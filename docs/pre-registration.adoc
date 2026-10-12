@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Pre-registration, provenance and obligations
+:revdate: 2026-10-12
+
+== Intent (recorded before the first proof)
+
+Define, once, the algebra that grades are drawn from, so that the
+choreographic keystone K-CUT-LOSS can be stated parametrically and
+discharged for every estate instance. The 2026-10-12 recon found that the
+family map already records three connections into choreographic-types
+(echo, epistemic, tropical), each demanding "a projection theorem", and an
+unresolved vocabulary clash ("echo loss-grade" against echo's separation of
+indices, measures and grades, and occupancy's "HWM monoid ≠ max-plus").
+A parametric algebra resolves the clash by construction: the instance names
+which algebra a grade belongs to.
+
+== Decisions this repository depends on
+
+* Kernel ruling 2026-10-12: Agda `--safe --without-K` is the proof kernel
+  for the type family; Idris2 is the ABI/runtime layer; Lean 4 is provenance
+  (jtv's proof layer, tropical's Mathlib-facing work); Isabelle only for AFP.
+  Falsifier for the ruling: this repository could not be built postulate-free
+  under those flags within the week. It was (All.agda).
+* Scaffold: full RSR template, owner's choice. The files here are the
+  project-specific layer to be placed on top of `just repo-init`.
+
+== Provenance ledger (borrowed vs ours)
+
+[cols="1,2,1",options="header"]
+|===
+| Item | Origin | Our contribution
+| Loss grade (ℕ ∪ {∞}, min, +) | echo-types `experimental/echo-additive/Grade.agda` (R0, session-gated) | transcription; dioid and annihilation layers re-proved here
+| Tropical grade (ℕ ∪ {−∞}, max, +) | tropical-types `TropicalSessionTypes.lean` | transcription into Agda; same laws re-proved
+| High-water-mark grade (peak, drift) | the stack-height / peak-and-drift monoid of resource analysis; occupancy-types operational model for the reading | definition and proofs (DESIGNED instance)
+| Dioid ⇒ ordered | standard | stated as a derived layer so instances prove distributivity once
+| Separation witnesses | — | ours; three family-map sentences made checkable
+|===
+
+== Obligations carried forward
+
+. *L-2 import direction.* echo-types' `Grade.agda` is an R0 experimental
+  module gated by a do-not-reopen retraction. Decide whether echo-types
+  imports `ResourceAlgebra.Instances.Loss` or this repository later imports
+  echo-types; until then the two texts must be identical and any edit to one
+  is an edit to both.
+. *M-2 Lean bridge.* A Lean theorem is provenance, not an Agda import.
+  Record in tropical-types that `MaxPlus.agda` is the Agda port and that any
+  change to `tAdd`/`tMul` on either side reopens the correspondence.
+. *H-2 supersession.* When occupancy-types defines its R2–R3 algebra,
+  replace `Instances/HWM.agda` with the transcription, re-run
+  `Separation.agda`, and move H-2 from DESIGNED to the transcription status.
+  Signed drift (terms that consume more than they allocate) is the first
+  expected extension.
+. *K-CUT-LOSS.* Next step in choreographic-types: canonical global/local
+  types, projection, cuts, then the statement over `ResourceAlgebra`. The
+  RoleGraded three-grade base case in echo-types should re-emerge as the
+  Loss instance restricted to {fin 0, fin 1, inf}.
+. *Registration.* Add this repository to nextgen-typing
+  `TYPE-CONNECTIONS.adoc` as a kernel module; occupancy-types and katagoria
+  are not registered there at all (recon 2026-10-12) and should be.
+
+== Expected rejections
+
+Each file under `tests/reject/` must fail to typecheck at its invalid
+declaration, for the stated reason:
+
+* `HWMAnnihilates` — no annihilating zero in the high-water-mark algebra.
+* `LossWorstCase` — echo alternatives are min, not max.
+* `DriftExceedsPeak` — a grade cannot end holding more than its peak.

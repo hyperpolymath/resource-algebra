@@ -1,0 +1,30 @@
+// Rows to add to nextgen-typing/docs/TYPE-CONNECTIONS.adoc.
+
+// Table "What each family means" — add after Secret Types:
+|https://github.com/hyperpolymath/resource-algebra[Resource Algebra] (kernel module, not a family)
+|Which laws must a grade algebra satisfy for grading to commute with
+projection? `ResourceAlgebra` = idempotent commutative monoid of
+alternatives + monoid of sequence; layers for order, distributivity and
+an annihilating zero. Instances: echo Loss (min-plus), tropical MaxPlus,
+HWM (proposed occupancy algebra).
+|The record is not any one instance. "Loss" and "cost" are different
+instances with opposite induced orders (checked: `Separation.agda`).
+
+|https://github.com/hyperpolymath/occupancy-types[Occupancy Types]
+|How do live-state footprints compose, and when are they reclaimed?
+Occupancy/HWM grades; protocol frontier = reclamation.
+|An occupancy bound is not a cost bound (checked: `resource-algebra`
+S-1). The occupancy algebra is R2–R3; v0 counts live bytes and grades
+communication steps in max-plus.
+
+// Table "What each connection asks us to establish" — add:
+|Resource Algebra → Choreographic
+|State K-CUT-LOSS over the parametric record; discharge for Loss, MaxPlus and HWM.
+|The statement, its proof, and the three discharges. The RoleGraded base
+case in echo-types should re-emerge as the Loss instance on {fin 0, fin 1, inf}.
+
+|Occupancy → Choreographic
+|The occupancy "protocol cut = reclaim" frontier and the choreographic cut
+are the same notion under the HWM instance.
+|A proof that K-CUT-LOSS at the HWM instance yields occupancy's
+reclamation-at-cut; until then, a conjecture.

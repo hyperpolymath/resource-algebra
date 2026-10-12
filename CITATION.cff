@@ -1,17 +1,14 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+title: "resource-algebra: the parametric grade algebra of the hyperpolymath type family"
+type: software
 authors:
-  - family-names: "{{AUTHOR_LAST}}"
-    given-names: "{{AUTHOR_FIRST}}"
-    orcid: "https://orcid.org/{{AUTHOR_ORCID}}"
-title: "{{PROJECT_NAME}}"
-version: 0.1.0
-date-released: "{{CURRENT_DATE}}"
-url: "https://{{FORGE}}/{{OWNER}}/{{REPO}}"
-repository-code: "https://{{FORGE}}/{{OWNER}}/{{REPO}}"
+  - family-names: Jewell
+    given-names: Jonathan D.A.
+    affiliation: The Open University
 license: MPL-2.0
-keywords:
-  - "rsr"
-  - "formal-verification"
-  - "neurosymbolic"
-  - "provenance"
+repository-code: https://github.com/hyperpolymath/resource-algebra
+abstract: >-
+  An Agda (--safe --without-K) record for grade algebras shared by the
+  echo, tropical, occupancy and choreographic type projects, with three
+  checked instances and computed separation witnesses. Instance HWM is a
+  proposal pending occupancy-types' own definition.

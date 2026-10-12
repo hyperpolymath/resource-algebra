@@ -1,5 +1,17 @@
 == Changelog
 
+
+== 2026-10-12 — initial development
+
+* `ResourceAlgebra` record with `IsOrdered`, `IsDioid` (⇒ ordered) and
+  `IsAnnihilating` layers.
+* Instances: `Loss` (echo-types transcription), `MaxPlus` (tropical-types
+  transcription), `HWM` (proposed occupancy algebra, DESIGNED).
+* `Separation.agda`: three checked separation witnesses.
+* Three expected-rejection controls; `scripts/check.sh` gate.
+* Checked under Agda 2.6.3 (`--safe --without-K --no-libraries --double-check`).
+
+
 All notable changes to this project will be documented in this file.
 
 The format is based on https://keepachangelog.com/en/1.1.0/[Keep a

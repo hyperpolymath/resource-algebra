@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: MPL-2.0
+name: Agda proofs
+# DESIGNED until its first green run. Pattern: residual-evidence-types
+# proofs.yml — the prover is the Debian agda-bin package at the pinned
+# version; the RSR template's estate workflows (secret scanner, governance,
+# labels, push-email-notify, mirror) are expected to arrive with the scaffold.
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  proofs:
+    name: Core proofs and expected rejections
+    runs-on: ubuntu-latest
+    container: debian:trixie-slim
+    steps:
+      - name: Install the pinned prover
+        run: |
+          apt-get update
+          apt-get install --no-install-recommends -y ca-certificates git agda-bin=2.6.4.3-1+b2
+      - uses: actions/checkout@v6.0.3
+      - name: Verify the checked Agda version
+        run: test "$(agda --version)" = 'Agda version 2.6.4.3'
+      - name: Core proofs and expected rejections
+        run: bash scripts/check.sh

@@ -1,0 +1,3 @@
+name: resource-algebra
+include: src
+flags: --safe --without-K

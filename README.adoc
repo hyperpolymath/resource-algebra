@@ -1,7 +1,97 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
-= {{PROJECT_NAME}}
+= resource-algebra — the parametric grade algebra shared by the type family
+:toc: left
+
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
+= Resource Algebra — the parametric grade algebra shared by the type family
+:toc: left
+
+== Overview
+
+One Agda record, `ResourceAlgebra`, states what a grade algebra is for the
+hyperpolymath type family: alternatives form an idempotent commutative
+monoid `(⊕, 𝟘)`, sequence forms a monoid `(⊗, 𝟙)`. Optional layers add the
+`⊕`-induced order and monotone sequencing (`IsOrdered`), distributivity
+(`IsDioid`, which yields `IsOrdered` by a proof, not a second obligation),
+and an annihilating zero (`IsAnnihilating`).
+
+Three instances are checked against it:
+
+[cols="1,2,2,1",options="header"]
+|===
+| Instance | Source of the definition | Alternatives / sequence | Status
+| `Instances.Loss` | echo-types `experimental/echo-additive/Grade.agda`, transcribed | min / + on ℕ ∪ {∞} | transcribed, PROVEN
+| `Instances.MaxPlus` | tropical-types `TropicalSessionTypes.lean`, transcribed | max / + on ℕ ∪ {−∞} | transcribed, PROVEN; Lean bridge OPEN
+| `Instances.HWM` | occupancy-types operational model, *proposed* (its R2–R3 algebra is not yet defined) | componentwise max / peak-and-drift | DESIGNED, PROVEN against this definition
+|===
+
+This repository is a kernel module of the family, not a family of its own.
+It exists so that K-CUT-LOSS (choreographic-types) can be stated once,
+parametrically, and discharged three times, instead of being proved against
+a single concrete algebra that bakes in one repo's vocabulary.
+
+== What is standard and what is ours
+
+*Standard:* idempotent semirings (dioids), the max-plus and min-plus
+semirings, the observation that distributivity implies monotonicity of
+multiplication for the natural order.
+
+*Ours:* the layering (what K-CUT-LOSS needs versus what K-CUT-WARRANT
+needs), the three estate instances held against one record, the
+high-water-mark proposal, and the checked separation witnesses
+(`Separation.agda`) that turn three boundary sentences of the family map into
+`refl`-plus-inequality facts: an occupancy bound is not a cost bound; echo
+alternatives are min while tropical alternatives are max; the induced order
+runs opposite ways in the two.
+
+== What this is not
+
+* Not an import of echo-types or tropical-types. The instances are
+  transcriptions; the correspondence is a review obligation recorded in
+  link:PROOF-STATUS.adoc[].
+* Not the K-CUT statement. Global/local types, projection and cuts live in
+  choreographic-types; this repository supplies the algebra they are
+  parametric in.
+* Not occupancy-types' algebra. `Instances.HWM` is a proposal that the
+  occupancy repo's own definition supersedes on arrival.
+
+== Build
+
+[source,bash]
+----
+just check        # core proofs under --safe --without-K --double-check,
+                  # then every tests/reject/*.agda must be refused at its
+                  # invalid declaration
+----
+
+Builtins only (`--no-libraries`): the development checks under the Debian
+`agda-bin` package the estate CI pins and under Ubuntu's 2.6.3.
+
+== Repository layout
+
+----
+src/ResourceAlgebra/Prelude.agda      ℕ lemmas (+, max, min, ≤), proved here
+src/ResourceAlgebra/Core.agda         the record and its layers
+src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM
+src/ResourceAlgebra/Separation.agda   checked separation witnesses
+tests/reject/*.agda                   expected rejections (must fail)
+docs/pre-registration.adoc            intent, provenance ledger, obligations
+PROOF-STATUS.adoc                     every claim with its status and artefact
+----
+
+== Documentation
+
+* link:PROOF-STATUS.adoc[Proof status]
+* link:docs/pre-registration.adoc[Pre-registration and obligations]
+* Family map: `nextgen-typing/docs/TYPE-CONNECTIONS.adoc`
+
+== Licence
+
+Code MPL-2.0; documentation CC-BY-SA-4.0.
+
+// ---- RSR template sections below; swept by `just repo-init` ----
 :toc:
 :toc-placement: preamble
 
