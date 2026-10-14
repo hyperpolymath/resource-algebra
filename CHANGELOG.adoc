@@ -1,6 +1,21 @@
 == Changelog
 
 
+== 2026-10-14 — governance pin `da2c748` → `934b879`
+
+* The six standards reusables (governance, hypatia-scan, mirror, rust-ci,
+  scorecard, secret-scanner) move to hyperpolymath/standards `934b879`.
+  At `da2c748`, governance ran its lock gate from a fixed helper pin with an
+  unpinned gh-actions-lock. Under v0.2.0 that gate failed *Actions lockfile
+  verify* on every job-level reusable ref, although it had accepted each one
+  as coverage. The new pin runs the gate at its own commit, with v0.2.0
+  pinned (standards#1250).
+* `actions.lock`: the `hyperpolymath/standards` record is rewritten at the
+  new pin with its called workflows' `uses:` union, and closed over the four
+  refs that union adds (setup-bun, setup-deno, upload-artifact,
+  rust-toolchain). The old record and the three refs only it named are
+  removed.
+
 == 2026-10-14 — MinMax and morphisms (resource-algebra#3)
 
 * `Instances/MinMax.agda`: the min-max (bottleneck) instance on the Loss
