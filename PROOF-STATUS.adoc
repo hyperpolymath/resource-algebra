@@ -10,14 +10,15 @@ OPEN. Every PROVEN line names the module that discharges it under
 
 * All modules carry `{-# OPTIONS --safe --without-K #-}`; no postulates, no
   holes, no standard library. — PROVEN by `just check-agda` (All.agda).
-* Five expected rejections fail at their invalid declaration and for the
-  intended reason (`min m n != max m n`, `p != zero`, `suc _ != zero`,
-  `max m n != m + n`, `max p₁ (n₁ + p₂) != p₁ + p₂`). — TESTED by
-  `scripts/check-agda.sh`, which CI (`proofs.yml`) runs. Until 2026-10-14
-  the workflow called a `scripts/check.sh` that does not exist, so no CI
-  run had ever checked these proofs; the first green `Agda proofs` run on
-  the pinned Agda 2.6.4.3 is what moves this line from local (Agda 2.6.3)
-  to CI evidence.
+* Eight expected rejections fail at their invalid declaration, each with the
+  message its `-- EXPECT:` line names (`min m n != max m n`, `p != zero`,
+  `suc _ != zero`, `max m n != m + n`, `max p₁ (n₁ + p₂) != p₁ + p₂`,
+  `3 != 5`, `inf != fin 3`, `… != bot`); a refusal with any other message
+  fails the gate. The unit tests in `tests/unit/AllTests.agda` typecheck. —
+  TESTED by `scripts/check-agda.sh`, which CI (`proofs.yml`) runs. Until
+  2026-10-14 the workflow called a `scripts/check.sh` that does not exist, so
+  no CI run had checked these proofs. The first CI run, on the pinned Agda
+  2.6.4.3, passed on 2026-10-14 (resource-algebra#4).
 
 == Core (Core.agda)
 

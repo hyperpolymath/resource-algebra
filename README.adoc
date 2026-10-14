@@ -65,9 +65,10 @@ runs opposite ways in the two; a bottleneck bound is not a loss bound.
 
 [source,bash]
 ----
-just check-agda  # core proofs under --safe --without-K --double-check,
-                  # then every tests/reject/*.agda must be refused at its
-                  # invalid declaration
+just check-agda  # core proofs and unit tests under --safe --without-K
+                  # --double-check, then every tests/reject/*.agda must be
+                  # refused at its invalid declaration with the message
+                  # its `-- EXPECT:` line names
 ----
 
 Builtins only (`--no-libraries`). It checks locally under Agda 2.6.3. CI
