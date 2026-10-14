@@ -83,13 +83,13 @@
   (identity
     :primary-forge github
     :owner "hyperpolymath"
-    :prefixed-name "UNASSIGNED-resource-algebra")
+    :prefixed-name "fv-resource-algebra")
   (clade
-    :primary UNASSIGNED
-    :primary-name "UNASSIGNED"
+    :primary fv
+    :primary-name "Formal Verification & Proofs"
     :secondary ()
     :assigned "2026-10-14"
-    :rationale "")
+    :rationale "Formal Verification & Proofs (`fv`), chosen by the owner 2026-10-14. The core value is checked correctness: an Agda (--safe --without-K) grade algebra whose instances, morphisms and separations are proved, with expected-rejection tests that must fail.")
   (forges
     :github "hyperpolymath/resource-algebra")
   ; :type is one of standalone monorepo monorepo-child inflated deflated hub
@@ -99,14 +99,14 @@
   (lineage
     :type standalone
     :parent ""
-    :born "2026-10-14"
+    :born "2026-10-12"
     :previous-names ()
     :instantiated-from "rsr-template-repo")
   ; :phase is one of reserved incubating active dormant merged superseded
   ; archived extinct. A repo created today has not proven anything yet.
   (status
     :phase incubating
-    :since "2026-10-14"
+    :since "2026-10-12"
     :present #t
     :aliases ()
     :merged-into ""
@@ -114,7 +114,7 @@
     :successors ()
     :ended ""
     (history
-      (entry :phase incubating :since "2026-10-14" :note "created from rsr-template-repo; clade not yet chosen; not yet registered")))
+      (entry :phase incubating :since "2026-10-12" :note "created from rsr-template-repo df09a6c with GitHub's template copy; minted by just repo-init 2026-10-14; clade fv chosen 2026-10-14; not yet registered in gv-clade-index")))
   ; :level is one of experimental alpha beta production lts (standards
   ; 1-formats/deed/vocabulary/maturity.adoc).
   (maturity
@@ -126,9 +126,9 @@
   (ecosystem
     :project "resource-algebra"
     :ecosystem "hyperpolymath"
-    :position-type "UNASSIGNED"
-    :purpose "UNASSIGNED"
-    :not ()
+    :position-type "kernel-module"
+    :purpose "One Agda record, ResourceAlgebra, stating what a grade algebra is for the hyperpolymath type family, with checked instances (Loss, MaxPlus, HWM, MinMax), morphisms between them and separation witnesses, so that K-CUT-LOSS can be stated once, parametrically, instead of against one concrete algebra."
+    :not ("an import of echo-types or tropical-types: the instances are transcriptions" "the K-CUT statement: global and local types, projection and cuts live in choreographic-types" "occupancy-types' algebra: Instances.HWM is a proposal its own definition supersedes")
     :coordination standards
     (related :name "rsr-template-repo" :relationship minted-from :notes "the template this repo was minted from by just repo-init"))
   ; <<< repo-identity
@@ -1064,7 +1064,7 @@
     :last-updated "2026-10-14"
     :parent "hyperpolymath/rsr-template-repo"
     ; template tip at mint
-    :parent-pin "4c796c791be8f934a3dfa6e80cdc498bfc421b92"
+    :parent-pin "df09a6c50c4c77e93abac0fdf162509bf5648611"
     :role "minted-repo"
     :stack "unspecified"
     :direction "generated-from-core"
@@ -1080,9 +1080,9 @@
   (provenance
     :minted-at "2026-10-14"
     :template-repo "hyperpolymath/rsr-template-repo"
-    :template-branch "UNASSIGNED"
-    :template-commit "4c796c791be8f934a3dfa6e80cdc498bfc421b92"
-    :template-tree "bc4855da15af6d406ab3bc50e259b39f1d77c226"
+    :template-branch "main"
+    :template-commit "df09a6c50c4c77e93abac0fdf162509bf5648611"
+    :template-tree "2c01b6f0627133f0ed2544e1edd07ed49602e117"
     ; Contract: branches this repo is EXPECTED to carry beyond the default.
     ; Empty means default-only. A mint must never inherit template work
     ; branches (coderabbit/, chore/, bot-task or stale branches) — that is
