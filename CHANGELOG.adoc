@@ -11,7 +11,8 @@
   (upload-artifact, setup-deno, rust-toolchain, setup-bun) record their SHA as
   `ref`, not the tag copied from standards' lock.
   `tests/workflows/actions_lock_sha_refs_test.sh` checks this, with negative
-  controls, and runs in Estate Rules.
+  controls, and `tests/workflows/scorecard_permissions_test.sh` checks the
+  grant; both run in Estate Rules.
 * The governance re-pin that #7 was opened for had already landed, in #8.
 
 == 2026-10-14 — minted, and the estate checks made green
