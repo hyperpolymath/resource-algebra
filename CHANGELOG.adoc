@@ -1,6 +1,22 @@
 == Changelog
 
 
+== 2026-10-14 — minted, and the estate checks made green
+
+* Minted with `just repo-init`. The repository had been created from
+  rsr-template-repo df09a6c with GitHub's template copy and never minted,
+  so it still declared itself the template. The deed is now
+  `resource-algebra_chora.deed` (clade `fv`), placeholders are filled,
+  and CLAUDE.md and the repository map describe this repository.
+* `build/just/repo-init.just`: the non-interactive mint now completes;
+  just's own interpolation, the arrival pack, the repository map, the
+  state-validation detector and the OpenSSF audit table survive the mint.
+* `scripts/check-agda.sh`: each expected rejection must land on the
+  fixture's `invalid` definition.
+* `PROOF-STATUS.adoc` moved to `docs/status/PROOF-STATUS.adoc`.
+* CI: the standards reusables re-pinned to standards main, with a closed
+  `actions.lock`; `CITATION.cff` gained its required `message`.
+
 == 2026-10-14 — MinMax and morphisms (resource-algebra#3)
 
 * `Instances/MinMax.agda`: the min-max (bottleneck) instance on the Loss
