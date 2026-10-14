@@ -20,7 +20,7 @@ jobs:
         run: |
           apt-get update
           apt-get install --no-install-recommends -y ca-certificates git agda-bin=2.6.4.3-1+b2
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.1
       - name: Verify the checked Agda version
         run: test "$(agda --version)" = 'Agda version 2.6.4.3'
       - name: Core proofs and expected rejections
