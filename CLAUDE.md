@@ -62,7 +62,7 @@ Put every question that needs the owner's decision through the selector (the Ask
 
 # This repo: `resource-algebra`  ·  clade `fv-resource-algebra`
 
-- **Identity** — uuid `241f1c29-0838-5033-b654-7f4c5e279ebc`; clade `fv` (secondary ``); born 2026-10-12; forge `hyperpolymath/resource-algebra`.
+- **Identity** — uuid `#u5"github.com/hyperpolymath/resource-algebra"`; clade `fv` (secondary ``); born 2026-10-12; forge `hyperpolymath/resource-algebra`.
 - **IS** — Parametric resource algebra in Agda, with Loss, MaxPlus, HWM and MinMax instances and strict/lax morphisms.
 - **IS-NOT** — a repository template · the K-CUT statement, which belongs in choreographic-types · occupancy-types' own algebra, for which HWM is a proposal
 - **Where it sits** — pipeline position **kernel**; chain `resource-algebra → hyperpolymath type family`; coordination = `standards`.
