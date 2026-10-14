@@ -7,7 +7,7 @@ A repo minted from the template does not inherit it: `just repo-init`
 replaces this file with `build/templates/ROADMAP.adoc.in`.
 
 Phase and maturity are not recorded here. They live in the repo deed,
-`rsr-template-repo_chora.deed`, in the `(status …)` and `(maturity …)`
+`resource-algebra_chora.deed`, in the `(status …)` and `(maturity …)`
 clauses (`just state-phase` prints both).
 
 This file took over the journal half of the retired STATE record

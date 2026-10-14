@@ -113,6 +113,10 @@ predecessors did.
 | yes
 | REUSE licence texts, dual-licence model (code MPL-2.0 / docs CC-BY-SA-4.0)
 
+| `PROOF-STATUS.adoc`
+| yes
+| project proof ledger, linked by README.adoc and docs/pre-registration.adoc
+
 | `README.adoc`
 | yes
 | -
@@ -161,9 +165,13 @@ predecessors did.
 | yes
 | the toolchain: every tool at latest (PROVISIONING-STANDARD §4)
 
-| `rsr-template-repo_chora.deed`
+| `resource-algebra.agda-lib`
 | yes
-| the repo deed: universal AI entry point; family-7 allocation manifest + ply tree folded in (standards#837 pilot). Filename carries the repo slug (deed dispatch <stem>_chora.deed), so repo-init renames it at mint
+| Agda library manifest; Agda discovers it at the library root and resolves src/ relative to it
+
+| `resource-algebra_chora.deed`
+| yes
+| repository deed; Canon lockstep reads <repo>_chora.deed at the PR head
 
 | `scripts/`
 | yes

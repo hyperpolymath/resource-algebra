@@ -4,10 +4,6 @@
 = resource-algebra — the parametric grade algebra shared by the type family
 :toc: left
 
-// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
-= Resource Algebra — the parametric grade algebra shared by the type family
-:toc: left
-
 == Overview
 
 One Agda record, `ResourceAlgebra`, states what a grade algebra is for the
@@ -220,7 +216,7 @@ maintainers can brief an AI with `just ai-warmup dev` / `just ai-warmup maintain
 * *Machine-readable metadata* (`.machine_readable/descriptiles/`) — `STATE`, `META`,
   `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE`, and `anchors/ANCHOR`,
   in deed, so tools and agents can read the project's state and boundaries.
-* *AI gatekeeper protocol* — `rsr-template-repo_chora.deed` (the repo deed) is the
+* *AI gatekeeper protocol* — `resource-algebra_chora.deed` (the repo deed) is the
   universal entry point that tells an AI agent how to work in this repo before it
   touches anything; it carries the AI allocation policy and the ply directory tree.
 * *Typed ABI/FFI seam* — `src/interface/Abi/` (Idris2 type + layout proofs) over
