@@ -366,9 +366,17 @@ repo-init archetype="":
     # in the new repo's README, and it trips the placeholder gate on every
     # subsequent push, which trains people to ignore a red CI. No id yet means
     # no badge yet; add it when you register at bestpractices.dev.
+    #
+    # Line deletion is only safe where the line is the whole construct. It
+    # used to run on docs/governance/TEMPLATE-STANDARDS-AUDIT.adoc too, where
+    # the token's line is one CELL of a six-column table row: deleting it
+    # left an incomplete row, asciidoctor reported "dropping cells from
+    # incomplete row", and Estate Rules' render gate failed in every child
+    # minted without an OpenSSF id (measured 2026-10-14 on resource-algebra).
+    # That document names the README's tokens rather than using them, so it
+    # now spells them as plain names and needs no pass here.
     if [ -z "$OPENSSF_BP_ID" ]; then
         sed -i "/bestpractices\.dev\/projects\/${LB}OPENSSF_BP_ID${RB}/d" README.adoc 2>/dev/null || true
-        sed -i "/${LB}OPENSSF_PROJECT_ID${RB}/d" docs/governance/TEMPLATE-STANDARDS-AUDIT.adoc 2>/dev/null || true
     fi
     # Same rule for the ORCID iD: CFF makes `orcid` optional, a wrong one is not.
     if [ -z "$AUTHOR_ORCID" ]; then
