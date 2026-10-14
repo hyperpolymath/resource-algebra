@@ -2,15 +2,17 @@
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 --
--- Computed witnesses that the three instances are not interchangeable.
+-- Computed witnesses that the four instances are not interchangeable.
 -- Each is `refl` plus a decidable inequality on ℕ, so each is TESTED by the
 -- typechecker's evaluator, not argued in prose.  They discharge, as checked
--- facts, three boundary sentences the family map currently states only in
+-- facts, four boundary sentences the family map currently states only in
 -- words:
 --   S-1  "an occupancy bound is not a cost bound"           (nextgen-typing)
 --   S-2  "an informal loss number cannot stand in for the
 --         structure" — echo alternatives are MIN, tropical MAX (nextgen-typing)
 --   S-3  the ⊕-induced order runs opposite ways in Loss and MaxPlus
+--   S-4  a bottleneck is not a sum: MinMax and Loss share carrier and
+--        alternatives and differ only in sequence
 module ResourceAlgebra.Separation where
 
 open import ResourceAlgebra.Prelude
@@ -18,6 +20,7 @@ open import ResourceAlgebra.Core
 open import ResourceAlgebra.Instances.Loss    as L
 open import ResourceAlgebra.Instances.MaxPlus as M
 open import ResourceAlgebra.Instances.HWM     as H
+open import ResourceAlgebra.Instances.MinMax  as MM using (_⊔g_)
 
 ----------------------------------------------------------------------
 -- S-1  Sequencing peaks 2 and 3 (nothing held between them):
@@ -64,3 +67,20 @@ maxplus-order = refl
 
 loss-order-reversed : ResourceAlgebra._≼_ Loss (fin 2) (fin 1)
 loss-order-reversed = refl
+
+----------------------------------------------------------------------
+-- S-4  Same carrier, same alternatives, different sequence: Loss adds the
+--      hops (2 then 3 costs 5), MinMax keeps the worst hop (3).  A
+--      bottleneck bound is not a loss bound, though it is below one
+--      (Morphism.loss-bottleneck).
+loss-seq : fin 2 +g fin 3 ≡ fin 5
+loss-seq = refl
+
+minmax-seq : fin 2 ⊔g fin 3 ≡ fin 3
+minmax-seq = refl
+
+bottleneck-is-not-sum : (fin 2 ⊔g fin 3) ≢ (fin 2 +g fin 3)
+bottleneck-is-not-sum p = 3≢5 (fin-inj p)
+  where
+  fin-inj : ∀ {m n} → fin m ≡ fin n → m ≡ n
+  fin-inj refl = refl

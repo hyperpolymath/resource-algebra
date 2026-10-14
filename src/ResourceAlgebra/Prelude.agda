@@ -182,3 +182,67 @@ max-mono-≤ : ∀ {a a' b b'} → a ≤ a' → b ≤ b' → max a b ≤ max a' 
 max-mono-≤ {a' = a'}          z≤n     q       = ≤-trans q (≤-max-right a' _)
 max-mono-≤ {a' = a'} {b' = b'} (s≤s p) z≤n     = ≤-trans (s≤s p) (≤-max-left a' b')
 max-mono-≤                     (s≤s p) (s≤s q) = s≤s (max-mono-≤ p q)
+
+----------------------------------------------------------------------
+-- Disjoint sum (for the morphism classifications)
+infixr 1 _⊎_
+data _⊎_ (A B : Set) : Set where
+  inj₁ : A → A ⊎ B
+  inj₂ : B → A ⊎ B
+
+----------------------------------------------------------------------
+-- More of the usual order, for the min-max instance and the morphisms
+suc-injective : ∀ {m n} → suc m ≡ suc n → m ≡ n
+suc-injective refl = refl
+
++-cancelˡ : ∀ k {m n} → k + m ≡ k + n → m ≡ n
++-cancelˡ zero    p = p
++-cancelˡ (suc k) p = +-cancelˡ k (suc-injective p)
+
+≤-+ʳ : ∀ m n → m ≤ m + n
+≤-+ʳ zero    n = z≤n
+≤-+ʳ (suc m) n = s≤s (≤-+ʳ m n)
+
+≤-+ˡ : ∀ m n → n ≤ m + n
+≤-+ˡ m n = subst (λ x → n ≤ x) (+-comm n m) (≤-+ʳ n m)
+
++-monoˡ-≤ : ∀ {m n} p → m ≤ n → m + p ≤ n + p
++-monoˡ-≤ {m} {n} p q =
+  subst (λ x → x ≤ n + p) (+-comm p m)
+        (subst (λ y → p + m ≤ y) (+-comm p n) (+-monoʳ-≤ p q))
+
+max-lub : ∀ {a b c} → a ≤ c → b ≤ c → max a b ≤ c
+max-lub {zero}           _       q       = q
+max-lub {suc a} {zero}   p       _       = p
+max-lub {suc a} {suc b}  (s≤s p) (s≤s q) = s≤s (max-lub p q)
+
+-- max m n is n once m ≤ n; min m n is m once m ≤ n.
+max-≤ : ∀ {m n} → m ≤ n → max m n ≡ n
+max-≤ z≤n     = refl
+max-≤ (s≤s p) = cong suc (max-≤ p)
+
+min-≤ : ∀ {m n} → m ≤ n → min m n ≡ m
+min-≤ z≤n     = refl
+min-≤ (s≤s p) = cong suc (min-≤ p)
+
+min-≥ : ∀ {m n} → n ≤ m → min m n ≡ n
+min-≥ {m} {n} p = trans (min-comm m n) (min-≤ p)
+
+-- A bottleneck never exceeds the sum: max m n ≤ m + n.
+max-≤-+ : ∀ m n → max m n ≤ m + n
+max-≤-+ m n = max-lub (≤-+ʳ m n) (≤-+ˡ m n)
+
+-- max distributes over min: the min-max instance is a dioid.
+max-distribˡ-min : ∀ a b c → max a (min b c) ≡ min (max a b) (max a c)
+max-distribˡ-min zero    b       c       = refl
+max-distribˡ-min (suc a) zero    c       =
+  sym (min-≤ (≤-max-left (suc a) c))
+max-distribˡ-min (suc a) (suc b) zero    =
+  cong suc (sym (min-≥ (≤-max-left a b)))
+max-distribˡ-min (suc a) (suc b) (suc c) = cong suc (max-distribˡ-min a b c)
+
+max-distribʳ-min : ∀ a b c → max (min a b) c ≡ min (max a c) (max b c)
+max-distribʳ-min a b c =
+  trans (max-comm (min a b) c)
+  (trans (max-distribˡ-min c a b)
+         (cong₂ min (max-comm c a) (max-comm c b)))

@@ -1,6 +1,29 @@
 == Changelog
 
 
+== 2026-10-14 — MinMax and morphisms (resource-algebra#3)
+
+* `Instances/MinMax.agda`: the min-max (bottleneck) instance on the Loss
+  carrier, with dioid, ordered and annihilating layers.
+* `Morphism.agda`: strict (`Hom`) and lax (`LaxHom`) morphisms with
+  identities and composition; `peak-lax` (HWM → MaxPlus); no strict
+  morphism out of HWM; exactly two strict morphisms Loss → MaxPlus and
+  exactly one MaxPlus → Loss; `loss-bottleneck` (Loss → MinMax, lax).
+* `Separation.agda`: S-4 (a bottleneck is not a sum).
+* Five more expected rejections: `MinMaxIsLoss`, `PeakIsStrict`,
+  `BottleneckBoundReversed`, `MinMaxInfinityIsIdentity`, `PeakPreservesZero`;
+  unit tests in `tests/unit/`.
+* `scripts/check-agda.sh` now requires each rejection to carry the message
+  its `-- EXPECT:` line names (a refusal for another reason fails), and
+  typechecks the unit tests.
+* The proof ledger moved to `docs/status/PROOF-STATUS.adoc`, the template's
+  home for it, replacing the unfilled template stub there (`just` read the
+  stub first). The root allowlist keeps only `resource-algebra.agda-lib`.
+* Fixed: `proofs.yml` called a non-existent `scripts/check.sh`, so CI had
+  never checked the proofs; it now runs `scripts/check-agda.sh`. The
+  workflow had no `actions.lock` key and an unlocked checkout ref (Lock Sync
+  Gate); it now uses the locked `actions/checkout@v7.0.1`.
+
 == 2026-10-12 — initial development
 
 * `ResourceAlgebra` record with `IsOrdered`, `IsDioid` (⇒ ordered) and

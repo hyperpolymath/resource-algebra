@@ -32,12 +32,13 @@ LICENSE
 LICENSES/                  # REUSE licence texts, dual-licence model (code MPL-2.0 / docs CC-BY-SA-4.0)
 CHANGELOG.adoc             # AsciiDoc is the estate-standard documentation format
 CITATION.cff               # citation metadata; GitHub reads it from the root of the default branch only
-rsr-template-repo_chora.deed # the repo deed: universal AI entry point; family-7 allocation manifest + ply tree folded in (standards#837 pilot). Filename carries the repo slug (deed dispatch <stem>_chora.deed), so repo-init renames it at mint
+resource-algebra_chora.deed # repository deed; Canon lockstep reads <repo>_chora.deed at the PR head
 CLAUDE.md                  # generated arrival pack; the generator, pre-commit and Claude Code all read it from the ROOT (do not hand-edit; edit the repo deed)
 ?GEMINI.md                # pointer to CLAUDE.md for repos without AGENTS.md yet
 Justfile                   # thin; delegates phases to build/just/*.just
 launcher.sh                # --setup/--doctor/--heal/--ai-setup (launcher-standard 0.6.0); the one file a newcomer runs first
 coordination.k9.ncl        # repo-local session binding (template-mandated)
+resource-algebra.agda-lib  # Agda library manifest; Agda discovers it at the library root and resolves src/ relative to it
 
 # ─── Conventional dotfiles (tool-required at root) ───────────────────────────
 .editorconfig
