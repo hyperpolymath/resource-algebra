@@ -4,10 +4,6 @@
 = resource-algebra — the parametric grade algebra shared by the type family
 :toc: left
 
-// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
-= Resource Algebra — the parametric grade algebra shared by the type family
-:toc: left
-
 == Overview
 
 One Agda record, `ResourceAlgebra`, states what a grade algebra is for the
@@ -38,7 +34,7 @@ instances and says which exist: `peak` is lax HWM → MaxPlus and nothing
 strict leaves HWM; Loss → MaxPlus has exactly two strict maps and
 MaxPlus → Loss exactly one, and none of them separates two positive
 grades; the identity is lax Loss → MinMax. Transport of K-CUT-LOSS along these maps is
-not proved here (link:PROOF-STATUS.adoc[], Open).
+not proved here (link:docs/status/PROOF-STATUS.adoc[], Open).
 
 == What is standard and what is ours
 
@@ -58,7 +54,7 @@ runs opposite ways in the two; a bottleneck bound is not a loss bound.
 
 * Not an import of echo-types or tropical-types. The instances are
   transcriptions; the correspondence is a review obligation recorded in
-  link:PROOF-STATUS.adoc[].
+  link:docs/status/PROOF-STATUS.adoc[].
 * Not the K-CUT statement. Global/local types, projection and cuts live in
   choreographic-types; this repository supplies the algebra they are
   parametric in.
@@ -89,12 +85,12 @@ src/ResourceAlgebra/Separation.agda   checked separation witnesses
 src/ResourceAlgebra/Morphism.agda     strict and lax morphisms, classifications
 tests/reject/*.agda                   expected rejections (must fail)
 docs/pre-registration.adoc            intent, provenance ledger, obligations
-PROOF-STATUS.adoc                     every claim with its status and artefact
+docs/status/PROOF-STATUS.adoc         every claim with its status and artefact
 ----
 
 == Documentation
 
-* link:PROOF-STATUS.adoc[Proof status]
+* link:docs/status/PROOF-STATUS.adoc[Proof status]
 * link:docs/pre-registration.adoc[Pre-registration and obligations]
 * Family map: `nextgen-typing/docs/TYPE-CONNECTIONS.adoc`
 
@@ -124,42 +120,6 @@ image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web
 
 The parametric grade algebra shared by the hyperpolymath type family
 
-[IMPORTANT]
-====
-*This file is a template.* You are reading `README.adoc` from the *RSR template repo*
-(or a freshly-cloned copy of it). Run `just repo-init` to replace every `{{PLACEHOLDER}}`
-token with your project's details, then delete this admonition. Until you do, the
-`{{...}}` markers below are intentional placeholders, not content.
-====
-
-== What this is
-
-A new repository scaffolded from the *Rhodium Standard Repository (RSR)* template:
-a batteries-included starting point that ships with CI/CD, machine-readable project
-metadata, an AI-agent gatekeeper protocol, a formally-typed ABI/FFI seam
-(Idris2 + Zig), container and reproducible-build scaffolding, and governance
-infrastructure — all wired and passing the RSR validators on day one.
-
-Replace this section with a description of *your* project once initialised.
-
-== Quick start
-
-[source,bash]
-----
-# 1. Create a repo from this template (or clone it), then from the repo root:
-just repo-init                # interactive bootstrap: fills every {{PLACEHOLDER}}
-
-# 2. See the available tasks:
-just                     # lists all phases (build, test, validate, audit, ...)
-
-# 3. Check the repo still satisfies the RSR shape:
-just validate            # structure + metadata checks
-----
-
-`just repo-init` prompts for the project name, owner, author, licence contact, and the
-other values listed in `.machine_readable/ai/PLACEHOLDERS.adoc`, substitutes them
-across the tree, validates the result, and (if available) runs the `k9-svc` checks.
-
 [[ai-install]]
 == AI-Assisted Installation (Recommended)
 
@@ -170,23 +130,21 @@ commands to paste):
 
 [source,text]
 ----
-Create a new repository from https://github.com/hyperpolymath/resource-algebra
+Set up resource-algebra from https://github.com/hyperpolymath/resource-algebra
 ----
 
 The URL is the key: it leads the assistant to
 link:docs/AI_INSTALLATION_GUIDE.adoc[`docs/AI_INSTALLATION_GUIDE.adoc`], the
-complete step-by-step recipe. The assistant checks your system, installs the
-prerequisites, instantiates the template with `just repo-init`, and verifies the
-result with `just doctor`.
+complete step-by-step recipe for this repository. The assistant checks your
+system, installs the prerequisites, fetches and sets up resource-algebra, and
+verifies it with `just doctor`.
 
-* "Set up resource-algebra so I can work on the template itself — https://github.com/hyperpolymath/resource-algebra"
 * `./launcher.sh --ai-setup` (or `just ai-setup`) prints the line and the guide path.
 
 === What you will be asked
 
 . Your operating system (Linux, macOS, or Windows via WSL2).
-. The new project's name, owner, author and licence contact (the values listed in
-  `.machine_readable/ai/PLACEHOLDERS.adoc`).
+. Where to put it (default `~/src/resource-algebra`).
 . To confirm the privacy notice below.
 
 === Privacy and security
@@ -195,16 +153,7 @@ result with `just doctor`.
 ====
 Setting up resource-algebra clones this repository and installs its developer
 tools per-user with mise (no administrator rights, nothing sent anywhere).
-`just repo-init` rewrites files only inside the new checkout; it creates no
-remote repository and pushes nothing until you do.
 ====
-
-=== The one trap
-
-If you are an AI agent: **do not set `RSR_NON_INTERACTIVE=1`**. It stubs the
-shell builtin `read`, which also disables the loops that perform token
-substitution — the run never terminates and substitutes nothing. Pipe answers to
-stdin instead.
 
 === Troubleshooting
 

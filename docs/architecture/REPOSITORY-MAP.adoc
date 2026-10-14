@@ -121,10 +121,6 @@ predecessors did.
 | yes
 | -
 
-| `archetypes`
-| optional
-| template-only variation seam (ADR-0003); `just repo-init` removes it from minted repos
-
 | `benches/`
 | optional
 | Cargo-conventional at package root
@@ -167,11 +163,11 @@ predecessors did.
 
 | `resource-algebra.agda-lib`
 | yes
-| -
+| the Agda library file of this repo (include: src). Agda finds it by walking up from each source file and consumers register its path, so it lives at the project root by Agda convention; repo-specific, like the deed line above
 
-| `rsr-template-repo_chora.deed`
+| `resource-algebra_chora.deed`
 | yes
-| -
+| the repo deed: universal AI entry point; family-7 allocation manifest + ply tree folded in (standards#837 pilot). Filename carries the repo slug (deed dispatch <stem>_chora.deed), so repo-init renames it at mint
 
 | `scripts/`
 | yes
