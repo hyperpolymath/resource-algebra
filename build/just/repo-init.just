@@ -161,16 +161,16 @@ repo-init archetype="":
     if [ -d "build/container" ]; then
         echo ""
         echo "── Container configuration (optional) ─────────"
-        ask "Service name [${REPO,,}]: " _SERVICE_NAME
-        SERVICE_NAME="${_SERVICE_NAME:-${REPO,,}}"
-        ask "Primary port [8080]: " _PORT
-        PORT="${_PORT:-8080}"
-        ask "Container registry [ghcr.io/${OWNER}]: " _REGISTRY
-        REGISTRY="${_REGISTRY:-ghcr.io/${OWNER}}"
+        ask "Service name [${SERVICE_NAME:-${REPO,,}}]: " _SERVICE_NAME
+        SERVICE_NAME="${_SERVICE_NAME:-${SERVICE_NAME:-${REPO,,}}}"
+        ask "Primary port [${PORT:-8080}]: " _PORT
+        PORT="${_PORT:-${PORT:-8080}}"
+        ask "Container registry [${REGISTRY:-ghcr.io/${OWNER}}]: " _REGISTRY
+        REGISTRY="${_REGISTRY:-${REGISTRY:-ghcr.io/${OWNER}}}"
     else
-        SERVICE_NAME="${REPO,,}"
-        PORT="8080"
-        REGISTRY="ghcr.io/${OWNER}"
+        SERVICE_NAME="${SERVICE_NAME:-${REPO,,}}"
+        PORT="${PORT:-8080}"
+        REGISTRY="${REGISTRY:-ghcr.io/${OWNER}}"
     fi
 
     # --- Derived values ---
