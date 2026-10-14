@@ -94,6 +94,14 @@ jobs:
       # the spine's at mint and left every Julia mint with Lock Sync red.
       - name: Archetype lock fragments merge into a valid lock
         run: bash tests/workflows/archetype_lock_merge_test.sh
+      # The four SHA-keyed leaves standards' reusables add keep an immutable ref,
+      # and the sync gate names each one if its record goes missing.
+      - name: actions.lock SHA-ref regression controls
+        run: bash tests/workflows/actions_lock_sha_refs_test.sh
+      # The Scorecard calling job's own permissions map must grant actions: read;
+      # the workflow-level grant does not reach a job that declares its own map.
+      - name: Scorecard caller grants
+        run: bash tests/workflows/scorecard_permissions_test.sh
       # The CHECK half of the template contract. repo-init has always written an
       # answer-file (now the child deed's (provenance) clause); nothing ever read it.
       # This is the missing reader, and it covers the #200/#201/#203 class:
