@@ -13,7 +13,7 @@ rsr-template-repo (https://github.com/hyperpolymath/rsr-template-repo) is a libr
 It is not a project in its own right: it is the template every new hyperpolymath
 repository is created from. It ships CI/CD, machine-readable metadata
 (`.machine_readable/descriptiles/`), an AI gatekeeper deed
-(`rsr-template-repo_chora.deed`), a typed ABI/FFI seam (Idris2 over Zig), Guix and
+(`resource-algebra_chora.deed`), a typed ABI/FFI seam (Idris2 over Zig), Guix and
 mise toolchains, and governance files, all passing the RSR validators before you
 add a line of your own.
 
