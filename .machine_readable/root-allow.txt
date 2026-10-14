@@ -38,7 +38,6 @@ CLAUDE.md                  # generated arrival pack; the generator, pre-commit a
 Justfile                   # thin; delegates phases to build/just/*.just
 launcher.sh                # --setup/--doctor/--heal/--ai-setup (launcher-standard 0.6.0); the one file a newcomer runs first
 coordination.k9.ncl        # repo-local session binding (template-mandated)
-PROOF-STATUS.adoc          # project proof ledger, linked by README.adoc and docs/pre-registration.adoc
 resource-algebra.agda-lib  # Agda library manifest; Agda discovers it at the library root and resolves src/ relative to it
 
 # ─── Conventional dotfiles (tool-required at root) ───────────────────────────
