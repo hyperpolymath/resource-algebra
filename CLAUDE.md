@@ -55,6 +55,9 @@ Deny: **Nix, Python, Go, TypeScript, Deno, ReScript, AGPL**. (Guix, not Nix.)
 JavaScript runtime: **Bun** (package.json + bun.lock) > pnpm > npm (last resort, permitted). Deno is retired, not grandfathered (owner ruling 2026-08-26, standards#655): existing Deno projects migrate to Bun.
 Use plain JavaScript when this tooling is needed. TypeScript and ReScript migrate to AffineScript.
 
+## Asking the owner
+Put every question that needs the owner's decision through the selector (the AskUserQuestion tool), not as prose at the end of a report. Batch up to four per call, offer concrete options with the recommended one first, and say what each option would cause.
+
 ---
 
 # This repo: `resource-algebra`  ·  clade `fv-resource-algebra`
@@ -112,11 +115,3 @@ hand; that migration is done per repo (ADR-008 phase P3). In deed files use
 **ENFORCEMENT:** these rulings are recorded on `standards#787`. Some are
 ruled but not yet gated: check the gate on `standards` main before
 relying on it.
-
-<!-- Hand-authored (owner, 2026-10-14). -->
-## Asking the owner
-
-Put every question that needs the owner's decision through the selector
-(the AskUserQuestion tool), not as prose at the end of a report. Batch up to
-four per call, offer concrete options with the recommended one first, and say
-what each option would cause.
