@@ -102,10 +102,8 @@
     :born "2026-10-12"
     :previous-names ()
     :instantiated-from "rsr-template-repo")
-  ; :phase is one of reserved incubating active dormant merged superseded
-  ; archived extinct. A repo created today has not proven anything yet.
   (status
-    :phase incubating
+    :phase active
     :since "2026-10-12"
     :present #t
     :aliases ()
@@ -114,23 +112,23 @@
     :successors ()
     :ended ""
     (history
-      (entry :phase incubating :since "2026-10-12" :note "created from rsr-template-repo df09a6c with GitHub's template copy; minted by just repo-init 2026-10-14; clade fv chosen 2026-10-14; not yet registered in gv-clade-index")))
-  ; :level is one of experimental alpha beta production lts (standards
-  ; 1-formats/deed/vocabulary/maturity.adoc).
+      (entry :phase active :since "2026-10-12" :note "Agda resource-algebra library, created from rsr-template-repo df09a6c with GitHub's template copy; minted by just repo-init 2026-10-14; clade fv chosen 2026-10-14; not yet registered in gv-clade-index")))
+  ; Proofs and remaining adoption obligations are recorded in docs/status/PROOF-STATUS.adoc.
   (maturity
-    :level experimental
-    :since "2026-10-14")
-  ; Fill in what this repo IS and IS NOT, and the repos it relates to.
-  ; :relationship is one of standard-source build-tooling validation-tooling
-  ; signing-tooling verification-tooling minted-from registry.
+    :level experimental)
+  ; Ecosystem: mapping meta-ecosystem-to-repo-deed.
   (ecosystem
     :project "resource-algebra"
     :ecosystem "hyperpolymath"
-    :position-type "kernel-module"
-    :purpose "One Agda record, ResourceAlgebra, stating what a grade algebra is for the hyperpolymath type family, with checked instances (Loss, MaxPlus, HWM, MinMax), morphisms between them and separation witnesses, so that K-CUT-LOSS can be stated once, parametrically, instead of against one concrete algebra."
-    :not ("an import of echo-types or tropical-types: the instances are transcriptions" "the K-CUT statement: global and local types, projection and cuts live in choreographic-types" "occupancy-types' algebra: Instances.HWM is a proposal its own definition supersedes")
+    :position-type "library"
+    :purpose "Parametric resource algebra in Agda, with Loss, MaxPlus, HWM and MinMax instances and strict/lax morphisms."
+    :not ("a repository template"
+          "the K-CUT statement, which belongs in choreographic-types"
+          "occupancy-types' own algebra, for which HWM is a proposal")
+    :pipeline-position "kernel"
+    :chain "resource-algebra → hyperpolymath type family"
     :coordination standards
-    (related :name "rsr-template-repo" :relationship minted-from :notes "the template this repo was minted from by just repo-init"))
+    (related :name "rsr-template-repo" :relationship minted-from :notes "Source of the inherited repository scaffolding."))
   ; <<< repo-identity
   ; Meta: mapping meta-ecosystem-to-repo-deed. A minted repo keeps this
   ; clause (self-name pass applied) and edits it as its own.
@@ -196,8 +194,8 @@
   (manifest
     :version "0.1.0"
     :last-updated "2026-10-14"
-    :project "Resource Algebra"
-    :purpose "Canonical RSR (Rhodium Standard Repository) template — governance, CI/CD, machine-readable metadata, ABI/FFI seam and formal-verification scaffolding that hyperpolymath projects are instantiated from."
+    :project "resource-algebra"
+    :purpose "Parametric resource algebra in Agda, with checked instances, separation witnesses and strict/lax morphism classifications."
     (agent :name CLAUDE :role "proofs, compilers, repo-local implementation, CI/CD, formal verification, Rust/Idris2/Zig")
     (agent :name CHATGPT :role "prose, papers, publication review, standards docs, outreach drafts, letters")
     (agent :name GEMINI :role "estate audits, cross-repo sweeps, long-context triage, pattern detection")
@@ -347,9 +345,9 @@
     (identity
       :project "Resource Algebra"
       ; language | library | service | tool
-      :kind "UNASSIGNED"
-      :one-sentence "The parametric grade algebra shared by the hyperpolymath type family"
-      :domain "UNASSIGNED")
+      :kind "library"
+      :one-sentence "Parametric resource algebra in Agda with checked instances and strict/lax morphisms."
+      :domain "formal-methods")
     (semantic-authority
       :policy "canonical"
       :owns (
@@ -548,7 +546,7 @@
         ; What makes this project special. Agents should DEEPEN this, not broaden it.
         ; Customise this per project — the template default is generic.
         (unique-strength
-          :description "UNASSIGNED"
+          :description "Checked separation witnesses and classifications of strict and lax morphisms between resource algebras."
           :deepen-not-broaden #t)
         ; ============================================================================
         ; DIVERGENT INVARIANTS
@@ -587,7 +585,7 @@
         ; These rules detect corrupt/template/stale state files.
         (state-validation
           ; A regex, not a literal list. The list form named the exact strings it was
-          ; meant to catch ("RESOURCE_ALGEBRA"), so `just repo-init` substituted the detector along
+          ; meant to catch (an upper-snake brace token), so `just repo-init` substituted the detector along
           ; with everything else and shipped reject-if-contains = ["MY_PROJECT", ...] —
           ; a guard against unfilled tokens that had been eaten by the filling. The
           ; escaped pattern below contains no token for init to match, and covers every

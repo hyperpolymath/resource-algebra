@@ -9,5 +9,6 @@ open import ResourceAlgebra.Instances.HWM
 -- Must fail: in the high-water-mark algebra the ⊕-unit is also the
 -- ⊗-unit, so sequencing with it returns the other grade, not 𝟘.  Accepting
 -- this would smuggle an annihilating zero into an algebra that has none.
+-- EXPECT: p != zero of type Nat
 invalid : ∀ g → (𝟘h ⊗h g) ≡ 𝟘h
 invalid (hwm p n b) = refl

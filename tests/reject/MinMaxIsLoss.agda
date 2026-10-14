@@ -10,5 +10,6 @@ open import ResourceAlgebra.Instances.MinMax
 -- the hops.  Accepting this would let a min-max bound be read as a
 -- min-plus (loss) bound, which is the identification Separation S-4 and
 -- the lax (not strict) loss-bottleneck morphism exist to forbid.
+-- EXPECT: max m n != m \+ n of type Nat
 invalid : ∀ m n → (fin m ⊔g fin n) ≡ fin (m + n)
 invalid m n = refl

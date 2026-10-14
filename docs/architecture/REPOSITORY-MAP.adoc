@@ -113,10 +113,6 @@ predecessors did.
 | yes
 | REUSE licence texts, dual-licence model (code MPL-2.0 / docs CC-BY-SA-4.0)
 
-| `PROOF-STATUS.adoc`
-| yes
-| -
-
 | `README.adoc`
 | yes
 | -
@@ -163,11 +159,11 @@ predecessors did.
 
 | `resource-algebra.agda-lib`
 | yes
-| the Agda library file of this repo (include: src). Agda finds it by walking up from each source file and consumers register its path, so it lives at the project root by Agda convention; repo-specific, like the deed line above
+| Agda library manifest; Agda discovers it at the library root and resolves src/ relative to it
 
 | `resource-algebra_chora.deed`
 | yes
-| the repo deed: universal AI entry point; family-7 allocation manifest + ply tree folded in (standards#837 pilot). Filename carries the repo slug (deed dispatch <stem>_chora.deed), so repo-init renames it at mint
+| repository deed; Canon lockstep reads <repo>_chora.deed at the PR head
 
 | `scripts/`
 | yes

@@ -8,6 +8,9 @@ prover="${AGDA:-agda}"
 "$prover" --version
 flags=(--safe --without-K --no-libraries --ignore-interfaces --double-check -i src)
 "$prover" "${flags[@]}" src/ResourceAlgebra/All.agda
+# Unit tests (closed computations and small lemmas over the instances).
+"$prover" "${flags[@]}" -i tests/unit tests/unit/AllTests.agda
+echo "PASS: unit tests (tests/unit/AllTests.agda)"
 mkdir -p _build/check-logs
 shopt -s nullglob
 rejects=(tests/reject/*.agda)
@@ -18,6 +21,13 @@ if (( ${#rejects[@]} == 0 )); then
 fi
 for file in "${rejects[@]}"; do
   name="$(basename -- "$file" .agda)"
+  # The refusal must carry the message the fixture names: failing at the
+  # declaration for some other reason must not pass.
+  expect="$(sed -n 's/^-- EXPECT: //p' "$file" | head -1)"
+  if [ -z "$expect" ]; then
+    echo "ERROR: $name has no '-- EXPECT: <regex>' line" >&2
+    exit 1
+  fi
   log="_build/check-logs/$name.log"
   # The lines of the fixture's `invalid` definition: from its first clause
   # (the first `invalid` line that is not the type signature) to the last
@@ -51,6 +61,11 @@ for file in "${rejects[@]}"; do
          "(first error at line ${err_line:-none}; \`invalid\` spans lines $def_first-$def_last)" >&2
     exit 1
   fi
-  echo "PASS: rejected $name at its invalid declaration (line $err_line)"
+  if ! grep -Eq -- "$expect" "$log"; then
+    cat "$log"
+    echo "ERROR: $name was refused, but not with: $expect" >&2
+    exit 1
+  fi
+  echo "PASS: rejected $name at its invalid declaration (line $err_line: $expect)"
 done
-echo "PASS: core proofs and all ${#rejects[@]} expected rejections"
+echo "PASS: core proofs, unit tests and all ${#rejects[@]} expected rejections"
