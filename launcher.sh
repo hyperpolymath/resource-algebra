@@ -6,12 +6,12 @@
 # ;; SPDX-License-Identifier: MPL-2.0
 # (praxis-deed
 #   :schema-version  "1.0.0"
-#   :canonical-name  "rsr-template-repo-launcher"
+#   :canonical-name  "resource-algebra-launcher"
 #   :beholding-chora #u5"estate/chora"
 #   (artefact :type "launcher" :version "0.1.0"
 #             :generator "provision-set")
-#   (app :name "rsr-template-repo" :display "rsr-template-repo"
-#        :url "https://github.com/hyperpolymath/rsr-template-repo" :archetype "library")
+#   (app :name "resource-algebra" :display "resource-algebra"
+#        :url "https://github.com/hyperpolymath/resource-algebra" :archetype "library")
 #   (compliance :standard-version "0.6.0"
 #               :standards ("launcher-standard.adoc"
 #                           "PROVISIONING-STANDARD.adoc"))

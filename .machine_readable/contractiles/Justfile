@@ -22,9 +22,9 @@ import? "build/contractile.just"
 mod provision 'build/just/provision.just'
 
 # Project metadata — customize these
-project := "rsr-template-repo"
+project := "resource-algebra"
 OWNER := "hyperpolymath"
-REPO := "rsr-template-repo"
+REPO := "resource-algebra"
 version := "0.1.0"
 tier := "infrastructure"  # 1 | 2 | infrastructure
 
@@ -408,7 +408,7 @@ import? "build/just/validate.just"
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Repo state lives in the repo deed's (status …) and (maturity …) clauses
-# (rsr-template-repo#209); the journal is docs/status/ROADMAP.adoc. There is
+# (resource-algebra#209); the journal is docs/status/ROADMAP.adoc. There is
 # no last-updated stamp to touch: git log is the record of when it changed.
 
 # Show the lifecycle phase and maturity from the repo deed
@@ -574,7 +574,7 @@ opsm: provision::opsm
 
 # Guided tour of key features
 tour:
-    @echo "=== rsr-template-repo Tour ==="
+    @echo "=== resource-algebra Tour ==="
     @echo ""
     @echo "1. Project structure:"
     @ls -la
@@ -589,12 +589,12 @@ tour:
 
 # Open feedback channel with diagnostic context
 help-me:
-    @echo "=== rsr-template-repo Help ==="
+    @echo "=== resource-algebra Help ==="
     @echo "Platform: $(uname -s) $(uname -m)"
     @echo "Shell: $SHELL"
     @echo ""
     @echo "To report an issue:"
-    @echo "  https://github.com/hyperpolymath/rsr-template-repo/issues/new"
+    @echo "  https://github.com/hyperpolymath/resource-algebra/issues/new"
     @echo ""
     @echo "Include the output of 'just doctor' in your report."
 

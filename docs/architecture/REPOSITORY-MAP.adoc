@@ -113,17 +113,9 @@ predecessors did.
 | yes
 | REUSE licence texts, dual-licence model (code MPL-2.0 / docs CC-BY-SA-4.0)
 
-| `PROOF-STATUS.adoc`
-| yes
-| project proof ledger, linked by README.adoc and docs/pre-registration.adoc
-
 | `README.adoc`
 | yes
 | -
-
-| `archetypes/`
-| optional
-| template-only variation seam (ADR-0003); `just repo-init` removes it from minted repos
 
 | `benches/`
 | optional

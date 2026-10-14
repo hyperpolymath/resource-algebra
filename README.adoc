@@ -110,53 +110,16 @@ image:https://img.shields.io/badge/Provenance-Quantum--Safe-blueviolet[Quantum-S
 
 // ── Standard & quality gates ────────────────────────────────────────────────
 image:https://img.shields.io/badge/RSR-Rhodium_Standard-9C27B0[Rhodium Standard Repository,link="https://github.com/hyperpolymath/rhodium-standard-repositories"]
-image:https://www.bestpractices.dev/projects/{{OPENSSF_BP_ID}}/badge[OpenSSF Best Practices,link="https://www.bestpractices.dev/projects/{{OPENSSF_BP_ID}}"]
-image:https://api.scorecard.dev/projects/github.com/{{OWNER}}/{{REPO}}/badge[OpenSSF Scorecard,link="https://scorecard.dev/viewer/?uri=github.com/{{OWNER}}/{{REPO}}"]
-image:https://sonarcloud.io/api/project_badges/measure?project={{OWNER}}_{{REPO}}&metric=alert_status[SonarQube Quality Gate,link="https://sonarcloud.io/summary/new_code?id={{OWNER}}_{{REPO}}"]
-image:https://archive.softwareheritage.org/badge/origin/https://{{FORGE}}/{{OWNER}}/{{REPO}}/[Archived in Software Heritage,link="https://archive.softwareheritage.org/browse/origin/?origin_url=https://{{FORGE}}/{{OWNER}}/{{REPO}}"]
+image:https://api.scorecard.dev/projects/github.com/hyperpolymath/resource-algebra/badge[OpenSSF Scorecard,link="https://scorecard.dev/viewer/?uri=github.com/hyperpolymath/resource-algebra"]
+image:https://sonarcloud.io/api/project_badges/measure?project=hyperpolymath_resource-algebra&metric=alert_status[SonarQube Quality Gate,link="https://sonarcloud.io/summary/new_code?id=hyperpolymath_resource-algebra"]
+image:https://archive.softwareheritage.org/badge/origin/https://github.com/hyperpolymath/resource-algebra/[Archived in Software Heritage,link="https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/hyperpolymath/resource-algebra"]
 
 // ── Provenance & ecosystem ──────────────────────────────────────────────────
 image:https://img.shields.io/badge/Idris-Inside-5E5086?logo=idris&logoColor=white[Idris Inside,link="https://github.com/hyperpolymath/proven"]
 image:https://img.shields.io/badge/Zig-Zero--overhead-F7A41D?logo=zig&logoColor=black[Zig Zero-overhead FFI,link="https://github.com/hyperpolymath/typed-wasm"]
-image:https://api.thegreenwebfoundation.org/greencheckimage/{{FORGE}}[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url={{FORGE}}"]
+image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
 
-{{PROJECT_DESCRIPTION}}
-
-[IMPORTANT]
-====
-*This file is a template.* You are reading `README.adoc` from the *RSR template repo*
-(or a freshly-cloned copy of it). Run `just repo-init` to replace every `{{PLACEHOLDER}}`
-token with your project's details, then delete this admonition. Until you do, the
-`{{...}}` markers below are intentional placeholders, not content.
-====
-
-== What this is
-
-A new repository scaffolded from the *Rhodium Standard Repository (RSR)* template:
-a batteries-included starting point that ships with CI/CD, machine-readable project
-metadata, an AI-agent gatekeeper protocol, a formally-typed ABI/FFI seam
-(Idris2 + Zig), container and reproducible-build scaffolding, and governance
-infrastructure — all wired and passing the RSR validators on day one.
-
-Replace this section with a description of *your* project once initialised.
-
-== Quick start
-
-[source,bash]
-----
-# 1. Create a repo from this template (or clone it), then from the repo root:
-just repo-init                # interactive bootstrap: fills every {{PLACEHOLDER}}
-
-# 2. See the available tasks:
-just                     # lists all phases (build, test, validate, audit, ...)
-
-# 3. Check the repo still satisfies the RSR shape:
-just validate            # structure + metadata checks
-----
-
-`just repo-init` prompts for the project name, owner, author, licence contact, and the
-other values listed in `.machine_readable/ai/PLACEHOLDERS.adoc`, substitutes them
-across the tree, validates the result, and (if available) runs the `k9-svc` checks.
+The parametric grade algebra shared by the hyperpolymath type family
 
 [[ai-install]]
 == AI-Assisted Installation (Recommended)
@@ -168,41 +131,30 @@ commands to paste):
 
 [source,text]
 ----
-Create a new repository from https://github.com/hyperpolymath/rsr-template-repo
+Set up resource-algebra from https://github.com/hyperpolymath/resource-algebra
 ----
 
 The URL is the key: it leads the assistant to
 link:docs/AI_INSTALLATION_GUIDE.adoc[`docs/AI_INSTALLATION_GUIDE.adoc`], the
-complete step-by-step recipe. The assistant checks your system, installs the
-prerequisites, instantiates the template with `just repo-init`, and verifies the
-result with `just doctor`.
+complete step-by-step recipe for this repository. The assistant checks your
+system, installs the prerequisites, fetches and sets up resource-algebra, and
+verifies it with `just doctor`.
 
-* "Set up rsr-template-repo so I can work on the template itself — https://github.com/hyperpolymath/rsr-template-repo"
 * `./launcher.sh --ai-setup` (or `just ai-setup`) prints the line and the guide path.
 
 === What you will be asked
 
 . Your operating system (Linux, macOS, or Windows via WSL2).
-. The new project's name, owner, author and licence contact (the values listed in
-  `.machine_readable/ai/PLACEHOLDERS.adoc`).
+. Where to put it (default `~/src/resource-algebra`).
 . To confirm the privacy notice below.
 
 === Privacy and security
 
 [IMPORTANT]
 ====
-Setting up rsr-template-repo clones this repository and installs its developer
+Setting up resource-algebra clones this repository and installs its developer
 tools per-user with mise (no administrator rights, nothing sent anywhere).
-`just repo-init` rewrites files only inside the new checkout; it creates no
-remote repository and pushes nothing until you do.
 ====
-
-=== The one trap
-
-If you are an AI agent: **do not set `RSR_NON_INTERACTIVE=1`**. It stubs the
-shell builtin `read`, which also disables the loops that perform token
-substitution — the run never terminates and substitutes nothing. Pipe answers to
-stdin instead.
 
 === Troubleshooting
 
