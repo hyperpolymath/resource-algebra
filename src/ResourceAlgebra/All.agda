@@ -9,4 +9,6 @@ import ResourceAlgebra.Core
 import ResourceAlgebra.Instances.Loss
 import ResourceAlgebra.Instances.MaxPlus
 import ResourceAlgebra.Instances.HWM
+import ResourceAlgebra.Instances.MinMax
 import ResourceAlgebra.Separation
+import ResourceAlgebra.Morphism
