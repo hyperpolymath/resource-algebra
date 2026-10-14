@@ -357,7 +357,7 @@ done
 log_step "Verifying machine-readable metadata"
 
 # Identity, state, meta and ecosystem are clauses of the minted repo's own
-# deed (resource-algebra#209); the journal is docs/status/ROADMAP.adoc.
+# deed (rsr-template-repo#209); the journal is docs/status/ROADMAP.adoc.
 CHILD_DEED="${TEST_REPO_NAME}_chora.deed"
 for file in "$CHILD_DEED" "docs/status/ROADMAP.adoc"; do
     if [ -f "$TEST_REPO_PATH/$file" ]; then
@@ -393,7 +393,7 @@ fi
 # the {{PLACEHOLDER}} the deed's prose mentions.
 log_pass "Child deed carries the minted repo's identity"
 
-# Mint-time clauses (resource-algebra#209 follow-up): the profile is the
+# Mint-time clauses (rsr-template-repo#209 follow-up): the profile is the
 # minimal one, not the template's maximal spine profile; provenance and the
 # variant record name the template commit; exactly one canon pin survives.
 if [ "$(bash "$DEED_READ" "$CHILD" rsr-profile role 2>/dev/null || true)" = "spine" ]; then

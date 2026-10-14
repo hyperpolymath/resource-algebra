@@ -187,7 +187,7 @@ log_info "Phase 2: Machine-readable metadata (.machine_readable/)"
 echo ""
 
 # Project state, architecture axes, ecosystem position, the anchor and the
-# maintenance axes are clauses of the repo deed (resource-algebra#209).
+# maintenance axes are clauses of the repo deed (rsr-template-repo#209).
 DEED_FILE=$(bash "$REPO_ROOT/scripts/deed-field.sh" --find "$REPO_ROOT" || true)
 for clause in status maturity meta ecosystem anchor policies/maintenance-axes; do
     if [ -z "$DEED_FILE" ] || ! bash "$REPO_ROOT/scripts/deed-field.sh" --has "$DEED_FILE" "$clause"; then

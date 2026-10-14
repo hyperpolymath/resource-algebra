@@ -408,7 +408,7 @@ import? "build/just/validate.just"
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Repo state lives in the repo deed's (status …) and (maturity …) clauses
-# (resource-algebra#209); the journal is docs/status/ROADMAP.adoc. There is
+# (rsr-template-repo#209); the journal is docs/status/ROADMAP.adoc. There is
 # no last-updated stamp to touch: git log is the record of when it changed.
 
 # Show the lifecycle phase and maturity from the repo deed
