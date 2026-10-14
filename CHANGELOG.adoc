@@ -1,21 +1,20 @@
 == Changelog
 
 
-== 2026-10-14 — minted, and the estate checks made green
+== 2026-10-14 — governance pin `da2c748` → `934b879`
 
-* Minted with `just repo-init`. The repository had been created from
-  rsr-template-repo df09a6c with GitHub's template copy and never minted,
-  so it still declared itself the template. The deed is now
-  `resource-algebra_chora.deed` (clade `fv`), placeholders are filled,
-  and CLAUDE.md and the repository map describe this repository.
-* `build/just/repo-init.just`: the non-interactive mint now completes;
-  just's own interpolation, the arrival pack, the repository map, the
-  state-validation detector and the OpenSSF audit table survive the mint.
-* `scripts/check-agda.sh`: each expected rejection must land on the
-  fixture's `invalid` definition.
-* `PROOF-STATUS.adoc` moved to `docs/status/PROOF-STATUS.adoc`.
-* CI: the standards reusables re-pinned to standards main, with a closed
-  `actions.lock`; `CITATION.cff` gained its required `message`.
+* The six standards reusables (governance, hypatia-scan, mirror, rust-ci,
+  scorecard, secret-scanner) move to hyperpolymath/standards `934b879`.
+  At `da2c748`, governance ran its lock gate from a fixed helper pin with an
+  unpinned gh-actions-lock. Under v0.2.0 that gate failed *Actions lockfile
+  verify* on every job-level reusable ref, although it had accepted each one
+  as coverage. The new pin runs the gate at its own commit, with v0.2.0
+  pinned (standards#1250).
+* `actions.lock`: the `hyperpolymath/standards` record is rewritten at the
+  new pin with its called workflows' `uses:` union, and closed over the four
+  refs that union adds (setup-bun, setup-deno, upload-artifact,
+  rust-toolchain). The old record and the three refs only it named are
+  removed.
 
 == 2026-10-14 — MinMax and morphisms (resource-algebra#3)
 
