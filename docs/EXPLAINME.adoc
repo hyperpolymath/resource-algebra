@@ -116,3 +116,16 @@ Caveat:
 This project is licensed under the Mozilla Public License, v. 2.0. See the `LICENSE` file for details.
 
 SPDX-License-Identifier: CC-BY-SA-4.0
+
+== Applications in practice
+
+The worked case is MetaManifold's occupancy reading: each pipeline stage's
+measured bytes are typed to a peak in Agda (`TypedPeak`, `GradedStages`),
+with this repository's HWM instance carrying the algebra -- the live-sum
+boundaries, the drift between handovers, what a stage's end reclaims, and
+the folded result matching the largest simultaneous peak. In production the
+value is concrete: the pipeline's own memory probe produces numbers, and
+the algebra makes those numbers *mean* something -- a stage cannot report
+a peak its own window forbids, and the sum of the stage grades equals the
+peak the whole run actually occupied. The day-to-day question "which stage
+ate the machine?" gets an answer that survives an audit.
