@@ -123,9 +123,32 @@ The worked case is MetaManifold's occupancy reading: each pipeline stage's
 measured bytes are typed to a peak in Agda (`TypedPeak`, `GradedStages`),
 with this repository's HWM instance carrying the algebra -- the live-sum
 boundaries, the drift between handovers, what a stage's end reclaims, and
-the folded result matching the largest simultaneous peak. In production the
-value is concrete: the pipeline's own memory probe produces numbers, and
-the algebra makes those numbers *mean* something -- a stage cannot report
-a peak its own window forbids, and the sum of the stage grades equals the
-peak the whole run actually occupied. The day-to-day question "which stage
-ate the machine?" gets an answer that survives an audit.
+the folded result matching the largest simultaneous peak. Two things should
+be said plainly. First, the HWM grade is this repository's proposal
+(`Instances/HWM.agda`, STATUS: DESIGNED): it is proven against this
+repository's definition, and occupancy-types' own R2-R3 algebra supersedes
+it when that repo publishes one -- MetaManifold pins this instance by commit
+and re-checks the pin, which is validation of the proposal, not adoption of
+a settled standard. Second, "production" below means one measured run, and
+the claims are what that run's checks demonstrate.
+
+The run (hyperpolymath/MetaManifold-WebUI: `docs/occupancy-2026-10.adoc`,
+raw records `docs/occupancy/results-2026-10-14.yml`, Agda
+`docs/occupancy/TypedPeak.agda` and `GradedStages.agda`, checked by
+`scripts/check-occupancy.sh`): two vsearch searches measured under three
+orders. Serially the stage's measured peak is the larger search's
+(9192 and 9204 KiB); concurrently it is 18380 KiB, the two peaks' sum. The
+typed peak -- computed by the HWM sequence law
+`max (peak a) (drift a + peak b)` over the measured per-search peaks, the
+first search still resident at the second's start -- reproduces all three
+measured stage peaks exactly, and the check script re-verifies that
+equality, the Agda type-check against the pinned commit, and the counted
+bytes at every run. The concurrent equality is that run's observed
+interleaving, not a law about interleavings: had the two searches' peaks
+not overlapped, the measurement would have come in lower and the grade
+would have said so. That is the value in practice: the pipeline's own
+memory probe produces numbers, and the algebra makes those numbers *mean*
+something -- a stage cannot report a peak its own window forbids, and the
+fold that predicted each order's stage peak is the one the run confirmed.
+The day-to-day question "which stage ate the machine?" gets an answer
+that survives an audit.
