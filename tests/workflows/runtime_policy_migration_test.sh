@@ -125,6 +125,10 @@ run_case() {
         || fail "$label: workflow recommendations unexpectedly failed validation"
     grep -Fq 'Workflow validation PASSED' "$scratch/workflows.log" \
         || fail "$label: workflow validator did not reach its summary"
+    local expected_found=12
+    if [[ "$governance_present" == no ]]; then expected_found=11; fi
+    grep -Fq "Found $expected_found/12 required workflows" "$scratch/workflows.log" \
+        || fail "$label: workflow validator reported an unexpected required-workflow count"
 
     if [[ "$governance_present" == yes ]]; then
         grep -Fq 'Found: governance.yml' "$scratch/workflows.log" \
@@ -167,6 +171,30 @@ rmdir "$workflows/governance.yml"
 cp "$scratch/governance.yml" "$workflows/governance.yaml"
 run_case 'governance.yaml does not satisfy the required governance.yml path' no
 rm "$workflows/governance.yaml"
+
+# The presence check must resolve the exact top-level path, even though the
+# workflow validator also scans nested files for generic formatting checks.
+mkdir "$workflows/nested"
+cp "$scratch/governance.yml" "$workflows/nested/governance.yml"
+run_case 'nested governance cannot satisfy the top-level requirement' no
+rm -r "$workflows/nested"
+
+cp "$scratch/governance.yml" "$workflows/Governance.yml"
+run_case 'governance workflow names are case-sensitive' no
+rm "$workflows/Governance.yml"
+
+# Match the validators' regular-file contract: a dangling link is missing,
+# while a link resolving to a regular workflow file satisfies the requirement.
+# As with the directory case, the generic workflow scan rejects the unreadable
+# link separately, so isolate the missing-file boundary to template validation.
+ln -s missing-governance.yml "$workflows/governance.yml"
+run_case 'a dangling governance symlink is missing' no template
+rm "$workflows/governance.yml"
+
+cp "$scratch/governance.yml" "$workflows/governance-target.yml"
+ln -s governance-target.yml "$workflows/governance.yml"
+run_case 'a governance symlink resolving to a workflow file is accepted' yes
+rm "$workflows/governance.yml" "$workflows/governance-target.yml"
 
 cp "$scratch/governance.yml" "$workflows/governance.yml"
 run_case 'restoring governance restores passing validation' yes
