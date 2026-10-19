@@ -21,6 +21,14 @@ command -v jq >/dev/null || fail "jq is required"
 yq --version | grep -q 'github.com/mikefarah/yq/' || fail "mikefarah yq v4 is required"
 yq -o=json '.' "$LOCK" > "$FIXTURE/lock.json"
 
+# Folding runtime policy into governance must remove both the workflow and
+# its lock entry. A valid, fully locked legacy workflow would pass sync alone.
+[[ ! -e "$WF_DIR/runtime-policy.yml" && ! -L "$WF_DIR/runtime-policy.yml" ]] \
+    || fail "runtime-policy.yml must remain folded into governance"
+jq -e '.workflows | has(".github/workflows/runtime-policy.yml") | not' \
+    "$FIXTURE/lock.json" >/dev/null || fail "runtime-policy.yml must not retain a lock entry"
+echo "PASS: retired runtime-policy workflow and lock entry are absent"
+
 # Use the standards pin actually called by governance, so a later standards
 # update does not require copying its commit into this test.
 STANDARDS=$(jq -er '
@@ -83,6 +91,11 @@ while IFS='|' read -r action tag_ref owner_id repo_id; do
 
     pinned_record "$key" "$FIXTURE/lock.json" \
         || fail "$key must have a symbolic ref and its own SHA as commit"
+    # Another nonempty symbolic ref also passes pinned_record, but would no
+    # longer identify the tag assigned to this action by the relock operation.
+    jq -e --arg key "$key" --arg tag "$tag_ref" '
+        .dependencies[$key].ref == $tag
+    ' "$FIXTURE/lock.json" >/dev/null || fail "$key must retain its relocked tag $tag_ref"
     jq -e --arg key "$key" --argjson owner "$owner_id" --argjson repo "$repo_id" '
         .dependencies[$key] | .owner_id == $owner and .repo_id == $repo
     ' "$FIXTURE/lock.json" >/dev/null || fail "$key lost its repository identity"
@@ -192,3 +205,8 @@ CASES
 
 [[ "$checked" == 12 ]] || fail "expected to check all twelve changed dependency records"
 echo "PASS: actions.lock SHA-ref regression controls ($checked dependencies)"
+
+# This regression gate already runs in Estate Rules CI. Include the validators'
+# migration controls so requiring governance in place of runtime-policy cannot
+# regress while the workflow and its lock entry still look correct.
+bash "$REPO/tests/workflows/runtime_policy_migration_test.sh"

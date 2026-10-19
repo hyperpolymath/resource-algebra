@@ -1,5 +1,24 @@
 == Changelog
 
+== 2026-10-19 — runtime-policy.yml folded into governance
+
+* `.github/workflows/runtime-policy.yml` is removed, with its
+  `actions.lock` record, as rsr-template-repo#244 does at the source. This
+  repository's copy still said Deno was retired. It failed any repository
+  holding `bun.lock`, `deno.lock` and `pnpm-lock.yaml` together, which is
+  what `js-runtimes regen` writes. Governance already covers the check.
+  "Language / package anti-pattern policy" fails any tracked
+  `package-lock.json`, and the "JS runtimes" jobs check each lock against
+  `package.json` (standards cicd-regularisation spec §14).
+* `scripts/validate-template.sh` and
+  `tests/workflows/validate_workflows_test.sh` require `governance.yml` in
+  its place. `tests/workflows/runtime_policy_migration_test.sh` checks both
+  validators reject a tree without `governance.yml`, and
+  `actions_lock_sha_refs_test.sh`, which Estate Rules runs, requires the
+  workflow and its lock record to stay gone and runs that test.
+  `tests/workflows/runtime_policy_retirement_test.sh`, also in Estate Rules,
+  restores the workflow or its lock record in each way the gate must catch
+  and checks the gate rejects every one.
 
 == 2026-10-19 — lock records carry tag refs; standards re-pinned to `75bd599`
 
