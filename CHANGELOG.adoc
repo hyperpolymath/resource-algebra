@@ -1,6 +1,20 @@
 == Changelog
 
 
+== 2026-10-19 — lock records carry tag refs; standards re-pinned to `75bd599`
+
+* Since 2026-10-15 GitHub's runner rejects a lock record whose `ref` is its
+  own SHA ("invalid lockfile pin"). Governance, Rust CI, Mirror, Code Quality
+  and Pages died at startup on main.
+* The six standards reusables move from `934b879` to `75bd599`, whose own lock
+  carries tag refs (hyperpolymath/standards#1271,
+  hyperpolymath/standards#1285). `relock-standards-pin.sh` at `75bd599` gave
+  the twelve self-SHA action records in `actions.lock` the same tags. No
+  commit changes: the key and `commit` still pin each action by SHA.
+* This reverses #7's four SHA refs (upload-artifact, setup-deno,
+  rust-toolchain, setup-bun). `tests/workflows/actions_lock_sha_refs_test.sh`
+  now requires a tag ref and rejects the self-SHA form as a negative control.
+
 == 2026-10-14 — Scorecard grants `actions: read`; four lock refs kept immutable (resource-algebra#7)
 
 * `.github/workflows/scorecard.yml`: the calling job grants `actions: read`.
