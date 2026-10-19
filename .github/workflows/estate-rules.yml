@@ -98,6 +98,10 @@ jobs:
       # and the sync gate names each one if its record goes missing.
       - name: actions.lock SHA-ref regression controls
         run: bash tests/workflows/actions_lock_sha_refs_test.sh
+      # The gate above must reject each way the retired runtime policy could
+      # come back, including a workflow and lock record restored together.
+      - name: Runtime policy retirement guards reject each regression
+        run: bash tests/workflows/runtime_policy_retirement_test.sh
       # The Scorecard calling job's own permissions map must grant actions: read;
       # the workflow-level grant does not reach a job that declares its own map.
       - name: Scorecard caller grants
