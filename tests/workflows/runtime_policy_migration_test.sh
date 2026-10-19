@@ -14,6 +14,8 @@ trap 'rm -rf "$scratch"' EXIT
 fixture="$scratch/repository with spaces"
 workflows="$fixture/.github/workflows"
 
+# Report all arguments as a failure message and print any validator logs from
+# $scratch to stderr. Terminates the test script with exit status 1.
 fail() {
     echo "FAIL: $*" >&2
     for log in "$scratch/template.log" "$scratch/workflows.log"; do
@@ -50,10 +52,18 @@ done
 
 # Compiler calls are outside this regression's scope. Bash functions keep the
 # test independent of locally installed compilers and create no build outputs.
+
+# Stub the Zig compiler: return 0 only for the single argument "build";
+# return 1 for any other invocation without compiling or writing files.
 zig() { [[ $# == 1 && $1 == build ]]; }
+
+# Stub Idris2: return 0 only for "--typecheck src/interface/abi.ipkg";
+# return 1 for any other invocation without invoking the real compiler.
 idris2() { [[ $# == 2 && $1 == --typecheck && $2 == src/interface/abi.ipkg ]]; }
 export -f zig idris2
 
+# Write a minimal workflow with an SPDX header and name to the path in $1,
+# overwriting any existing file. Returns the status of the printf command.
 write_workflow() {
     printf '%s\n' '# SPDX-License-Identifier: MPL-2.0' 'name: Fixture' > "$1"
 }
@@ -67,6 +77,11 @@ for workflow in hypatia-scan codeql scorecard quality mirror instant-sync \
 done
 cp "$workflows/governance.yml" "$scratch/governance.yml"
 
+# Validate the current $fixture against the expected governance presence.
+# Arguments: $1 case label, $2 "yes" or "no" for governance.yml presence,
+# $3 "both" (default) or "template" to select the validators to check.
+# Writes validator logs under $scratch and prints PASS, returning 0 on success;
+# calls fail to print diagnostics and exit 1 on any unexpected result.
 run_case() {
     local label=$1 governance_present=$2 template_status=0 workflow_status=0
     local validators=${3:-both}
