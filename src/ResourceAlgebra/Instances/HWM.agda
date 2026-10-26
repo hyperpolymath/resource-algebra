@@ -126,4 +126,10 @@ HWM-ordered : IsOrdered HWM
 HWM-ordered = IsDioid.ordered HWM-dioid
 
 -- There is no IsAnnihilating HWM: 𝟘h is also the sequence unit, so
--- 𝟘h ⊗h a ≡ a, not 𝟘h.  tests/reject/HWMAnnihilates.agda is the control.
+-- 𝟘h ⊗h a ≡ a, not 𝟘h.  A grade with peak 1 refutes it (H-3);
+-- tests/reject/HWMAnnihilates.agda is the control.
+HWM-not-annihilating : ¬ IsAnnihilating HWM
+HWM-not-annihilating z = one≢zero (cong peak (IsAnnihilating.annihilˡ z (hwm 1 0 z≤n)))
+  where
+  one≢zero : 1 ≢ 0
+  one≢zero ()

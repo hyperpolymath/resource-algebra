@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-10-14
+:revdate: 2026-10-26
 
 Statuses follow the estate taxonomy: PROVEN / TESTED / ASSUMED / DESIGNED /
 OPEN. Every PROVEN line names the module that discharges it under
@@ -28,7 +28,7 @@ OPEN. Every PROVEN line names the module that discharges it under
 | C-1 | `ResourceAlgebra`: alternatives an idempotent commutative monoid, sequence a monoid | PROVEN (definition + derived `unitʳ`)
 | C-2 | The ⊕-induced relation `≼` is a partial order with `𝟘` least and `⊕` its join | PROVEN (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`)
 | C-3 | Every dioid is ordered: distributivity ⇒ `⊗` monotone on both sides | PROVEN (`IsDioid.ordered`)
-| C-4 | `IsAnnihilating` is independent of `IsDioid` (an instance can be one without the other) | TESTED (HWM is a dioid; `tests/reject/HWMAnnihilates.agda` refuses the zero)
+| C-4 | `IsAnnihilating` is independent of `IsDioid` (an instance can be one without the other) | PROVEN in one direction: HWM is a dioid (`HWM-dioid`) and not annihilating (`HWM-not-annihilating`); control `tests/reject/HWMAnnihilates.agda`. No instance yet witnesses the converse (annihilating, not a dioid)
 |===
 
 == Instances
@@ -42,7 +42,7 @@ OPEN. Every PROVEN line names the module that discharges it under
 | M-2 | `MaxPlus` agrees with tropical-types `instance : CommSemiring Tropical` (Lean 4) | OPEN — cross-prover; port-and-reprove, named bridge obligation, no mechanical link exists or is claimed
 | H-1 | `HWM` (peak, drift, drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`, `IsOrdered`; 𝟘 ≡ 𝟙 | PROVEN against the definition in Instances/HWM.agda
 | H-2 | `HWM` is occupancy-types' occupancy algebra | DESIGNED — occupancy defines none yet (its v0 counts live bytes; the algebra is R2–R3); signed drift (consuming terms) not modelled
-| H-3 | `HWM` has no annihilating zero | TESTED (`tests/reject/HWMAnnihilates.agda`)
+| H-3 | `HWM` has no annihilating zero | PROVEN (`HWM-not-annihilating`, Instances/HWM.agda); control `tests/reject/HWMAnnihilates.agda`
 | N-1 | `MinMax` (bottleneck) is a `ResourceAlgebra`, `IsDioid`, `IsOrdered`, `IsAnnihilating` on the Loss carrier with ⊕ = min, ⊗ = max (`_⊔g_`, `inf` absorbing), 𝟘 = inf, 𝟙 = fin 0 | PROVEN (Instances/MinMax.agda)
 | N-2 | `MinMax` is the bottleneck sequence typed-wasm's `Tropical.tropMax` defines locally | DESIGNED — typed-wasm still defines it locally; moves when typed-wasm's kernel port carries it and its transcription table lists it
 |===
@@ -58,7 +58,7 @@ most ⊗ (what transporting a bound needs).
 | ID | Claim | Status
 | F-1 | Both notions have identities and compose; every strict morphism is lax | PROVEN (`id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax`)
 | F-2 | `peak : HWM → MaxPlus` is lax: the peak of a sequence never exceeds the sum of the peaks | PROVEN (`peak-lax`)
-| F-3 | `peak` is not strict | TESTED (`tests/reject/PeakIsStrict.agda`)
+| F-3 | `peak` is not strict: it does not preserve ⊗, whatever the units do | PROVEN (`peak-not-strict`); control `tests/reject/PeakIsStrict.agda`
 | F-4 | No strict morphism leaves HWM for any algebra with 𝟘 ≢ 𝟙; in particular none to MaxPlus or Loss | PROVEN (`no-strict-from-HWM`, `no-strict-HWM→MaxPlus`, `no-strict-HWM→Loss`)
 | F-5 | Exactly two strict morphisms Loss → MaxPlus exist, `zero-test` and `support`, and neither distinguishes `fin 1` from `fin 2` | PROVEN (`zero-test-hom`, `support-hom`, `Loss→MaxPlus`, `Loss→MaxPlus-collapses`, `no-injective-Loss→MaxPlus`)
 | F-6 | Exactly one strict morphism MaxPlus → Loss exists, `support′` (resource-algebra#3 sketched this direction as "symmetric" to Loss → MaxPlus; it is not: one map, not two. Its other claim, that every positive grade goes to a single point, holds) | PROVEN (`support′-hom`, `MaxPlus→Loss`)

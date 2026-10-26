@@ -16,7 +16,8 @@
 -- cannot exist:
 --
 --   peak-lax          HWM → MaxPlus is lax (occupancy never exceeds cost;
---                     occupancy-types R-3), and there is no strict map out
+--                     occupancy-types R-3); it does not preserve ⊗
+--                     (peak-not-strict), and there is no strict map out
 --                     of HWM into any algebra with 𝟘 ≢ 𝟙 (no-strict-from-HWM).
 --   Loss→MaxPlus      exactly two strict maps, zero-test and support; neither
 --                     tells fin 1 from fin 2.
@@ -126,6 +127,13 @@ peak-lax = record
                  ≡ tMul (val (peak a)) (val (peak b))
   ⊗-case (hwm p₁ n₁ b₁) (hwm p₂ n₂ b₂) =
     cong val (max-≤ (max-lub (≤-+ʳ p₁ p₂) (+-monoˡ-≤ p₂ b₁)))
+
+-- The peak does not preserve ⊗ (F-3): peaks 2 and 3 with no drift sequence
+-- to peak 3, while the peaks sum to 5.  This holds whatever the units do;
+-- tests/reject/PeakIsStrict.agda is the control.
+peak-not-strict : ¬ (∀ a b → val (peak (a ⊗h b)) ≡ tMul (val (peak a)) (val (peak b)))
+peak-not-strict f with f (hwm 2 0 z≤n) (hwm 3 0 z≤n)
+... | ()
 
 -- HWM's 𝟘 is its 𝟙, so a strict map out of HWM would identify B's 𝟘 and 𝟙.
 no-strict-from-HWM : (B : ResourceAlgebra)

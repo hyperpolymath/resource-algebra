@@ -1,5 +1,21 @@
 == Changelog
 
+== 2026-10-26 — F-3 and H-3 proved; template proof removed
+
+* `Morphism.peak-not-strict`: the peak does not preserve ⊗ (peaks 2 and 3
+  with no drift sequence to 3, not 5). F-3 moves from TESTED to PROVEN.
+* `Instances/HWM.HWM-not-annihilating`: HWM has no annihilating zero. H-3,
+  moves from TESTED to PROVEN, and so does C-4 in the direction HWM
+  witnesses (a dioid that is not annihilating).
+* The expected rejections `PeakIsStrict` and `HWMAnnihilates` stay as
+  controls on the gate.
+* `verification/proofs/agda/Properties.agda` and its MANIFEST are removed.
+  They were the template's example, imported the standard library this
+  repository does not use, and made `just proof-check-agda` fail on main.
+  The development is checked by `scripts/check-agda.sh` (CI `proofs.yml`).
+* The deed's `(canon …)` pin moves to canon 2.1.3 (new gates hash), as
+  rsr-template-repo#255 did; Dogfood Gate's canon lockstep failed on 2.1.2.
+
 == 2026-10-19 — runtime-policy.yml folded into governance
 
 * `.github/workflows/runtime-policy.yml` is removed, with its
