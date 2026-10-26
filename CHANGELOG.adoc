@@ -13,6 +13,8 @@
   They were the template's example, imported the standard library this
   repository does not use, and made `just proof-check-agda` fail on main.
   The development is checked by `scripts/check-agda.sh` (CI `proofs.yml`).
+* The deed's `(canon …)` pin moves to canon 2.1.3 (new gates hash), as
+  rsr-template-repo#255 did; Dogfood Gate's canon lockstep failed on 2.1.2.
 
 == 2026-10-19 — runtime-policy.yml folded into governance
 
