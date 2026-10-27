@@ -89,12 +89,42 @@ container-init:
         -e "s|${LB}REGISTRY${RB}|${REGISTRY}|g"
     )
 
+    # Return success when $1 is classified as text, using a byte-content probe
+    # (which accepts empty files) when the file command is unavailable.
+    is_text_file() {
+        if command -v file >/dev/null 2>&1; then
+            file --brief "$1" | grep -qi 'text\|ascii\|utf'
+        else
+            [ ! -s "$1" ] || LC_ALL=C grep -Iq . "$1"
+        fi
+    }
+
     # Recurses into build/container/stapeln/ as well.
-    find build/container/ -type f | while read -r file; do
-        if file --brief "$file" | grep -qi 'text\|ascii\|utf'; then
+    find build/container/ -type f | while IFS= read -r file; do
+        if is_text_file "$file"; then
             sed -i "${SED_ARGS[@]}" "$file"
         fi
     done
+
+    # The k9-svc deploy component ships as a template (deploy.k9.ncl.in): a
+    # file with brace tokens is not a K9 component. Render it once nothing is
+    # left to fill (repo-init fills PROJECT_NAME and VERSION), so the K9 lane
+    # validates the real thing. The bracket spellings keep just from reading
+    # the token pattern as an interpolation.
+    DEPLOY_IN="build/container/stapeln/deploy.k9.ncl.in"
+    DEPLOY_OUT="${DEPLOY_IN%.in}"
+    if [ -f "$DEPLOY_IN" ]; then
+        LEFT=$(grep -oE '[{][{][A-Za-z_]+[}][}]' "$DEPLOY_IN" | sort -u | tr '\n' ' ' || true)
+        if [ -n "$LEFT" ]; then
+            echo "Kept $DEPLOY_IN: unfilled tokens ${LEFT}remain."
+            echo "  Run 'just repo-init', then 'just container-init' again to render it."
+        elif [ -e "$DEPLOY_OUT" ]; then
+            echo "Kept $DEPLOY_IN: $DEPLOY_OUT already exists, so it was not overwritten."
+        else
+            mv "$DEPLOY_IN" "$DEPLOY_OUT"
+            echo "Rendered $DEPLOY_OUT (K9 component, contract v1.0.0)."
+        fi
+    fi
 
     echo "Container templates initialised."
     echo ""
