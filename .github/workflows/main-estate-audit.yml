@@ -56,7 +56,12 @@ jobs:
           done
 
           echo "=== cicd-suite: spdx-license-check ==="
+          # Mirrors cicd-suite actions/spdx-license-check at this pin: a root
+          # licence file is enforced; no SPDX line anywhere is only a warning.
           test -f LICENSE.txt || test -f LICENSE || test -f LICENSE.md || test -f LICENSE.adoc
+          if [ "$({ git grep -i "SPDX-License-Identifier" || true; } | wc -l)" -eq 0 ]; then
+            echo "::warning::No SPDX-License-Identifier lines found in the repository."
+          fi
 
           echo "=== cicd-suite: idris2-abi & zig-unified-api-adapter ==="
           if find . -name '*.zig' -not -path './.git/*' | grep -q .; then
