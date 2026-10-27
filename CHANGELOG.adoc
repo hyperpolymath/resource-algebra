@@ -1,5 +1,21 @@
 == Changelog
 
+== 2026-10-27 — Review fixes for the template CI port
+
+* `build/just/repo-init.just` is the template's at `8034fc9`, verbatim as
+  `.machine_readable/mint-verbatim.txt` lists it. The port brought the
+  template's mint scripts but kept the older generator, which called
+  `strip-instruction-blocks .` (the new tool takes a file list), ignored the
+  verbatim manifest and mapped the index instead of the worktree. The
+  generator's tests still are not ported; they need template-only inputs.
+* Secret Scanner always runs the estate gitleaks baseline. A repository
+  `.gitleaks.toml` adds a second pass. Before, it replaced the baseline, so a
+  pull request could pass with a weaker local config.
+* `scripts/check-required-contexts.sh` also requires a job whose check-run
+  name is the mapped context, so a renamed job cannot strand pull requests.
+* The inlined SPDX step mirrors cicd-suite's gate at its pin, including its
+  warning when no SPDX line exists.
+
 == 2026-10-27 — CI follows standards to metadatastician/standards
 
 * `hyperpolymath/standards` moved to `metadatastician/standards`. A
