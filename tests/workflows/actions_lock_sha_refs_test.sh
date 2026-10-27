@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MPL-2.0
 #
-# The twelve SHA-keyed leaves relocked in PR #12 must carry a symbolic (tag)
-# ref, with the SHA in their key and commit. GitHub's runner rejects a record
+# Every SHA-keyed action record in actions.lock must carry a symbolic (tag)
+# ref, with the SHA in its key and commit. GitHub's runner rejects a record
 # whose ref is its own SHA ("invalid lockfile pin", enforced from 2026-10-15;
 # standards#1271), so the SHA ref PR #7 asked for stopped every job that
 # resolved such a record. The commit, not the ref, pins the action.
-# Separate tag-keyed records remain valid. This test is offline.
+#
+# No workflow may call a reusable from hyperpolymath/standards: the repository
+# moved to metadatastician/standards, and a reusable `uses:` does not follow
+# the rename ("workflow was not found"). Governance and the secret scanner
+# check out the standards policy at a SHA pin instead.
+# This test is offline.
 # Usage: bash tests/workflows/actions_lock_sha_refs_test.sh [workflow-directory]
 set -euo pipefail
 
@@ -29,37 +34,22 @@ jq -e '.workflows | has(".github/workflows/runtime-policy.yml") | not' \
     "$FIXTURE/lock.json" >/dev/null || fail "runtime-policy.yml must not retain a lock entry"
 echo "PASS: retired runtime-policy workflow and lock entry are absent"
 
-# Use the standards pin actually called by governance, so a later standards
-# update does not require copying its commit into this test.
-STANDARDS=$(jq -er '
-    [.workflows[".github/workflows/governance.yml"][]
-     | select(startswith("hyperpolymath/standards@"))]
-    | select(length == 1) | .[0]
-' "$FIXTURE/lock.json") || fail "governance must lock exactly one standards reusable"
-
-# All six callers must use the same immutable standards revision, including
-# the reusable's path (a lock key alone loses that path information).
-standards_sha=${STANDARDS##*@}
-[[ "$standards_sha" =~ ^[0-9a-f]{40}$ ]] || fail "standards must be pinned by SHA"
-for workflow in governance hypatia-scan mirror rust-ci scorecard secret-scanner; do
-    jq -e --arg workflow ".github/workflows/$workflow.yml" --arg standards "$STANDARDS" '
-        .workflows[$workflow] == [$standards]
-    ' "$FIXTURE/lock.json" >/dev/null || fail "$workflow must lock the shared standards pin"
-    expected="hyperpolymath/standards/.github/workflows/$workflow-reusable.yml@$standards_sha"
-    yq -o=json '.jobs' "$WF_DIR/$workflow.yml" | jq -e --arg expected "$expected" '
-        [.[].uses | select(. != null)] == [$expected]
-    ' >/dev/null || fail "$workflow must call $expected"
+# No job or step may name the moved repository, and the lock may not record
+# it. Comments are not `uses:` values, so they do not trip this.
+for workflow in "$WF_DIR"/*.yml; do
+    yq -o=json '[.. | select(tag == "!!map" and has("uses")) | .uses]' "$workflow" \
+        | jq -e '[.[] | select(type == "string" and startswith("hyperpolymath/standards/"))] | length == 0' \
+            >/dev/null || fail "$(basename "$workflow") calls a reusable from the moved hyperpolymath/standards"
 done
-
-# Reusable-workflow records still use a SHA ref. The symbolic-ref requirement
-# applies to action leaves, so do not reject this intentional exception.
-jq -e --arg standards "$STANDARDS" --arg sha "$standards_sha" '
-    .dependencies[$standards]
-    | .ref == $sha and .commit == ("sha1-" + $sha)
-      and .owner_id == 6759885 and .repo_id == 1116521501
-      and (.uses | type == "array" and length > 0)
-' "$FIXTURE/lock.json" >/dev/null || fail "standards lost its SHA binding or repository identity"
-echo "PASS: six standards callers share a locked SHA and the correct reusable paths"
+jq -e '[.dependencies | keys[] | select(startswith("hyperpolymath/standards"))] | length == 0' \
+    "$FIXTURE/lock.json" >/dev/null || fail "actions.lock still records hyperpolymath/standards"
+for workflow in governance secret-scanner; do
+    yq -o=json '[.jobs[].steps[]? | select(.with.repository? == "metadatastician/standards") | .with.ref]' \
+        "$WF_DIR/$workflow.yml" \
+        | jq -e 'length > 0 and all(.[]; type == "string" and test("^[0-9a-f]{40}$"))' \
+            >/dev/null || fail "$workflow must check out metadatastician/standards at a full SHA"
+done
+echo "PASS: no reusable from the moved standards; governance and secret scanner pin metadatastician/standards"
 
 # Assertions on parsed data, independent of the sync gate (which checks edges
 # but deliberately does not inspect ref/commit metadata).
@@ -82,17 +72,21 @@ bash "$REPO/scripts/check-lock-sync.sh" "$WF_DIR" > "$FIXTURE/sync.log" 2>&1 \
 mkdir -p "$FIXTURE/workflows"
 cp -a "$WF_DIR/." "$FIXTURE/workflows/"
 
+# The table must name every SHA-keyed record the lock holds, so a new record
+# cannot escape these controls by not being listed.
+jq -r '.dependencies | keys[] | select(test("@[0-9a-f]{40}$"))' "$FIXTURE/lock.json" \
+    | sort > "$FIXTURE/locked.txt"
+
 checked=0
-while IFS='|' read -r action tag_ref owner_id repo_id; do
-    key=$(jq -er --arg standards "$STANDARDS" --arg action "$action" '
-        [.dependencies[$standards].uses[] | select(startswith($action + "@"))]
-        | select(length == 1) | .[0]
-    ' "$FIXTURE/lock.json") || fail "$action must occur exactly once in standards transitive coverage"
+: > "$FIXTURE/listed.txt"
+while IFS='|' read -r key tag_ref owner_id repo_id alias; do
+    echo "$key" >> "$FIXTURE/listed.txt"
+    action=${key%@*}
 
     pinned_record "$key" "$FIXTURE/lock.json" \
         || fail "$key must have a symbolic ref and its own SHA as commit"
     # Another nonempty symbolic ref also passes pinned_record, but would no
-    # longer identify the tag assigned to this action by the relock operation.
+    # longer identify the tag this record was locked at.
     jq -e --arg key "$key" --arg tag "$tag_ref" '
         .dependencies[$key].ref == $tag
     ' "$FIXTURE/lock.json" >/dev/null || fail "$key must retain its relocked tag $tag_ref"
@@ -153,9 +147,9 @@ while IFS='|' read -r action tag_ref owner_id repo_id; do
         fail "$key accepted a missing commit"
     fi
 
-    # Delete only this leaf record, keeping its incoming standards edge and
-    # all other workflow/lock data intact. Preserve gh-actions-lock layout:
-    # the production gate parses that layout, not yq's reformatted output.
+    # Delete only this record, keeping its incoming workflow edges and all
+    # other lock data intact. Preserve gh-actions-lock layout: the production
+    # gate parses that layout, not yq's reformatted output.
     awk -v key="$key" '
         $0 == "    \047" key "\047:" { skip = 1; next }
         skip && /^    \047/ { skip = 0 }
@@ -170,13 +164,9 @@ while IFS='|' read -r action tag_ref owner_id repo_id; do
         fail "sync gate did not identify the missing $key"
     fi
 
-    # Some actions also have direct tag users (notably Pages' cache and Code
-    # Quality's editorconfig checker). Their tag and SHA records must coexist
-    # with identical commits and repository identities.
-    if [[ "$action" == actions/cache || "$action" == actions/checkout \
-        || "$action" == actions/upload-artifact \
-        || "$action" == editorconfig-checker/action-editorconfig-checker \
-        || "$action" == erlef/setup-beam || "$action" == oven-sh/setup-bun ]]; then
+    # Some actions also have direct tag users. Their tag and SHA records must
+    # coexist with identical commits and repository identities.
+    if [[ "$alias" == alias ]]; then
         jq -e --arg key "$key" --arg alias "$action@$tag_ref" --arg tag "$tag_ref" '
             .dependencies[$alias].ref == $tag
             and (.dependencies[$alias].commit == .dependencies[$key].commit)
@@ -187,23 +177,25 @@ while IFS='|' read -r action tag_ref owner_id repo_id; do
     fi
 
     checked=$((checked + 1))
-    echo "PASS: $action SHA binding, identity, negative controls and closure"
+    echo "PASS: $key SHA binding, identity, negative controls and closure"
 done <<'CASES'
-actions/cache|v6.1.0|44036562|215566462
-actions/checkout|v7.0.1|44036562|197814629
-actions/upload-artifact|v7.0.2|44036562|192625955
-denoland/setup-deno|v2.0.5|42048915|356423100
-dtolnay/rust-toolchain|v1|1940490|260749683
-editorconfig-checker/action-editorconfig-checker|v3.0.0|26415196|297874902
-erlef/setup-beam|v1.24.1|47606891|331103973
-goto-bus-stop/setup-zig|v2.2.1|1006268|212984112
-ossf/scorecard-action|v2.4.4|67707773|421101922
-oven-sh/setup-bun|v2.2.0|108928776|512644635
-swatinem/rust-cache|v2.9.2|580492|298565987
-webfactory/ssh-agent|v0.10.0|135788|208510314
+actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d|v4.2.1|44036562|760701061|-
+actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9|v6.1.0|44036562|215566462|alias
+actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1|v7.0.1|44036562|197814629|alias
+actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333|v8.0.2|44036562|192626254|-
+actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f|v7.0.0|44036562|192625955|-
+actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9|v7.0.2|44036562|192625955|alias
+dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98|v3.1.0|27347476|371068214|-
+editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393|v3.0.0|26415196|297874902|-
+erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124|v1.24.1|47606891|331103973|-
+github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370|v4.39.1|9919|259445878|-
+ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e|v2.5.0|67707773|421101922|-
+oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6|v2.2.0|108928776|512644635|-
 CASES
 
-[[ "$checked" == 12 ]] || fail "expected to check all twelve changed dependency records"
+sort "$FIXTURE/listed.txt" | diff - "$FIXTURE/locked.txt" > "$FIXTURE/coverage.diff" \
+    || { cat "$FIXTURE/coverage.diff" >&2; fail "the case table must list exactly the lock's SHA-keyed records"; }
+[[ "$checked" -gt 0 ]] || fail "no SHA-keyed records were checked"
 echo "PASS: actions.lock SHA-ref regression controls ($checked dependencies)"
 
 # This regression gate already runs in Estate Rules CI. Include the validators'

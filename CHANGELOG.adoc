@@ -1,5 +1,32 @@
 == Changelog
 
+== 2026-10-27 — CI follows standards to metadatastician/standards
+
+* `hyperpolymath/standards` moved to `metadatastician/standards`. A
+  reusable-workflow `uses:` does not follow the rename, and a hyperpolymath
+  repository cannot call a reusable in metadatastician's repository, so
+  Governance, Rust CI, Hypatia and Secret Scanner stopped loading ("workflow
+  was not found").
+* Ported rsr-template-repo's CI from `60cedf1` to `8034fc9`, its last green
+  main commit (rsr-template-repo#244, rsr-template-repo#245,
+  rsr-template-repo#247, rsr-template-repo#249, rsr-template-repo#251,
+  rsr-template-repo#253 and rsr-template-repo#256), with a three-way apply
+  that keeps this repository's own tests. Workflows run
+  self-contained, checking out `metadatastician/standards@8e48b1c`; new
+  squabble, proven-tests and fork-governance workflows, KYAML container
+  config, K9 contract v1.0.0 records and an I-JSON schema come with it.
+  `actions.lock` is the template's plus `proofs.yml`.
+* Not ported: the template's generator tests (use-this-template mint,
+  template-pin resolver, e2e mint tests), which exercise
+  `build/just/repo-init.just` and this port does not bring the generator.
+* Known gap: the self-contained governance runs one policy step. The
+  reusable ran 19 jobs, among them UUID v8 conformance, licence consistency,
+  actions-lockfile verify and the debt and exemption ratchets. They return
+  when standards can be called from hyperpolymath again.
+* `tests/workflows/actions_lock_sha_refs_test.sh` now checks every SHA-keyed
+  record in the lock, and that no workflow calls a reusable from the moved
+  repository.
+
 == 2026-10-26 — F-3 and H-3 proved; template proof removed
 
 * `Morphism.peak-not-strict`: the peak does not preserve ⊗ (peaks 2 and 3
