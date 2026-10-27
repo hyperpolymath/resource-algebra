@@ -1,5 +1,21 @@
 == Changelog
 
+== 2026-10-27 — Review fixes for the template CI port
+
+* `build/just/repo-init.just` is the template's at `8034fc9`, verbatim as
+  `.machine_readable/mint-verbatim.txt` lists it. The port brought the
+  template's mint scripts but kept the older generator, which called
+  `strip-instruction-blocks .` (the new tool takes a file list), ignored the
+  verbatim manifest and mapped the index instead of the worktree. The
+  generator's tests still are not ported; they need template-only inputs.
+* Secret Scanner always runs the estate gitleaks baseline. A repository
+  `.gitleaks.toml` adds a second pass. Before, it replaced the baseline, so a
+  pull request could pass with a weaker local config.
+* `scripts/check-required-contexts.sh` also requires a job whose check-run
+  name is the mapped context, so a renamed job cannot strand pull requests.
+* The inlined SPDX step mirrors cicd-suite's gate at its pin, including its
+  warning when no SPDX line exists.
+
 == 2026-10-27 — CI follows standards to metadatastician/standards
 
 * `hyperpolymath/standards` moved to `metadatastician/standards`. A
@@ -16,19 +32,9 @@
   squabble, proven-tests and fork-governance workflows, KYAML container
   config, K9 contract v1.0.0 records and an I-JSON schema come with it.
   `actions.lock` is the template's plus `proofs.yml`.
-* `build/just/repo-init.just` is the template's at `8034fc9`, verbatim as
-  `.machine_readable/mint-verbatim.txt` lists it, so the generator matches the
-  mint scripts this port brings: it passes `strip-instruction-blocks` a file
-  list, honours the verbatim manifest and maps the worktree. Its generator
-  tests (use-this-template mint, template-pin resolver, e2e mint tests) are
-  not ported; they need template-only inputs a child does not carry.
-* Secret Scanner always runs the estate gitleaks baseline. A repository
-  `.gitleaks.toml` adds a second pass; before, it replaced the baseline, so a
-  pull request could pass with a weaker local config.
-* `scripts/check-required-contexts.sh` also requires a job whose check-run
-  name is the mapped context, so a renamed job cannot strand pull requests.
-* The inlined SPDX step mirrors cicd-suite's gate at its pin, including its
-  warning when no SPDX line exists.
+* Not ported: the template's generator tests (use-this-template mint,
+  template-pin resolver, e2e mint tests), which exercise
+  `build/just/repo-init.just` and this port does not bring the generator.
 * Known gap: the self-contained governance runs one policy step. The
   reusable ran 19 jobs, among them UUID v8 conformance, licence consistency,
   actions-lockfile verify and the debt and exemption ratchets. They return
