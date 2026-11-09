@@ -6,7 +6,15 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 export LC_ALL="${LC_ALL:-C.UTF-8}"
 prover="${AGDA:-agda}"
 "$prover" --version
-flags=(--safe --without-K --no-libraries --ignore-interfaces --double-check -i src)
+flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -i src)
+# PROOF-POLICY §8.4.6: a comment-aware postulate scan of the import cone
+# (src/), alongside --safe. Line comments and {- -} blocks are stripped
+# first, so a comment that mentions the word does not count.
+if perl -0ne 's/\{-.*?-\}//gs; s/--[^\n]*//g; $hit = 1 if /\bpostulate\b/; END { exit($hit ? 0 : 1) }' $(find src -name "*.agda"); then
+  echo "ERROR: postulate in the import cone (src/)" >&2
+  exit 1
+fi
+echo "PASS: no postulate in the import cone (src/)"
 "$prover" "${flags[@]}" src/ResourceAlgebra/All.agda
 # Unit tests (closed computations and small lemmas over the instances).
 "$prover" "${flags[@]}" -i tests/unit tests/unit/AllTests.agda
