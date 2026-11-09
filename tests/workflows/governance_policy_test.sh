@@ -196,10 +196,13 @@ console.log("PASS: new proof instructions require needs, verification, rechecks 
 // Update this expectation deliberately when adopting the next canon release.
 const field = (key) => execFileSync("bash", [resolve(root, "scripts/deed-field.sh"),
   resolve(root, "resource-algebra_chora.deed"), "canon", key], { encoding: "utf8" }).trim();
+// Canon 2.1.4 was an editorial PATCH; 2.1.5 changes the gates table (the
+// formal-proofs row needs a prover source file; a container no longer needs
+// its own directory). Both follow the template (rsr-template-repo#289, #298).
 assert.deepEqual([field("version"), field("criteria-sha256"), field("gates-sha256")], [
-  "2.1.3",
+  "2.1.5",
   "6a5aa8857bd0d0d58ef48827938ca17c251b6b854dacf59d306388d61694d82a",
-  "2f31f46d4753432e0aa8c9c28f339e18e062c98dc6e6ef4ecbb76993cf37638b",
-], "canon 2.1.3 must retain the criteria identity and adopt the new gates identity");
-console.log("PASS: the deed adopts the complete canon 2.1.3 identity");
+  "5c510bba025be718deebb12d0333bfe7db2da43c66578b728b1a334df65290b1",
+], "canon 2.1.5 keeps the criteria identity and adopts the new gates identity");
+console.log("PASS: the deed adopts the complete canon 2.1.5 identity");
 JS
