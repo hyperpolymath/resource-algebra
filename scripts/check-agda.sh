@@ -6,7 +6,24 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 export LC_ALL="${LC_ALL:-C.UTF-8}"
 prover="${AGDA:-agda}"
 "$prover" --version
-flags=(--safe --without-K --no-libraries --ignore-interfaces --double-check -i src)
+flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -i src)
+# PROOF-POLICY §8.4.6: a comment-aware postulate scan of the import cone
+# (src/), alongside --safe. scripts/scan-postulates.pl reads each file in
+# source order (nested block comments, line comments, strings) and fails on
+# a file it cannot read.
+# find runs to a file, not a process substitution, so its own failure (a
+# directory it cannot read) stops the gate instead of leaving a partial cone.
+cone_list="$(mktemp)"
+trap 'rm -f "$cone_list"' EXIT
+find src -name '*.agda' -print0 > "$cone_list" \
+  || { echo "ERROR: could not list the import cone (src/)" >&2; exit 1; }
+mapfile -d '' cone < "$cone_list"
+(( ${#cone[@]} > 0 )) || { echo "ERROR: no Agda sources in the import cone" >&2; exit 1; }
+if ! perl scripts/scan-postulates.pl "${cone[@]}"; then
+  echo "ERROR: postulate in the import cone (src/), or an unreadable file" >&2
+  exit 1
+fi
+echo "PASS: no postulate in the import cone (src/)"
 "$prover" "${flags[@]}" src/ResourceAlgebra/All.agda
 # Unit tests (closed computations and small lemmas over the instances).
 "$prover" "${flags[@]}" -i tests/unit tests/unit/AllTests.agda
