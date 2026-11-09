@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 --
@@ -98,6 +98,13 @@ record ResourceAlgebra : Set₁ where
   ⊕-mono : ∀ {a a' b b'} → a ≼ a' → b ≼ b' → (a ⊕ b) ≼ (a' ⊕ b')
   ⊕-mono {a} {a'} {b} {b'} p q =
     trans (⊕-interchange a b a' b') (cong₂ _⊕_ p q)
+
+  -- ⊕ is the least upper bound: any common upper bound of a and b is
+  -- above a ⊕ b.  With ⊕-upperˡ/ʳ this makes ⊕ the join of ≼.
+  ⊕-least : ∀ {a b c} → a ≼ c → b ≼ c → (a ⊕ b) ≼ c
+  ⊕-least {a} {b} {c} p q =
+    trans (cong ((a ⊕ b) ⊕_) (sym (IsAltMonoid.idem alt c)))
+    (trans (⊕-mono p q) (IsAltMonoid.idem alt c))
 
 record IsOrdered (R : ResourceAlgebra) : Set where
   open ResourceAlgebra R

@@ -6,7 +6,7 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 export LC_ALL="${LC_ALL:-C.UTF-8}"
 prover="${AGDA:-agda}"
 "$prover" --version
-flags=(--safe --without-K --no-libraries --ignore-interfaces --double-check -i src)
+flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src)
 "$prover" "${flags[@]}" src/ResourceAlgebra/All.agda
 # Unit tests (closed computations and small lemmas over the instances).
 "$prover" "${flags[@]}" -i tests/unit tests/unit/AllTests.agda

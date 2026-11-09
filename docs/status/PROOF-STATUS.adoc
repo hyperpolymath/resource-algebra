@@ -4,7 +4,9 @@
 
 Statuses follow the estate taxonomy: PROVEN / TESTED / ASSUMED / DESIGNED /
 OPEN. Every PROVEN line names the module that discharges it under
-`--safe --without-K --no-libraries --double-check`.
+`--safe --without-K --cubical-compatible --no-libraries --double-check
+-W error -W noUnsupportedIndexedMatch`, with `--exact-split --no-sized-types
+--no-guardedness` declared in every module's pragma.
 
 [NOTE]
 .Audit 2026-11-09
@@ -12,10 +14,10 @@ OPEN. Every PROVEN line names the module that discharges it under
 * PROOF-POLICY §5's closed vocabulary is PROVEN, PROVEN-WITH-AXIOMS,
   TESTED, ASSUMED and OPEN. `DESIGNED` is a local label for "intended, not
   yet the case"; read it as OPEN.
-* The gate invocation above lacks `--cubical-compatible`, so it is not the
-  PROOF-POLICY §2.1 profile `agda --safe --without-K --cubical-compatible`.
-  A 2026-11-09 local run of `All.agda` under that profile passed (Agda 2.6.3
-  and 2.7.0.1); the gate itself still needs the flag. This is open.
+* The gate invocation lacked `--cubical-compatible` (not the PROOF-POLICY
+  §2.1 profile). *Resolved 2026-11-09:* `scripts/check-agda.sh` now runs that
+  profile with `-W error`, and every module declares the estate strict flag
+  set. Locally it passes on Agda 2.6.3 and 2.7.0.1.
 * Every theorem is `ungraded` under PROOF-POLICY §8: no PWG-3 receipt is
   recorded and no Rocq or Lean leg exists.
 * S-1, S-2 and S-4 are closed refutations checked by the kernel; TESTED
@@ -47,7 +49,7 @@ OPEN. Every PROVEN line names the module that discharges it under
 |===
 | ID | Claim | Status
 | C-1 | `ResourceAlgebra`: alternatives an idempotent commutative monoid, sequence a monoid | PROVEN (definition + derived `unitʳ`)
-| C-2 | The ⊕-induced relation `≼` is a partial order with `𝟘` least and `⊕` an upper bound of its arguments | PROVEN (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`). The least-upper-bound half of "join" is not stated (derivable from `⊕-mono` and idempotence)
+| C-2 | The ⊕-induced relation `≼` is a partial order with `𝟘` least and `⊕` an upper bound of its arguments | PROVEN (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`). The least-upper-bound half of "join" is `⊕-least` (added 2026-11-09), so `⊕` is the join of `≼`
 | C-3 | Every dioid is ordered: distributivity ⇒ `⊗` monotone on both sides | PROVEN (`IsDioid.ordered`)
 | C-4 | `IsAnnihilating` is independent of `IsDioid` (an instance can be one without the other) | PROVEN in one direction: HWM is a dioid (`HWM-dioid`) and not annihilating (`HWM-not-annihilating`); control `tests/reject/HWMAnnihilates.agda`. No instance yet witnesses the converse (annihilating, not a dioid)
 |===
