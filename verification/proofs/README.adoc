@@ -53,48 +53,39 @@ in `docs/status/PROOF-STATUS.adoc`. When choosing between dependencies that
 fit equally well, prefer one that carries its own verification. This is a
 preference, not a gate.
 
-== Directory structure
+== This repository
+
+Every obligation here is *theory*: the resource algebra and its instances,
+morphisms and separations would hold for any implementation. There is no
+ABI, FFI, wire format or protocol, so there are no Idris2 or TLA+
+obligations (`docs/status/PROOF-NEEDS.adoc`).
 
 [source]
 ----
-proofs/
-├── idris2/          # Engineering: ABI and interface contracts
-│   ├── ABI/         # ABI-specific proofs (mandatory)
-│   │   ├── Pointers.idr    # Non-null pointer safety
-│   │   ├── Layout.idr      # Memory layout correctness
-│   │   ├── Platform.idr    # Platform type size proofs
-│   │   ├── Foreign.idr     # FFI return type proofs
-│   │   └── Compliance.idr  # C ABI compliance
-│   └── Types.idr    # Core data type well-formedness
-├── agda/            # Theory: the source of truth goes here
-│   └── Properties.agda
-├── coq/             # Theory: Rocq recheck legs of agda/ go here
-│   └── TypeSafety.v
-├── lean4/           # Theory: Lean recheck legs of agda/ go here
-│   └── ApiTypes.lean
-└── tlaplus/         # Recorded exception: protocol model checks (TESTED)
-    └── StateMachine.tla
+src/ResourceAlgebra/   # Agda: the source of truth (not proofs/agda/)
+tests/unit/            # Agda: closed computations and small lemmas
+tests/reject/          # Agda: claims that must be refused, with the reason
+verification/proofs/
+├── coq/               # Rocq recheck leg (transported through Dedukti)
+└── lean4/             # Lean recheck leg (re-proved; no Mathlib)
 ----
 
-Each prover directory carries a `MANIFEST` read by `scripts/check-proofs.sh`.
-
-The files the template ships in these directories (`Properties.agda`,
+The template shipped example modules in this directory (`Properties.agda`,
 `TypeSafety.v`, `ApiTypes.lean`, `Types.idr`, the `ABI/` modules,
-`StateMachine.tla`) are *layout examples, not evidence*. Several have never
-compiled and sit as `quarantine` in their `MANIFEST`; `TypeSafety.v` and
-`ApiTypes.lean` are not rechecks of `Properties.agda`. A repository created
-from the template replaces them with its own proofs or deletes them, and
-never counts them in `docs/status/PROOF-STATUS.adoc`.
+`StateMachine.tla`). They were layout examples, not evidence, and were
+deleted on 2026-11-09: none was a recheck of this repository's theorems, and
+`ApiTypes.lean` had never compiled. Each recheck leg, its route and its
+statement correspondence are recorded per theorem in
+`docs/status/PROOF-STATUS.adoc`.
 
 == Verification commands
 
 [source,bash]
 ----
-just proof-check-all       # Run all proof checkers
-just proof-check-idris2    # Idris2 only
-just proof-check-lean4     # Lean4 only
-just proof-check-agda      # Agda only
-just proof-check-coq       # Coq only
+just proof-check-all       # Agda, Rocq and Lean legs, then the escape-hatch scan
+just proof-check-agda      # scripts/check-agda.sh: the canonical §2.1 invocation
+just proof-check-coq       # Rocq leg, per verification/proofs/coq/MANIFEST
+just proof-check-lean4     # Lean leg, per verification/proofs/lean4/MANIFEST
 ----
 
 == Banned patterns

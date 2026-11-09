@@ -1,97 +1,312 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-10-26
+:revdate: 2026-11-09
 
-Statuses follow the estate taxonomy: PROVEN / TESTED / ASSUMED / DESIGNED /
-OPEN. Every PROVEN line names the module that discharges it under
-`--safe --without-K --no-libraries --double-check`.
+Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
+`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
+three fields apart:
 
-== Build invariant
+* the §5 status of each leg: `PROVEN`, `PROVEN-WITH-AXIOMS`, `TESTED`,
+`ASSUMED` or `OPEN`;
+* the §2.2 correspondence state, which says how far the statements in the
+different provers have been tied together;
+* the §8 Proof Witness Grade (`pwg`). It is derived from receipts and never
+asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
+`1`.
 
-* All modules carry `{-# OPTIONS --safe --without-K #-}`; no postulates, no
-  holes, no standard library. — PROVEN by `just check-agda` (All.agda).
-* Eight expected rejections fail at their invalid declaration, each with the
-  message its `-- EXPECT:` line names (`min m n != max m n`, `p != zero`,
-  `suc _ != zero`, `max m n != m + n`, `max p₁ (n₁ + p₂) != p₁ + p₂`,
-  `3 != 5`, `inf != fin 3`, `… != bot`); a refusal with any other message
-  fails the gate. The unit tests in `tests/unit/AllTests.agda` typecheck. —
-  TESTED by `scripts/check-agda.sh`, which CI (`proofs.yml`) runs. Until
-  2026-10-14 the workflow called a `scripts/check.sh` that does not exist, so
-  no CI run had checked these proofs. The first CI run, on the pinned Agda
-  2.6.4.3, passed on 2026-10-14 (resource-algebra#4).
+== Census
+
+Out of 22 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 22. Of the ungraded rows, 20 are `PROVEN` in Agda and wait for
+the first receipt under the §2.1 profile. Two are `OPEN` (C-4b, M-2).
+`foundation_diverse` is false for every row.
+
+== Agda leg: invocation and receipt
+
+* *Invocation.* `scripts/check-agda.sh` runs `agda --safe --without-K
+--cubical-compatible -Werror --no-libraries --ignore-interfaces
+--double-check -i src` over `src/ResourceAlgebra/All.agda`, the unit tests
+(`tests/unit/AllTests.agda`) and the eight expected rejections. A rejection
+must fail at its invalid declaration with the message its `-- EXPECT:` line
+names. A refusal with any other message fails the gate, and so does any
+warning.
+* *Import cone.* Only `src/ResourceAlgebra/`: no standard library and no
+other library. There is no `postulate` (refused by `--safe`), no hole and no
+`TERMINATING` or similar pragma.
+* *Receipt.* CI (`proofs.yml`) installs Agda 2.6.4.3, asserts the version
+and checks the proofs. It then writes a receipt to the run summary with the
+source commit, `agda --version`, the package version and its SHA256 from
+Debian's signed index, the digest of the installed binary, the flags read
+from the script, and the import cone. Installing Agda from Debian rather
+than Guix is a §6 deviation, recorded in `proofs.yml`; its state is `open`.
+* *History.* Until 2026-11-09 the gate ran `--safe --without-K
+--no-libraries --double-check`. That profile passed in CI from 2026-10-14
+(resource-algebra#4). Under §2.1 those runs are historical evidence, not
+receipts for the canonical profile. On 2026-11-09, `_≤_` and the
+constructor-injectivity lemmas were restated so that the core checks under
+`--cubical-compatible` with no `UnsupportedIndexedMatch` warning. The
+statements of the theorems below did not change.
+* *Expected rejections.* Eight claims must be refused, each with the message
+its `-- EXPECT:` line names. In order, those messages are:
+`min m n != max m n`, `p != zero`, `suc _ != zero`, `max m n != m + n`,
+`max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3` and `… != bot`.
+These are controls for the PROVEN rows. They are not themselves theorems.
+
+== Recheck legs (every row)
+
+Unless a row says otherwise, every theorem row carries this record:
+
+[cols="1,1,1,1,2",options="header"]
+|===
+| Leg | Route | §5 | §2.2 | Receipts
+
+| Agda
+| source
+| `PROVEN`
+| `AGDA-PENDING`
+| none yet under the §2.1 profile
+
+| Rocq
+| none yet (planned: `transported`, `re-proved` as the fallback)
+| `OPEN`
+| —
+| none
+
+| Lean
+| none yet (planned: `re-proved`, no Mathlib)
+| `OPEN`
+| —
+| none
+|===
+
+The Agda state becomes `AGDA-VERIFIED`, and `pwg` becomes `3`, when a
+`proofs.yml` receipt exists for a commit that carries these statements.
+Neither recheck leg counts towards a grade until it is kernel-checked and
+`RECONCILED` (§8.2).
 
 == Core (Core.agda)
 
-[cols="1,3,1",options="header"]
+[cols="1,4,2,1",options="header"]
 |===
-| ID | Claim | Status
-| C-1 | `ResourceAlgebra`: alternatives an idempotent commutative monoid, sequence a monoid | PROVEN (definition + derived `unitʳ`)
-| C-2 | The ⊕-induced relation `≼` is a partial order with `𝟘` least and `⊕` its join | PROVEN (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`)
-| C-3 | Every dioid is ordered: distributivity ⇒ `⊗` monotone on both sides | PROVEN (`IsDioid.ordered`)
-| C-4 | `IsAnnihilating` is independent of `IsDioid` (an instance can be one without the other) | PROVEN in one direction: HWM is a dioid (`HWM-dioid`) and not annihilating (`HWM-not-annihilating`); control `tests/reject/HWMAnnihilates.agda`. No instance yet witnesses the converse (annihilating, not a dioid)
+| ID | Claim | Agda (§5) | pwg
+
+| C-1
+| `ResourceAlgebra`: alternatives form an idempotent commutative monoid and
+sequencing a monoid.
+| `PROVEN` (the definition, plus the derived `unitʳ`)
+| ungraded
+
+| C-2
+| The relation `≼` induced by ⊕ is a partial order. `𝟘` is least and `⊕` is
+its join.
+| `PROVEN` (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`)
+| ungraded
+
+| C-3
+| Every dioid is ordered: distributivity makes `⊗` monotone on both sides.
+| `PROVEN` (`IsDioid.ordered`)
+| ungraded
+
+| C-4a
+| A dioid need not be annihilating. HWM is a dioid and is not annihilating.
+| `PROVEN` (`HWM-dioid`, `HWM-not-annihilating`); control
+`tests/reject/HWMAnnihilates.agda`
+| ungraded
+
+| C-4b
+| An annihilating ordered algebra need not be a dioid.
+| `OPEN`: no instance witnesses it yet
+| ungraded
 |===
 
 == Instances
 
-[cols="1,3,1",options="header"]
+[cols="1,4,2,1",options="header"]
 |===
-| ID | Claim | Status
-| L-1 | `Loss` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered`, `IsAnnihilating` with ⊕ = min, ⊗ = +, 𝟘 = inf, 𝟙 = fin 0 | PROVEN (Instances/Loss.agda)
-| L-2 | `Loss` is textually the echo-types definition (`experimental/echo-additive/Grade.agda`: `_⊓g_`, `_+g_`) | ASSUMED — transcription reviewed by eye; direction of future import (echo → here or here → echo) OPEN
-| M-1 | `MaxPlus` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered`, `IsAnnihilating` with ⊕ = max, ⊗ = +, 𝟘 = bot, 𝟙 = val 0 | PROVEN (Instances/MaxPlus.agda)
-| M-2 | `MaxPlus` agrees with tropical-types `instance : CommSemiring Tropical` (Lean 4) | OPEN — cross-prover; port-and-reprove, named bridge obligation, no mechanical link exists or is claimed
-| H-1 | `HWM` (peak, drift, drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`, `IsOrdered`; 𝟘 ≡ 𝟙 | PROVEN against the definition in Instances/HWM.agda
-| H-2 | `HWM` is occupancy-types' occupancy algebra | DESIGNED — occupancy defines none yet (its v0 counts live bytes; the algebra is R2–R3); signed drift (consuming terms) not modelled
-| H-3 | `HWM` has no annihilating zero | PROVEN (`HWM-not-annihilating`, Instances/HWM.agda); control `tests/reject/HWMAnnihilates.agda`
-| N-1 | `MinMax` (bottleneck) is a `ResourceAlgebra`, `IsDioid`, `IsOrdered`, `IsAnnihilating` on the Loss carrier with ⊕ = min, ⊗ = max (`_⊔g_`, `inf` absorbing), 𝟘 = inf, 𝟙 = fin 0 | PROVEN (Instances/MinMax.agda)
-| N-2 | `MinMax` is the bottleneck sequence typed-wasm's `Tropical.tropMax` defines locally | DESIGNED — typed-wasm still defines it locally; moves when typed-wasm's kernel port carries it and its transcription table lists it
+| ID | Claim | Agda (§5) | pwg
+
+| L-1
+| `Loss` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
+`IsAnnihilating`, with ⊕ = min, ⊗ = +, 𝟘 = inf and 𝟙 = fin 0.
+| `PROVEN` (Instances/Loss.agda)
+| ungraded
+
+| M-1
+| `MaxPlus` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
+`IsAnnihilating`, with ⊕ = max, ⊗ = +, 𝟘 = bot and 𝟙 = val 0.
+| `PROVEN` (Instances/MaxPlus.agda)
+| ungraded
+
+| M-2
+| `MaxPlus` agrees with tropical-types' `instance : CommSemiring Tropical`
+(Lean 4).
+| `OPEN`: a cross-prover bridge obligation. No mechanical link exists, and
+none is claimed.
+| ungraded
+
+| H-1
+| `HWM` (peak, drift, with drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`
+and `IsOrdered`, and 𝟘 ≡ 𝟙.
+| `PROVEN` (Instances/HWM.agda)
+| ungraded
+
+| H-3
+| `HWM` has no annihilating zero.
+| `PROVEN` (`HWM-not-annihilating`); control
+`tests/reject/HWMAnnihilates.agda`
+| ungraded
+
+| N-1
+| `MinMax` (the bottleneck algebra) is a `ResourceAlgebra`, `IsDioid`,
+`IsOrdered` and `IsAnnihilating` on the Loss carrier. Its operations are
+⊕ = min and ⊗ = max (`_⊔g_`, with `inf` absorbing), with 𝟘 = inf and
+𝟙 = fin 0.
+| `PROVEN` (Instances/MinMax.agda)
+| ungraded
 |===
 
 == Morphisms (Morphism.agda)
 
-`Hom A B` preserves 𝟘, 𝟙, ⊕ and ⊗ (what transporting a grade equality
-needs). `LaxHom A B` preserves 𝟙 and ⊕, hence is monotone, and maps ⊗ to at
-most ⊗ (what transporting a bound needs).
+A `Hom A B` preserves 𝟘, 𝟙, ⊕ and ⊗: that is what transporting a grade
+equality needs. A `LaxHom A B` preserves 𝟙 and ⊕, so it is monotone, and
+it maps ⊗ to at most ⊗: that is what transporting a bound needs.
 
-[cols="1,3,1",options="header"]
+[cols="1,4,2,1",options="header"]
 |===
-| ID | Claim | Status
-| F-1 | Both notions have identities and compose; every strict morphism is lax | PROVEN (`id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax`)
-| F-2 | `peak : HWM → MaxPlus` is lax: the peak of a sequence never exceeds the sum of the peaks | PROVEN (`peak-lax`)
-| F-3 | `peak` is not strict: it does not preserve ⊗, whatever the units do | PROVEN (`peak-not-strict`); control `tests/reject/PeakIsStrict.agda`
-| F-4 | No strict morphism leaves HWM for any algebra with 𝟘 ≢ 𝟙; in particular none to MaxPlus or Loss | PROVEN (`no-strict-from-HWM`, `no-strict-HWM→MaxPlus`, `no-strict-HWM→Loss`)
-| F-5 | Exactly two strict morphisms Loss → MaxPlus exist, `zero-test` and `support`, and neither distinguishes `fin 1` from `fin 2` | PROVEN (`zero-test-hom`, `support-hom`, `Loss→MaxPlus`, `Loss→MaxPlus-collapses`, `no-injective-Loss→MaxPlus`)
-| F-6 | Exactly one strict morphism MaxPlus → Loss exists, `support′` (resource-algebra#3 sketched this direction as "symmetric" to Loss → MaxPlus; it is not: one map, not two. Its other claim, that every positive grade goes to a single point, holds) | PROVEN (`support′-hom`, `MaxPlus→Loss`)
-| F-7 | The identity on the carrier is a lax morphism Loss → MinMax: a bottleneck never exceeds the sum | PROVEN (`loss-bottleneck`)
+| ID | Claim | Agda (§5) | pwg
+
+| F-1
+| Both notions have identities and compose, and every strict morphism is
+lax.
+| `PROVEN` (`id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax`)
+| ungraded
+
+| F-2
+| `peak : HWM → MaxPlus` is lax: the peak of a sequence never exceeds the
+sum of the peaks.
+| `PROVEN` (`peak-lax`)
+| ungraded
+
+| F-3
+| `peak` is not strict: it does not preserve ⊗, whatever it does to the
+units.
+| `PROVEN` (`peak-not-strict`); control `tests/reject/PeakIsStrict.agda`
+| ungraded
+
+| F-4
+| No strict morphism leaves HWM for an algebra with 𝟘 ≢ 𝟙. In particular,
+none goes to MaxPlus or to Loss.
+| `PROVEN` (`no-strict-from-HWM`, `no-strict-HWM→MaxPlus`,
+`no-strict-HWM→Loss`)
+| ungraded
+
+| F-5
+| Exactly two strict morphisms Loss → MaxPlus exist, `zero-test` and
+`support`. Neither distinguishes `fin 1` from `fin 2`.
+| `PROVEN`. Both are morphisms (`zero-test-hom`, `support-hom`) and every
+morphism is one of them (`Loss→MaxPlus`). They are distinct
+(`maps-disagree-at-positive`, tests/unit/MorphismTest.agda), and every
+morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
+`no-injective-Loss→MaxPlus`).
+| ungraded
+
+| F-6
+| Exactly one strict morphism MaxPlus → Loss exists, `support′`.
+resource-algebra#3 sketched this direction as "symmetric" to
+Loss → MaxPlus, but it is not: there is one map, not two. The issue's other
+claim, that every positive grade goes to a single point, holds.
+| `PROVEN` (`support′-hom`, `MaxPlus→Loss`)
+| ungraded
+
+| F-7
+| The identity on the carrier is a lax morphism Loss → MinMax: a bottleneck
+never exceeds the sum.
+| `PROVEN` (`loss-bottleneck`)
+| ungraded
 |===
 
 == Separation (Separation.agda)
 
-[cols="1,3,1",options="header"]
+These rows are closed statements about particular grades. Each is a
+kernel-checked proof of its proposition, so it is `PROVEN`. They were
+listed as `TESTED` before 2026-11-09. That was a misreading: `TESTED` is
+for checks over a bounded or sampled domain.
+
+[cols="1,4,2,1",options="header"]
+|===
+| ID | Claim | Agda (§5) | pwg
+
+| S-1
+| Sequencing peaks 2 and 3 gives 3 under HWM and 5 under MaxPlus: an
+occupancy bound is not a cost bound.
+| `PROVEN` (`occupancy-is-not-cost`)
+| ungraded
+
+| S-2
+| On the same numbers, alternatives give `fin 2` under Loss and `val 3`
+under MaxPlus: echo's join is min, while tropical's is max.
+| `PROVEN` (`alternatives-differ`)
+| ungraded
+
+| S-3
+| `val 1 ≼ val 2` in MaxPlus but `fin 2 ≼ fin 1` in Loss: the induced
+orders run in opposite directions.
+| `PROVEN` (`maxplus-order`, `loss-order-reversed`)
+| ungraded
+
+| S-4
+| Sequencing 2 then 3 gives `fin 5` under Loss but `fin 3` under MinMax: a
+bottleneck bound is not a loss bound.
+| `PROVEN` (`bottleneck-is-not-sum`); `tests/reject/MinMaxIsLoss.agda`
+refuses the general identification
+| ungraded
+|===
+
+== Correspondences with other repositories (not graded)
+
+These rows relate an artefact here to one in another repository. They are
+not theorems of this repository, so they carry no `pwg`.
+
+[cols="1,4,2",options="header"]
 |===
 | ID | Claim | Status
-| S-1 | Sequencing peaks 2 and 3 gives 3 under HWM and 5 under MaxPlus: an occupancy bound is not a cost bound | TESTED (computed; `occupancy-is-not-cost`)
-| S-2 | On the same numbers, Loss alternatives give `fin 2` and MaxPlus alternatives give `val 3`: echo's join is min, tropical's is max | TESTED (computed; `alternatives-differ`)
-| S-3 | `val 1 ≼ val 2` in MaxPlus and `fin 2 ≼ fin 1` in Loss: the induced order runs the opposite way | TESTED (computed)
-| S-4 | Sequencing 2 then 3 gives `fin 5` under Loss and `fin 3` under MinMax: a bottleneck bound is not a loss bound | TESTED (computed; `bottleneck-is-not-sum`; `tests/reject/MinMaxIsLoss.agda` refuses the general identification)
+
+| L-2
+| `Loss` is textually the echo-types definition
+(`experimental/echo-additive/Grade.agda`: `_⊓g_`, `_+g_`).
+| `ASSUMED`: the transcription was checked by eye. The direction of a
+future import (echo → here, or here → echo) is `OPEN`.
+
+| H-2
+| `HWM` is occupancy-types' occupancy algebra.
+| `OPEN`: occupancy-types defines no algebra yet. Its v0 counts live bytes,
+and the algebra is planned for R2–R3. Signed drift (consuming terms) is not
+modelled.
+
+| N-2
+| `MinMax` is the bottleneck sequence that typed-wasm's `Tropical.tropMax`
+defines locally.
+| `OPEN`: typed-wasm still defines it locally. It moves here when
+typed-wasm's kernel port carries it and its transcription table lists it.
 |===
 
-== Open (honest — NOT proved)
+== Open (not proved)
 
-* K-CUT-LOSS itself. It is not stated here; this repository supplies the
-  algebra it will be parametric in. Expectation (DESIGNED): only the core
-  record is needed for the equality; `IsOrdered` is needed for the
-  K-CUT-WARRANT bound.
-* L-2 import direction; M-2 Lean bridge; H-2 supersession by occupancy;
-  N-2 typed-wasm adoption.
+* K-CUT-LOSS itself. It is not stated here: this repository supplies the
+algebra it will be parametric in. The expected shape, also `OPEN`, is that
+the equality needs only the core record and the K-CUT-WARRANT bound also
+needs `IsOrdered`.
 * Transport of K-CUT-LOSS along a morphism. F-1..F-7 supply the maps and
-  say which exist; no theorem here states that a strict morphism carries a
-  cut-loss equality, or a lax one a cut-loss bound. That theorem belongs
-  with K-CUT-LOSS (choreographic-types), and is OPEN.
-* Morphisms out of or into MinMax other than `loss-bottleneck` are not
-  classified.
+say which ones exist. No theorem here states that a strict morphism
+carries a cut-loss equality, or that a lax one carries a cut-loss bound.
+That theorem belongs with K-CUT-LOSS in choreographic-types, and it is
+`OPEN`.
+* Morphisms into or out of MinMax, other than `loss-bottleneck`, are not
+classified.
+* The Rocq and Lean legs of every row (PROOF-NEEDS PN-2, PN-3).
 
 == Discipline
 
 Prose, citation and artefact must agree before any status moves. A status
-moves only with a named module or a named log line.
+moves only with a named declaration or a named receipt. A grade moves only
+with a receipt.

@@ -54,10 +54,7 @@ maxplus-alt = refl
 2≢3 ()
 
 alternatives-differ : (fin 2 ⊓g fin 3) ≢ fin 3
-alternatives-differ p = 2≢3 (fin-inj p)
-  where
-  fin-inj : ∀ {m n} → fin m ≡ fin n → m ≡ n
-  fin-inj refl = refl
+alternatives-differ p = 2≢3 (fin-injective p)
 
 ----------------------------------------------------------------------
 -- S-3  The induced order: in MaxPlus 1 is below 2; in Loss 2 is below 1
@@ -80,7 +77,4 @@ minmax-seq : fin 2 ⊔g fin 3 ≡ fin 3
 minmax-seq = refl
 
 bottleneck-is-not-sum : (fin 2 ⊔g fin 3) ≢ (fin 2 +g fin 3)
-bottleneck-is-not-sum p = 3≢5 (fin-inj p)
-  where
-  fin-inj : ∀ {m n} → fin m ≡ fin n → m ≡ n
-  fin-inj refl = refl
+bottleneck-is-not-sum p = 3≢5 (fin-injective p)

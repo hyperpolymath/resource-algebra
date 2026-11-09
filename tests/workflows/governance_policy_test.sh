@@ -85,7 +85,7 @@ const arrival = section(claude, "## Proofs — which prover for which obligation
 const guide = read("verification/proofs/README.adoc");
 const mapping = section(guide, "== Which prover for which obligation");
 const dependencies = section(guide, "== Third-party code");
-const layout = section(guide, "== Directory structure");
+const layout = section(guide, "== This repository");
 const adding = section(guide, "== Adding new proofs");
 
 for (const [name, text] of [["arrival guidance", arrival], ["proof guide", guide]]) {
@@ -163,17 +163,23 @@ for (const text of [dependencies, arrival]) {
 }
 console.log("PASS: third-party dependencies remain ASSUMED boundaries and verification is a preference");
 
-// Negative regression: a shipped example, even one with a gated manifest
-// entry, must never become evidence of completed proofs or a theory recheck.
+// Negative regression: the template's example modules were never evidence of
+// this repository's theorems. This child deleted them (as the template's own
+// guidance says to); none may come back, and the layout must name the real
+// source and legs.
 const examples = prose(layout);
 for (const file of ["Properties.agda", "TypeSafety.v", "ApiTypes.lean", "Types.idr", "StateMachine.tla"]) {
-  assert.ok(examples.includes(file), `layout guidance must identify example ${file}`);
+  assert.ok(examples.includes(file), `layout must record the deleted example ${file}`);
 }
-assert.match(examples, /layout examples, not evidence/);
-assert.match(examples, /quarantine.*MANIFEST/);
-assert.match(examples, /TypeSafety\.v and ApiTypes\.lean are not rechecks of Properties\.agda/);
-assert.match(examples, /replaces them with its own proofs or deletes them, and never counts them in docs\/status\/PROOF-STATUS\.adoc/);
-console.log("PASS: shipped examples cannot be counted as proof evidence or theory rechecks");
+for (const path of ["verification/proofs/agda/Properties.agda", "verification/proofs/coq/TypeSafety.v",
+                    "verification/proofs/lean4/ApiTypes.lean", "verification/proofs/idris2/Types.idr",
+                    "verification/proofs/tlaplus/StateMachine.tla"]) {
+  assert.ok(!existsSync(resolve(root, path)), `template example must not return: ${path}`);
+}
+assert.match(examples, /layout examples, not evidence, and were deleted/);
+assert.match(examples, /src\/ResourceAlgebra\/ # Agda: the source of truth/);
+assert.match(examples, /Each recheck leg, its route and its statement correspondence are recorded per theorem in docs\/status\/PROOF-STATUS\.adoc/);
+console.log("PASS: template examples stay deleted and cannot stand in for recheck legs");
 
 assert.match(prose(adding), /classify the obligation.*docs\/status\/PROOF-NEEDS\.adoc/i);
 assert.match(prose(adding), /put Rust and Ada proofs on the code/i);

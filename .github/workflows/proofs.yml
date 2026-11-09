@@ -1,9 +1,23 @@
 # SPDX-License-Identifier: MPL-2.0
 name: Agda proofs
-# DESIGNED until its first green run. Pattern: residual-evidence-types
-# proofs.yml — the prover is the Debian agda-bin package at the pinned
-# version; the RSR template's estate workflows (secret scanner, governance,
-# labels, push-email-notify, mirror) are expected to arrive with the scaffold.
+#
+# The Agda leg of every theory theorem here: scripts/check-agda.sh runs the
+# canonical invocation (standards PROOF-POLICY §2.1), with -Werror, over the
+# core, the unit tests and the expected rejections. The receipt step records
+# what a Proof Witness Grade is derived from (PROOF-POLICY §8.2): the source
+# commit, the Agda version, the installed package's digest and the flags.
+#
+# DEVIATION (PROOF-POLICY §6), state: open.
+#   Leg:     the Agda leg of every theorem in docs/status/PROOF-STATUS.adoc.
+#   Tool:    Debian trixie agda-bin 2.6.4.3-1+b2, asserted below; apt checks
+#            the .deb against Debian's signed Packages index, and the receipt
+#            step prints that index's SHA256 for the package and the digest of
+#            the installed binary.
+#   Why:     this repository has no Guix manifest and no proof container yet;
+#            the hosted runner has no Guix. The Debian package is an exact,
+#            signature-checked pin.
+#   Closes:  when a Guix manifest (or the repo's container) provides Agda and
+#            this job installs from it.
 on:
   push:
     branches: [main]
@@ -27,3 +41,18 @@ jobs:
         run: test "$(agda --version)" = 'Agda version 2.6.4.3'
       - name: Core proofs and expected rejections
         run: bash scripts/check-agda.sh
+      - name: Proof receipt
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -eu
+          {
+            echo "## Agda leg receipt"
+            echo ""
+            echo "- source commit: \`$SOURCE_SHA\`"
+            echo "- checker: \`$(agda --version)\`"
+            echo "- package: \`agda-bin $(dpkg-query -W -f='${Version}' agda-bin)\`, index SHA256 \`$(apt-cache show agda-bin=2.6.4.3-1+b2 | sed -n 's/^SHA256: //p' | head -1)\`"
+            echo "- binary SHA256: \`$(sha256sum "$(command -v agda)" | cut -d' ' -f1)\`"
+            echo "- invocation: \`$(sed -n 's/^flags=(\(.*\))$/\1/p' scripts/check-agda.sh)\`"
+            echo "- import cone: \`src/ResourceAlgebra/All.agda\`, first-party only (\`--no-libraries\`), 0 postulates (\`--safe\`)"
+          } >> "$GITHUB_STEP_SUMMARY"

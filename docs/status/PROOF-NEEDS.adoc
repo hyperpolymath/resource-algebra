@@ -1,122 +1,88 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: rsr-template-repo/docs/status/PROOF-NEEDS.adoc
-// Authoritative master list: ~/Desktop/PROOF-REQUIREMENTS-MASTER.adoc
-= Proof Requirements — RESOURCE_ALGEBRA
+= Proof Requirements — resource-algebra
+:revdate: 2026-11-09
 
-== Proof Tier
+What this repository owes, classified by the estate proof policy
+(`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
+discharged, and how, is in `PROOF-STATUS.adoc`.
 
-// Assign one: T1 (Critical), T2 (High), T3 (Standard), T4 (Light), T5 (Exempt)
-*Tier*: T3 — Standard
+== Classification
 
-== Proof Categories
+Every obligation here is *theory* (policy §1): the algebra, its instances,
+the morphisms between them and the separations hold for any implementation.
+The repository ships no executable code, ABI, FFI, wire format or protocol.
 
-[cols="1,3,1", options="header"]
+[cols="2,1,3",options="header"]
 |===
-| Code | Meaning | Applies?
+| Obligation class | Applies? | Why
 
-| *TP* | Typing Proofs (type soundness, type safety) | Yes
-| *INV* | Invariant Proofs (state machines, monotonicity, bounds) |
-| *SEC* | Security Proofs (crypto, injection freedom, access control) |
-| *CONC* | Concurrency Proofs (linearizability, deadlock freedom) |
-| *ALG* | Algorithm Proofs (termination, correctness, bounds) |
-| *ABI* | ABI/FFI Proofs (memory layout, pointer safety, platform compat) | Yes
-| *DOM* | Domain-Specific Proofs (bespoke to this project) |
-|===
+| Theory (Agda, rechecked in Rocq and Lean)
+| Yes
+| Everything in `src/ResourceAlgebra/`.
 
-== Mandatory Proofs (All RSR Repos)
+| APIs, ABIs and engineering properties (Idris2)
+| No
+| No exported functions, memory layout or foreign interface exist to state
+them about. The template's mandatory ABI rows (ABI-1..5) and its typing
+rows (TP-1, TP-2) named template example files, not this repository's code;
+they were removed with those files on 2026-11-09.
 
-These proofs come from the resource-algebra and MUST be present in every repo:
+| Rust (Creusot, Pearlite, Verus) and Ada (SPARK)
+| No
+| No Rust or Ada code.
 
-=== ABI/FFI Boundary Proofs (Idris2)
-
-[cols="1,3,1,3", options="header"]
-|===
-| # | Proof | Status | File
-
-| ABI-1 | Non-null pointer proofs (`So (ptr /= 0)`) | Needed | `verification/proofs/idris2/ABI/Pointers.idr`
-| ABI-2 | Memory layout correctness (`HasSize`, `HasAlignment`) | Needed | `verification/proofs/idris2/ABI/Layout.idr`
-| ABI-3 | Platform type size proofs (per platform) | Needed | `verification/proofs/idris2/ABI/Platform.idr`
-| ABI-4 | FFI function return type proofs | Needed | `verification/proofs/idris2/ABI/Foreign.idr`
-| ABI-5 | C ABI compliance (`CABICompliant`, `FieldsAligned`) | Needed | `verification/proofs/idris2/ABI/Compliance.idr`
+| Protocols (TLA+, policy §4 exception)
+| No
+| No concurrent or distributed behaviour.
 |===
 
-=== Typing Proofs (Prover Varies)
+== Obligations
 
-[cols="1,3,1,3", options="header"]
+[cols="1,4,2",options="header"]
 |===
-| # | Proof | Status | File
+| # | Obligation | Where
 
-| TP-1 | Core data type well-formedness | Needed | `verification/proofs/idris2/Types.idr`
-| TP-2 | Public API type safety (exported functions) | Needed | `verification/proofs/lean4/ApiTypes.lean`
-|===
+| PN-1
+| Every theorem in `PROOF-STATUS.adoc` checks in Agda under the canonical
+invocation `--safe --without-K --cubical-compatible` (policy §2.1), with no
+postulates, holes, libraries or warnings.
+| `scripts/check-agda.sh`; CI `proofs.yml`
 
-== Project-Specific Proofs
+| PN-2
+| Each theorem is rechecked in Rocq. Route: Dedukti transport
+(Agda2Dedukti → Lambdapi → Rocq) first, hand re-proof where transport fails.
+The statement correspondence is recorded per theorem (policy §2.2).
+| `verification/proofs/coq/`
 
-// Fill in proofs specific to this project. Copy from PROOF-REQUIREMENTS-MASTER.adoc
-// Delete this section for T4/T5 repos
+| PN-3
+| Each theorem is rechecked in Lean, re-proved by hand without Mathlib (no
+released exporter reaches Lean; policy §2). The statement correspondence is
+recorded per theorem.
+| `verification/proofs/lean4/`
 
-[cols="1,3,1,1,1,2", options="header"]
-|===
-| # | Proof Needed | Category | Prover | Priority | File(s)
+| PN-4
+| Every PROVEN row cites the declaration that discharges it, and each
+expected rejection fails with its stated message.
+| `tests/reject/`, `scripts/check-agda.sh`
 
-| | | | | |
-|===
-
-== Dangerous Patterns (BANNED)
-
-The following MUST NOT appear anywhere in proof files:
-
-[cols="2,2,3", options="header"]
-|===
-| Pattern | Language | Meaning
-
-| `believe_me` | Idris2 | Unsafe cast / trust-me
-| `assert_total` | Idris2 | Skip totality check
-| `postulate` | Idris2/Agda | Unproven axiom
-| `sorry` | Lean4 | Incomplete proof
-| `Admitted` | Coq | Incomplete proof
-| `unsafeCoerce` | Haskell | Unsafe type cast
-| `Obj.magic` | OCaml/ | Unsafe type cast
-| `unsafe` (unaudited) | Rust | Unsafe block without safety comment
+| PN-5
+| Close or keep stating the open theory rows: C-4b (an annihilating ordered
+algebra that is not a dioid) and M-2 (agreement with tropical-types' Lean
+semiring).
+| `PROOF-STATUS.adoc`
 |===
 
-CI will reject any PR introducing these patterns (enforced by `panic-attack assail`).
+== Out of scope here
 
-== Prover Selection Guide
+* K-CUT-LOSS, and its transport along a morphism, belong to
+`choreographic-types` (this repository's IS-NOT). This repository supplies
+the algebra it is parametric in.
+* occupancy-types' own algebra: HWM is a proposal to it (H-2).
 
-[cols="2,2,3", options="header"]
-|===
-| Use Case | Recommended Prover | Why
+== Banned constructs
 
-| ABI/FFI boundaries | *Idris2* | Dependent types model layouts precisely
-| Type system proofs | *Coq* or *Lean4* | Mature proof assistants for metatheory
-| Algebraic properties | *Lean4* | Good mathlib support
-| Inductive/coinductive | *Agda* | Native support for (co)induction
-| Distributed systems | *TLA+* | Model checking for protocols
-| Numerical properties | *Isabelle* | Strong real analysis library
-|===
-
-== Proof File Locations
-
-----
-verification/proofs/
-├── idris2/          # Idris2 proofs (ABI, dependent types)
-│   ├── ABI/         # ABI-specific proofs
-│   └── *.idr        # Project-specific Idris2 proofs
-├── lean4/           # Lean4 proofs (algebra, lattices)
-│   └── *.lean
-├── agda/            # Agda proofs (induction, metatheory)
-│   └── *.agda
-├── coq/             # Coq proofs (type systems, compilation)
-│   └── *.v
-└── tlaplus/         # TLA+ specs (distributed protocols)
-    └── *.tla
-----
-
-== References
-
-* Master list: `~/Desktop/PROOF-REQUIREMENTS-MASTER.adoc`
-* Proof status tracking: `PROOF-STATUS.adoc` (this repo)
-* Proven library: `proven` repo (Idris2 verified foundations)
-* Template: `rsr-template-repo/docs/status/PROOF-NEEDS.adoc`
+No escape hatch may appear in a proof file: `postulate` (Agda, refused by
+`--safe`), `Admitted`/`admit`/`Axiom` without a recorded disposition (Rocq),
+`sorry`/`axiom` without a recorded disposition (Lean). `just
+proof-scan-dangerous` and CI's `panic-attack assail` enforce this.

@@ -20,6 +20,14 @@ data Grade : Set where
   fin : Nat → Grade
   inf : Grade
 
+-- Injectivity through a projection (Prelude, suc-injective, says why).
+fin-proj : Grade → Nat
+fin-proj (fin n) = n
+fin-proj inf     = zero
+
+fin-injective : ∀ {m n} → fin m ≡ fin n → m ≡ n
+fin-injective = cong fin-proj
+
 infixl 7 _+g_
 _+g_ : Grade → Grade → Grade
 fin m +g fin n = fin (m + n)

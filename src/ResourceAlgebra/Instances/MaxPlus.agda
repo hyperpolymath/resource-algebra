@@ -20,6 +20,14 @@ data Tropical : Set where
   val : Nat → Tropical
   bot : Tropical
 
+-- Injectivity through a projection (Prelude, suc-injective, says why).
+val-proj : Tropical → Nat
+val-proj (val n) = n
+val-proj bot     = zero
+
+val-injective : ∀ {m n} → val m ≡ val n → m ≡ n
+val-injective = cong val-proj
+
 tAdd : Tropical → Tropical → Tropical
 tAdd bot     b       = b
 tAdd (val m) bot     = val m
