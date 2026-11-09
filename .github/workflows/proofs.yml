@@ -28,6 +28,7 @@ jobs:
   proofs:
     name: Core proofs and expected rejections
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     container: debian:trixie-slim
     steps:
       - name: Install the pinned prover
@@ -68,6 +69,7 @@ jobs:
   lean-leg:
     name: Lean recheck leg
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       LEAN_VERSION: '4.35.0'
       LEAN_SHA256: '7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d'
@@ -126,6 +128,7 @@ jobs:
   rocq-leg:
     name: Rocq recheck leg
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     container:
       image: rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
       # The image's user cannot write the runner's workspace. Job containers
