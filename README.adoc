@@ -38,7 +38,9 @@ not proved here (link:docs/status/PROOF-STATUS.adoc[], Open).
 
 == What is standard and what is ours
 
-*Standard:* idempotent semirings (dioids), the max-plus and min-plus
+*Standard:* idempotent semirings (dioids; note that `IsDioid` here omits
+the absorbing-zero axiom, as `Core.agda` explains, because HWM has 𝟘 ≡ 𝟙),
+the max-plus and min-plus
 semirings, the observation that distributivity implies monotonicity of
 multiplication for the natural order.
 
