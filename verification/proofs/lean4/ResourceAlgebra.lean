@@ -608,9 +608,11 @@ theorem maps_disagree_at_positive (n : Nat) :
     zeroTest (fin (n + 1)) ≠ support (fin (n + 1)) :=
   fun e => Tropical.noConfusion e
 
-/-- F-5: every strict morphism Loss → MaxPlus is one of the two. -/
-theorem Loss_to_MaxPlus (h : Hom Loss MaxPlus) :
-    (∀ a, h.map a = zeroTest a) ∨ (∀ a, h.map a = support a) := by
+/-- F-5: every strict morphism Loss → MaxPlus is one of the two, and the
+result says which. As Agda's `_⊎_`, this is a sum a caller can branch on
+(`PSum`), not a propositional `Or`. -/
+def Loss_to_MaxPlus (h : Hom Loss MaxPlus) :
+    PSum (∀ a, h.map a = zeroTest a) (∀ a, h.map a = support a) := by
   have one : h.map (fin 0) = val 0 := h.map_one
   have step : ∀ n, h.map (fin (n + 1)) = tMul (h.map (fin n)) (h.map (fin 1)) :=
     fun n => h.map_mul (fin n) (fin 1)
@@ -739,7 +741,9 @@ other answer. -/
 #print axioms RA.MinMax_dioid
 #print axioms RA.MinMax_annihilating
 #print axioms RA.lax
+#print axioms RA.idHom
 #print axioms RA.Hom.comp
+#print axioms RA.idLax
 #print axioms RA.LaxHom.comp
 #print axioms RA.peakLax
 #print axioms RA.peak_not_strict

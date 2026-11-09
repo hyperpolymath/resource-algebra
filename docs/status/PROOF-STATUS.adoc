@@ -16,10 +16,12 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 22 theory rows: PWG-1: 0 · PWG-2ii: 20 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 2. The 20 `PWG-2ii` rows have an Agda receipt under the §2.1
+Out of 22 theory rows: PWG-1: 0 · PWG-2ii: 19 · PWG-2i: 0 · PWG-3: 1 ·
+ungraded: 2. The 19 `PWG-2ii` rows have an Agda receipt under the §2.1
 profile and a `RECONCILED`, axiom-free Rocq leg and Lean leg (CI run
-`42629220745`, below). The two ungraded rows are `OPEN` (C-4b, M-2).
+`42629220745`, below). F-5 is `PWG-3`: its classifier's legs were weaker
+than the Agda statement in that run, and the corrected legs await their
+receipt (see Receipts). The two ungraded rows are `OPEN` (C-4b, M-2).
 `foundation_diverse` is false for every row: Agda, Rocq and Lean are all
 dependent type theories (§8.3).
 
@@ -110,10 +112,15 @@ global context
 | `e9cf75e17d55e5ba…53b064dd`; no printed theorem depends on an axiom
 |===
 
-Commits after `9f175cc` on this branch changed no proof source: the
-three input digests are the same, so these receipts describe the
-statements on the current head. Every later `proofs.yml` run recomputes
-them; a failing run drops the grades it no longer supports (§8.4).
+The Agda source has not changed since `9f175cc`. The two legs have
+changed once: F-5's classifier now returns a sum, as Agda's does, and both
+legs print the axioms of the identity morphisms too. Every other
+statement in the legs is as it was at `9f175cc`, so these receipts still
+recheck the 19 other `PROVEN` rows. They do not recheck F-5's classifier,
+which was the weaker `Or` at `9f175cc`. F-5 is `PWG-3` until a
+`proofs.yml` run on the new legs passes, and its leg digests above are the
+`9f175cc` ones until that run is recorded. A failing run drops the grades
+it no longer supports (§8.4).
 
 The grade is `2ii`, not `1`. `PWG-1` also needs a current receipt for
 every witness on every source commit (§8.2). These receipts live in the
@@ -174,7 +181,7 @@ fields.
 * `max` and `min` are defined in both legs by the same three equations as
 Agda's Prelude (`rmax`, `rmin`). The Rocq leg proves them equal to the
 standard library's `Nat.max` and `Nat.min` before `lia` uses them.
-`_+_` recurses on its first argument in Agda and on its second in Rocq and
+`_+_` recurses on its first argument in Agda and Rocq and on its second in
 Lean. It is the same function.
 * HWM's bound `drift ≤ peak` is Agda's own `_≤_` and the standard `le` in
 the legs. Both are the usual order on ℕ, so the carrier has the same
@@ -207,12 +214,13 @@ and drift are.
 | S-4 | `bottleneck-is-not-sum` | `bottleneck_is_not_sum` | `bottleneck_is_not_sum`
 |===
 
-One row differs in kind. F-5's `Loss→MaxPlus` returns Agda's `_⊎_`, a sum
-in `Set` that says *which* of the two maps a morphism is. Lean's and
-Rocq's `Loss_to_MaxPlus` return `Or` in `Prop`, which says only that it is
-one of them. The Agda statement implies the legs' statements, and not
-conversely; every other F-5 statement is unaffected. No leg rests on an
-assumption beyond its prover's kernel.
+F-5's classifier `Loss→MaxPlus` returns Agda's `_⊎_`, a sum in `Set` that
+says *which* of the two maps a morphism is. Both legs now return a sum too
+(Lean's `PSum`, Rocq's `sumbool`), so the statements correspond exactly.
+Until this change the legs returned the propositional `Or`, which says
+only that a morphism is one of the two: a weaker statement, so the receipts
+at `9f175cc` do not recheck F-5's classifier (see Receipts). No leg rests
+on an assumption beyond its prover's kernel.
 
 == Core (Core.agda)
 
@@ -338,7 +346,7 @@ morphism is one of them (`Loss→MaxPlus`). They are distinct
 (`maps-disagree-at-positive`, tests/unit/MorphismTest.agda), and every
 morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
 `no-injective-Loss→MaxPlus`).
-| 2ii
+| 3
 
 | F-6
 | Exactly one strict morphism MaxPlus → Loss exists, `support′`.

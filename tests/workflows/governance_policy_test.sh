@@ -173,6 +173,9 @@ for (const file of ["Properties.agda", "TypeSafety.v", "ApiTypes.lean", "Types.i
 }
 for (const path of ["verification/proofs/agda/Properties.agda", "verification/proofs/coq/TypeSafety.v",
                     "verification/proofs/lean4/ApiTypes.lean", "verification/proofs/idris2/Types.idr",
+                    "verification/proofs/idris2/ABI/Pointers.idr", "verification/proofs/idris2/ABI/Layout.idr",
+                    "verification/proofs/idris2/ABI/Platform.idr", "verification/proofs/idris2/ABI/Foreign.idr",
+                    "verification/proofs/idris2/ABI/Compliance.idr",
                     "verification/proofs/tlaplus/StateMachine.tla"]) {
   assert.ok(!existsSync(resolve(root, path)), `template example must not return: ${path}`);
 }

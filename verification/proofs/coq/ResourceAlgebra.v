@@ -458,9 +458,11 @@ Defined.
 Lemma maps_disagree_at_positive : forall n, zero_test (fin (S n)) <> support (fin (S n)).
 Proof. discriminate. Qed.
 
-(** Every strict morphism Loss → MaxPlus is one of the two. *)
-Lemma Loss_to_MaxPlus (h : Hom Loss MaxPlus) :
-  (forall a, hmap h a = zero_test a) \/ (forall a, hmap h a = support a).
+(** Every strict morphism Loss → MaxPlus is one of the two, and the result
+    says which. As Agda's [_⊎_], this is a sum a caller can branch on
+    ([sumbool]), not a propositional [\/]. *)
+Definition Loss_to_MaxPlus (h : Hom Loss MaxPlus) :
+  {forall a, hmap h a = zero_test a} + {forall a, hmap h a = support a}.
 Proof.
   assert (one : hmap h (fin 0) = val 0) by exact (hmap_one h).
   assert (step : forall n, hmap h (fin (S n)) = tMul (hmap h (fin n)) (hmap h (fin 1))).
@@ -481,7 +483,7 @@ Proof.
     + exact one.
     + rewrite step; try rewrite e. destruct (hmap h (fin n)); reflexivity.
     + exact (hmap_zero h).
-Qed.
+Defined.
 
 Lemma Loss_to_MaxPlus_collapses (h : Hom Loss MaxPlus) :
   hmap h (fin 1) = hmap h (fin 2).
@@ -578,7 +580,9 @@ Print Assumptions HWM.
 Print Assumptions HWM_dioid.
 Print Assumptions MinMax_dioid.
 Print Assumptions MinMax_annihilating.
+Print Assumptions id_hom.
 Print Assumptions comp_hom.
+Print Assumptions id_lax.
 Print Assumptions comp_lax.
 Print Assumptions peak_lax.
 Print Assumptions peak_not_strict.
