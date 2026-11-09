@@ -55,4 +55,125 @@ jobs:
             echo "- binary SHA256: \`$(sha256sum "$(command -v agda)" | cut -d' ' -f1)\`"
             echo "- invocation: \`$(sed -n 's/^flags=(\(.*\))$/\1/p' scripts/check-agda.sh)\`"
             echo "- import cone: \`src/ResourceAlgebra/All.agda\`, first-party only (\`--no-libraries\`), 0 postulates (\`--safe\`)"
+            echo "- input SHA256 (all of \`src/\`, sorted): \`$(find src -name '*.agda' | LC_ALL=C sort | xargs sha256sum | sha256sum | cut -d' ' -f1)\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Lean recheck leg (PROOF-POLICY §2): re-proved by hand, Lean core only.
+  # DEVIATION (§6), state: open.
+  #   Leg:     the Lean leg of every theorem in docs/status/PROOF-STATUS.adoc.
+  #   Tool:    Lean 4.35.0, the upstream release archive, checked against the
+  #            SHA256 below; the version is asserted against lean-toolchain.
+  #   Why:     no Guix manifest or proof container provides Lean here yet.
+  #   Closes:  when a Guix manifest (or the repo's container) provides Lean.
+  lean-leg:
+    name: Lean recheck leg
+    runs-on: ubuntu-latest
+    env:
+      LEAN_VERSION: '4.35.0'
+      LEAN_SHA256: '7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the pinned Lean
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 --fail --silent --show-error --location \
+            --output "$RUNNER_TEMP/lean.tar.zst" \
+            "https://github.com/leanprover/lean4/releases/download/v${LEAN_VERSION}/lean-${LEAN_VERSION}-linux.tar.zst"
+          echo "${LEAN_SHA256}  $RUNNER_TEMP/lean.tar.zst" | sha256sum --check --strict
+          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/lean-${LEAN_VERSION}-linux/bin" >> "$GITHUB_PATH"
+      - name: Verify the checked Lean version
+        run: |
+          set -euo pipefail
+          test "$(cat verification/proofs/lean4/lean-toolchain)" = "leanprover/lean4:v${LEAN_VERSION}"
+          lean --version | grep -F "version ${LEAN_VERSION},"
+      - name: Lean leg
+        run: bash scripts/check-proofs.sh lean4
+      - name: Axioms and receipt
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          out="$(cd verification/proofs/lean4 && lean ResourceAlgebra.lean 2>&1)"
+          # A counted witness lists its axioms (§8.4). The leg is recorded as
+          # axiom-free, so every printed theorem must say so.
+          n_print="$(grep -c '^#print axioms' verification/proofs/lean4/ResourceAlgebra.lean)"
+          n_free="$(grep -c 'does not depend on any axioms' <<<"$out" || true)"
+          if [ "$n_free" != "$n_print" ]; then
+            echo "::error::only $n_free of $n_print theorems are axiom-free"; echo "$out"; exit 1
+          fi
+          {
+            echo "## Lean leg receipt"
+            echo ""
+            echo "- source commit: \`$SOURCE_SHA\`"
+            echo "- checker: \`$(lean --version)\`"
+            echo "- archive SHA256: \`$LEAN_SHA256\`"
+            echo "- invocation: \`lean ResourceAlgebra.lean\` in \`verification/proofs/lean4\` (core only, no Mathlib)"
+            echo "- input SHA256: \`$(sha256sum verification/proofs/lean4/ResourceAlgebra.lean | cut -d' ' -f1)\`"
+            echo "- axioms: $n_free of $n_print printed theorems depend on no axiom"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Rocq recheck leg (PROOF-POLICY §2): re-proved by hand. Dedukti transport
+  # is unavailable for this development (docs/status/PROOF-STATUS.adoc).
+  # DEVIATION (§6), state: open.
+  #   Leg:     the Rocq leg of every theorem in docs/status/PROOF-STATUS.adoc.
+  #   Tool:    the upstream rocq/rocq-prover:9.3.0 image (Rocq 9.3.0, stdlib
+  #            9.2.0), pinned by digest; the version is asserted below.
+  #   Why:     no Guix manifest or proof container provides Rocq here yet.
+  #   Closes:  when a Guix manifest (or the repo's container) provides Rocq.
+  rocq-leg:
+    name: Rocq recheck leg
+    runs-on: ubuntu-latest
+    container:
+      image: rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
+      # The image's user cannot write the runner's workspace. Job containers
+      # skip the image's `opam exec` entrypoint, so a step puts its switch on PATH.
+      options: --user root
+    env:
+      OPAMROOT: /home/rocq/.opam
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Put the image's opam switch on PATH
+        run: |
+          set -euo pipefail
+          # The image has one switch; take its bin directory directly rather
+          # than run opam as root on the rocq user's opam root.
+          mapfile -t found < <(ls -d "$OPAMROOT"/*/bin/rocq 2>/dev/null)
+          [ "${#found[@]}" -eq 1 ] || { echo "::error::expected one rocq under $OPAMROOT, found ${#found[@]}"; exit 1; }
+          dirname "${found[0]}" >> "$GITHUB_PATH"
+      - name: Verify the checked Rocq version
+        run: |
+          set -euo pipefail
+          rocq --version | grep -F "version 9.3.0"
+      - name: Rocq leg
+        run: bash scripts/check-proofs.sh coq
+      - name: Assumptions and receipt
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          cd verification/proofs/coq
+          out="$(rocq compile ResourceAlgebra.v 2>&1)"
+          n_print="$(grep -c '^Print Assumptions' ResourceAlgebra.v)"
+          n_closed="$(grep -c 'Closed under the global context' <<<"$out" || true)"
+          # Every printed theorem must rest on no axiom at all (§8.4).
+          if [ "$n_closed" != "$n_print" ]; then
+            echo "::error::only $n_closed of $n_print theorems are closed under the global context"; echo "$out"; exit 1
+          fi
+          rocqchk -R . "" -norec ResourceAlgebra >/dev/null
+          {
+            echo "## Rocq leg receipt"
+            echo ""
+            echo "- source commit: \`$SOURCE_SHA\`"
+            echo "- checker: \`$(rocq --version | head -1)\`, image \`rocq/rocq-prover:9.3.0@sha256:97a68f23…\`"
+            echo "- invocation: \`rocq compile ResourceAlgebra.v\` in \`verification/proofs/coq\`, then \`rocqchk\`"
+            echo "- input SHA256: \`$(sha256sum ResourceAlgebra.v | cut -d' ' -f1)\`"
+            echo "- assumptions: $n_closed of $n_print printed theorems closed under the global context"
           } >> "$GITHUB_STEP_SUMMARY"

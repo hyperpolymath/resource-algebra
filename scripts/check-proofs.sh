@@ -71,7 +71,9 @@ case "$PROVER" in
   idris2) CMD=idris2; EXT=idr;  ERROR_RE='^Error:' ;;
   lean4)  CMD=lean;   EXT=lean; ERROR_RE='error:'  ;;
   agda)   CMD=agda;   EXT=agda; ERROR_RE=''        ;;
-  coq)    CMD=coqc;   EXT=v;    ERROR_RE=''        ;;
+  # Rocq 9 is invoked as `rocq compile`; it no longer installs `coqc` by
+  # default, and the proofs here use Rocq 9 names (`From Stdlib`).
+  coq)    CMD=rocq;   EXT=v;    ERROR_RE=''        ;;
 esac
 
 check_one() {
@@ -83,7 +85,7 @@ check_one() {
     idris2) out="$(cd "$ROOT/$root" && idris2 --check "$rel" 2>&1)"; rc=$? ;;
     lean4)  out="$(cd "$ROOT/$root" && lean          "$rel" 2>&1)"; rc=$? ;;
     agda)   out="$(cd "$ROOT/$root" && agda --safe    "$rel" 2>&1)"; rc=$? ;;
-    coq)    out="$(cd "$ROOT/$root" && coqc           "$rel" 2>&1)"; rc=$? ;;
+    coq)    out="$(cd "$ROOT/$root" && rocq compile   "$rel" 2>&1)"; rc=$? ;;
   esac
   set -e
   if [ "$rc" -eq 0 ] && { [ -z "$ERROR_RE" ] || ! grep -qE "$ERROR_RE" <<<"$out"; }; then

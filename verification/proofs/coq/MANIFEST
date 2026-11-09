@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MPL-2.0
+# Rocq recheck leg (PROOF-POLICY §2): re-proved by hand on Rocq 9.3.0 with its
+# standard library (Arith, Lia); Dedukti transport is unavailable for this
+# development (docs/status/PROOF-STATUS.adoc). See scripts/check-proofs.sh.
+verification/proofs/coq|ResourceAlgebra.v|gated|Rocq leg of every PROVEN row in docs/status/PROOF-STATUS.adoc

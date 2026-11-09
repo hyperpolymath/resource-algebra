@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
+# Lean recheck leg (PROOF-POLICY §2): re-proved by hand, Lean core only, no
+# Mathlib. Pinned by lean-toolchain. See scripts/check-proofs.sh for the format.
+verification/proofs/lean4|ResourceAlgebra.lean|gated|Lean leg of every PROVEN row in docs/status/PROOF-STATUS.adoc

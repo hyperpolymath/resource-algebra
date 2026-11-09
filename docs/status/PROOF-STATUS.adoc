@@ -18,7 +18,8 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 Out of 22 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
 ungraded: 22. Of the ungraded rows, 20 are `PROVEN` in Agda and wait for
-the first receipt under the §2.1 profile. Two are `OPEN` (C-4b, M-2).
+the first receipts: the Agda leg under the §2.1 profile, and the Rocq and
+Lean legs, which are written and check locally. Two are `OPEN` (C-4b, M-2).
 `foundation_diverse` is false for every row.
 
 == Agda leg: invocation and receipt
@@ -67,22 +68,122 @@ Unless a row says otherwise, every theorem row carries this record:
 | none yet under the §2.1 profile
 
 | Rocq
-| none yet (planned: `transported`, `re-proved` as the fallback)
-| `OPEN`
-| —
-| none
+| `re-proved` (transport `unavailable`; see below)
+| `PROVEN`: no axiom (`Print Assumptions` reports every theorem closed
+under the global context), and `rocqchk` rechecks the compiled file
+| `BRIDGE-PENDING`: statements compared and recorded below; no CI receipt
+yet
+| none yet
 
 | Lean
-| none yet (planned: `re-proved`, no Mathlib)
-| `OPEN`
-| —
-| none
+| `re-proved`, Lean core only, no Mathlib
+| `PROVEN`: no axiom (`#print axioms` reports none for every theorem)
+| `BRIDGE-PENDING`: statements compared and recorded below; no CI receipt
+yet
+| none yet
 |===
 
 The Agda state becomes `AGDA-VERIFIED`, and `pwg` becomes `3`, when a
 `proofs.yml` receipt exists for a commit that carries these statements.
-Neither recheck leg counts towards a grade until it is kernel-checked and
-`RECONCILED` (§8.2).
+Each recheck leg becomes `RECONCILED` when its own `proofs.yml` receipt
+exists for that commit, since the statement comparison and its residual
+assumptions are already recorded here. With all three receipts, every
+`PROVEN` row's `pwg` is `2ii`. A leg counts towards a grade only once it is
+kernel-checked and `RECONCILED` (§8.2).
+
+=== The legs: where, how checked, toolchains
+
+* *Lean.* `verification/proofs/lean4/ResourceAlgebra.lean`, checked by
+`lean` 4.35.0 (pinned by `lean-toolchain`). CI installs the upstream
+release archive against a SHA256 and asserts the version: a §6 deviation,
+recorded in `proofs.yml`, state `open`. The arithmetic is proved by
+structural recursion, as in Agda's Prelude, so no theorem depends on
+`propext` or `Quot.sound`. CI fails if any printed theorem depends on an
+axiom.
+* *Rocq.* `verification/proofs/coq/ResourceAlgebra.v`, checked by `rocq
+compile` 9.3.0 with the standard library 9.2.0 (`Arith`, `Lia`), then by
+`rocqchk`. CI runs the upstream `rocq/rocq-prover:9.3.0` image, pinned by
+digest, and asserts the version: a §6 deviation, recorded in `proofs.yml`,
+state `open`. HWM equality uses `Peano_dec.le_unique`, which the standard
+library proves, not assumes. CI fails unless every printed theorem is
+closed under the global context.
+
+=== Why the Rocq leg is re-proved, not transported
+
+PROOF-POLICY §2 asks for Dedukti transport first. For this development it
+is `unavailable`, for two reasons checked on 2026-11-09:
+
+. *The translator cannot read the canonical profile.* Agda2Dedukti's last
+commit (`c7c7d67`, January 2022) pins a fork of Agda 2.6.3-dev
+(`Deducteam/agda@b026db1`) that has no `--cubical-compatible` option. It
+builds with Stack on GHC 8.10.7, whose download host this session's network
+refuses. So the translator was not run on these sources.
+. *Lambdapi's Rocq export drops the computation the proofs need.* The
+Agda2Dedukti encoding expresses Agda's definitional unfolding (`max`, `+`,
+every instance operation) as rewrite rules. Lambdapi 4.0.0's `raw_coq`
+export prints "Command not translated" for every `rule` and turns every
+symbol into an `Axiom`. On a three-line probe whose proof depends on one
+such rule, Rocq 9.3.0 rejects the exported definition (`"refl (s z)" has
+type "P (s z)" while it is expected to have type "P (add (s z) z)"`). The
+`stt_coq` export needs an encoding of simple type theory, which this is
+not. Even an output that type-checked would rest on one `Axiom` per symbol,
+which PROOF-POLICY §8.4 would have to list.
+
+=== Statement correspondence
+
+Both legs restate each Agda declaration with the same carriers, operations
+and quantifiers. These differences hold for every row:
+
+* Agda's `≡` lives in `Set`, checked `--without-K`. Rocq's and Lean's `=`
+live in an impredicative `Prop`, and Lean's is proof-irrelevant. Every
+statement here is an equation, an order fact or a negation, so this
+changes no statement's strength.
+* The law records (`IsAltMonoid`, `IsSeqMonoid`, `IsOrdered`, `IsDioid`,
+`IsAnnihilating`) are `Prop` records in Rocq and Lean and `Set` records in
+Agda, with the same fields. `ResourceAlgebra` itself has the same seven
+fields.
+* `max` and `min` are defined in both legs by the same three equations as
+Agda's Prelude (`rmax`, `rmin`). The Rocq leg proves them equal to the
+standard library's `Nat.max` and `Nat.min` before `lia` uses them.
+`_+_` recurses on its first argument in Agda and on its second in Rocq and
+Lean. It is the same function.
+* HWM's bound `drift ≤ peak` is Agda's own `_≤_` and the standard `le` in
+the legs. Both are the usual order on ℕ, so the carrier has the same
+elements, and in all three provers two grades are equal when their peak
+and drift are.
+
+[cols="1,2,2,2",options="header"]
+|===
+| Row | Agda | Lean (`RA.`) | Rocq
+
+| C-1 | `ResourceAlgebra`, `IsAltMonoid.unitʳ` | `ResourceAlgebra`, `IsAltMonoid.unitr` | `ResourceAlgebra`, `alt_unitr`
+| C-2 | `≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ`, `⊕-upperʳ` | `ResourceAlgebra.le_refl`, `le_trans`, `le_antisym`, `zero_least`, `add_upperl`, `add_upperr` | `le_refl`, `le_trans`, `le_antisym`, `zero_least`, `add_upperl`, `add_upperr`
+| C-3 | `IsDioid.ordered` | `IsDioid.ordered` | `dioid_ordered`
+| C-4a | `HWM-dioid`, `HWM-not-annihilating` | `dioid_not_annihilating` (their conjunction) | `dioid_not_annihilating` (their conjunction)
+| L-1 | `Loss`, `Loss-dioid`, `Loss-ordered`, `Loss-annihilating` | `Loss`, `Loss_dioid`, `Loss_ordered`, `Loss_annihilating` | the same names
+| M-1 | `MaxPlus`, `MaxPlus-dioid`, `MaxPlus-ordered`, `MaxPlus-annihilating` | `MaxPlus`, `MaxPlus_dioid`, `MaxPlus_ordered`, `MaxPlus_annihilating` | the same names
+| H-1 | `HWM`, `HWM-dioid`, `HWM-ordered` | `HWM`, `HWM_dioid`, `HWM_ordered`, `HWM_zero_eq_one` | the same names
+| H-3 | `HWM-not-annihilating` | `HWM_not_annihilating` | `HWM_not_annihilating`
+| N-1 | `MinMax`, `MinMax-dioid`, `MinMax-ordered`, `MinMax-annihilating` | `MinMax`, `MinMax_dioid`, `MinMax_ordered`, `MinMax_annihilating` | the same names
+| F-1 | `id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax` | `idHom`, `Hom.comp`, `idLax`, `LaxHom.comp`, `lax` | `id_hom`, `comp_hom`, `id_lax`, `comp_lax`, `lax`
+| F-2 | `peak-lax` | `peakLax` | `peak_lax`
+| F-3 | `peak-not-strict` | `peak_not_strict` | `peak_not_strict`
+| F-4 | `no-strict-from-HWM`, `no-strict-HWM→MaxPlus`, `no-strict-HWM→Loss` | `no_strict_from_HWM`, `no_strict_HWM_MaxPlus`, `no_strict_HWM_Loss` | the same names
+| F-5 | `zero-test-hom`, `support-hom`, `Loss→MaxPlus`, `maps-disagree-at-positive`, `Loss→MaxPlus-collapses`, `no-injective-Loss→MaxPlus` | `zeroTestHom`, `supportHom`, `Loss_to_MaxPlus`, `maps_disagree_at_positive`, `Loss_to_MaxPlus_collapses`, `no_injective_Loss_to_MaxPlus` | `zero_test_hom`, `support_hom`, `Loss_to_MaxPlus`, `maps_disagree_at_positive`, `Loss_to_MaxPlus_collapses`, `no_injective_Loss_to_MaxPlus`
+| F-6 | `support′-hom`, `MaxPlus→Loss` | `support'Hom`, `MaxPlus_to_Loss` | `support'_hom`, `MaxPlus_to_Loss`
+| F-7 | `loss-bottleneck` | `lossBottleneck` | `loss_bottleneck`
+| S-1 | `occupancy-is-not-cost` | `occupancy_is_not_cost` | `occupancy_is_not_cost`
+| S-2 | `alternatives-differ` | `alternatives_differ` | `alternatives_differ`
+| S-3 | `maxplus-order`, `loss-order-reversed` | `maxplus_order`, `loss_order_reversed` | `maxplus_order`, `loss_order_reversed`
+| S-4 | `bottleneck-is-not-sum` | `bottleneck_is_not_sum` | `bottleneck_is_not_sum`
+|===
+
+One row differs in kind. F-5's `Loss→MaxPlus` returns Agda's `_⊎_`, a sum
+in `Set` that says *which* of the two maps a morphism is. Lean's and
+Rocq's `Loss_to_MaxPlus` return `Or` in `Prop`, which says only that it is
+one of them. The Agda statement implies the legs' statements, and not
+conversely; every other F-5 statement is unaffected. No leg rests on an
+assumption beyond its prover's kernel.
 
 == Core (Core.agda)
 
@@ -303,7 +404,8 @@ That theorem belongs with K-CUT-LOSS in choreographic-types, and it is
 `OPEN`.
 * Morphisms into or out of MinMax, other than `loss-bottleneck`, are not
 classified.
-* The Rocq and Lean legs of every row (PROOF-NEEDS PN-2, PN-3).
+* The CI receipts that move the Rocq and Lean legs to `RECONCILED`
+(PROOF-NEEDS PN-2, PN-3).
 
 == Discipline
 

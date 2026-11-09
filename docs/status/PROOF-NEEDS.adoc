@@ -50,9 +50,11 @@ postulates, holes, libraries or warnings.
 | `scripts/check-agda.sh`; CI `proofs.yml`
 
 | PN-2
-| Each theorem is rechecked in Rocq. Route: Dedukti transport
-(Agda2Dedukti → Lambdapi → Rocq) first, hand re-proof where transport fails.
-The statement correspondence is recorded per theorem (policy §2.2).
+| Each theorem is rechecked in Rocq. Policy §2 puts Dedukti transport
+(Agda2Dedukti → Lambdapi → Rocq) first; for this development it is
+unavailable, so the leg is re-proved by hand (the evidence is in
+`PROOF-STATUS.adoc`). The statement correspondence is recorded per theorem
+(policy §2.2).
 | `verification/proofs/coq/`
 
 | PN-3
