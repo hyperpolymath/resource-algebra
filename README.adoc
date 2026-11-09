@@ -20,8 +20,8 @@ Four instances are checked against it:
 | Instance | Source of the definition | Alternatives / sequence | Status
 | `Instances.Loss` | echo-types `experimental/echo-additive/Grade.agda`, transcribed | min / + on ℕ ∪ {∞} | transcribed, PROVEN
 | `Instances.MaxPlus` | tropical-types `TropicalSessionTypes.lean`, transcribed | max / + on ℕ ∪ {−∞} | transcribed, PROVEN; Lean bridge OPEN
-| `Instances.HWM` | occupancy-types operational model, *proposed* (its R2–R3 algebra is not yet defined) | componentwise max / peak-and-drift | DESIGNED, PROVEN against this definition
-| `Instances.MinMax` | typed-wasm L11 bottleneck (`Tropical.tropMax`), which defined it locally | min / max on ℕ ∪ {∞} | PROVEN; typed-wasm adoption DESIGNED
+| `Instances.HWM` | occupancy-types' occupancy algebra, which adopts it (its O-1) | componentwise max / peak-and-drift | PROVEN; signed drift OPEN
+| `Instances.MinMax` | typed-wasm L11 bottleneck (`Tropical.tropMax`), which now transcribes it (`tropMax = minMaxSeq`) | min / max on ℕ ∪ {∞} | PROVEN; typed-wasm transcription TESTED there
 |===
 
 This repository is a kernel module of the family, not a family of its own.
@@ -66,7 +66,7 @@ runs opposite ways in the two; a bottleneck bound is not a loss bound.
 [source,bash]
 ----
 just check-agda  # core proofs and unit tests under --safe --without-K
-                  # --double-check, then every tests/reject/*.agda must be
+                  # --cubical-compatible (PROOF-POLICY §2.1) --double-check, then every tests/reject/*.agda must be
                   # refused at its invalid declaration with the message
                   # its `-- EXPECT:` line names
 ----

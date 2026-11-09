@@ -1,5 +1,23 @@
 == Changelog
 
+== 2026-11-09 — PROOF-POLICY §2.1 invocation, grade records, ledger fixes
+
+* `scripts/check-agda.sh` runs every module, unit test and expected
+  rejection under `--safe --without-K --cubical-compatible`, the invocation
+  PROOF-POLICY §2.1 makes canonical for theory proofs. Before, it ran
+  `--safe --without-K`. `scripts/check-proofs.sh` (the template's manifest
+  gate) uses the same three flags for Agda.
+* `scripts/check-agda.sh` scans `src/` for `postulate` outside comments
+  (PROOF-POLICY §8.4.6), alongside `--safe`.
+* `docs/status/PROOF-STATUS.adoc`: the §5 vocabulary (`DESIGNED` is not in it),
+  and a Proof Witness Grades section: Agda leg, invocation, version, import
+  cone and receipt; Rocq and Lean legs OPEN; `PWG-3` only at commits whose
+  `proofs.yml` run used the invocation above.
+* H-2 and N-2 had gone stale. occupancy-types adopted HWM as its occupancy
+  algebra (its O-1), and typed-wasm transcribes MinMax (`tropMax =
+  minMaxSeq`) and checks the transcription against this tree. The open list
+  now says K-CUT-LOSS is proved in choreographic-types (its K-1).
+
 == 2026-10-27 — Review fixes for the template CI port
 
 * `build/just/repo-init.just` is the template's at `8034fc9`, verbatim as
