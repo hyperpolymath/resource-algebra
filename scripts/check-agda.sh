@@ -8,10 +8,13 @@ prover="${AGDA:-agda}"
 "$prover" --version
 flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -i src)
 # PROOF-POLICY §8.4.6: a comment-aware postulate scan of the import cone
-# (src/), alongside --safe. Line comments and {- -} blocks are stripped
-# first, so a comment that mentions the word does not count.
-if perl -0ne 's/\{-.*?-\}//gs; s/--[^\n]*//g; $hit = 1 if /\bpostulate\b/; END { exit($hit ? 0 : 1) }' $(find src -name "*.agda"); then
-  echo "ERROR: postulate in the import cone (src/)" >&2
+# (src/), alongside --safe. scripts/scan-postulates.pl reads each file in
+# source order (nested block comments, line comments, strings) and fails on
+# a file it cannot read.
+mapfile -d '' cone < <(find src -name '*.agda' -print0)
+(( ${#cone[@]} > 0 )) || { echo "ERROR: no Agda sources in the import cone" >&2; exit 1; }
+if ! perl scripts/scan-postulates.pl "${cone[@]}"; then
+  echo "ERROR: postulate in the import cone (src/), or an unreadable file" >&2
   exit 1
 fi
 echo "PASS: no postulate in the import cone (src/)"

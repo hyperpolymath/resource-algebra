@@ -25,5 +25,7 @@ jobs:
           persist-credentials: false
       - name: Verify the checked Agda version
         run: test "$(agda --version)" = 'Agda version 2.6.4.3'
+      - name: Postulate scanner tests
+        run: bash tests/scan_postulates_test.sh
       - name: Core proofs and expected rejections
         run: bash scripts/check-agda.sh
