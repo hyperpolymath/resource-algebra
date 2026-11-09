@@ -8,12 +8,12 @@
 set -uo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 stub=$(mktemp -d); trap 'rm -rf "$stub"' EXIT
-cat > "$stub/find" <<'STUB'
+cat > "$stub/find" <<'FAKE_FIND'
 #!/usr/bin/env bash
 printf 'src/ResourceAlgebra/All.agda\0'
 echo "find: 'src/locked': Permission denied" >&2
 exit 1
-STUB
+FAKE_FIND
 chmod +x "$stub/find"
 
 out=$(PATH="$stub:$PATH" bash scripts/check-agda.sh 2>&1); rc=$?
