@@ -151,18 +151,42 @@ min-idem (suc m) = cong suc (min-idem m)
 
 ----------------------------------------------------------------------
 -- The usual order on ℕ (needed only by the high-water-mark instance)
-infix 4 _≤_
-data _≤_ : Nat → Nat → Set where
-  z≤n : ∀ {n} → zero ≤ n
-  s≤s : ∀ {m n} → m ≤ n → suc m ≤ suc n
+--
+-- Defined by recursion on ℕ, not as an indexed family. Matching on an
+-- indexed ≤ (z≤n, s≤s) unifies suc-headed indices, which needs constructor
+-- injectivity; under --cubical-compatible (PROOF-POLICY §2.1) Agda warns
+-- that such clauses do not compute along transports. Here every case split
+-- is on a ℕ, so the canonical profile checks without a warning. The record
+-- wrapper keeps m and n inferable from a proof's type, and z≤n, s≤s and
+-- ≤-pred are its smart constructors and destructor.
+infix 4 _≤ᵣ_ _≤_
+_≤ᵣ_ : Nat → Nat → Set
+zero  ≤ᵣ _     = ⊤
+suc _ ≤ᵣ zero  = ⊥
+suc m ≤ᵣ suc n = m ≤ᵣ n
+
+record _≤_ (m n : Nat) : Set where
+  constructor le
+  field unle : m ≤ᵣ n
+
+z≤n : ∀ {n} → zero ≤ n
+z≤n = le tt
+
+s≤s : ∀ {m n} → m ≤ n → suc m ≤ suc n
+s≤s (le p) = le p
+
+≤-pred : ∀ {m n} → suc m ≤ suc n → m ≤ n
+≤-pred (le p) = le p
 
 ≤-refl : ∀ n → n ≤ n
 ≤-refl zero    = z≤n
 ≤-refl (suc n) = s≤s (≤-refl n)
 
 ≤-trans : ∀ {m n p} → m ≤ n → n ≤ p → m ≤ p
-≤-trans z≤n       _         = z≤n
-≤-trans (s≤s p) (s≤s q) = s≤s (≤-trans p q)
+≤-trans {zero}                    _      _      = z≤n
+≤-trans {suc _} {zero}            (le ()) _
+≤-trans {suc _} {suc _} {zero}    _      (le ())
+≤-trans {suc _} {suc _} {suc _}   p      q      = s≤s (≤-trans (≤-pred p) (≤-pred q))
 
 +-monoʳ-≤ : ∀ m {n p} → n ≤ p → m + n ≤ m + p
 +-monoʳ-≤ zero    q = q
@@ -179,9 +203,11 @@ data _≤_ : Nat → Nat → Set where
 ≤-max-left (suc m) (suc n) = s≤s (≤-max-left m n)
 
 max-mono-≤ : ∀ {a a' b b'} → a ≤ a' → b ≤ b' → max a b ≤ max a' b'
-max-mono-≤ {a' = a'}          z≤n     q       = ≤-trans q (≤-max-right a' _)
-max-mono-≤ {a' = a'} {b' = b'} (s≤s p) z≤n     = ≤-trans (s≤s p) (≤-max-left a' b')
-max-mono-≤                     (s≤s p) (s≤s q) = s≤s (max-mono-≤ p q)
+max-mono-≤ {zero}  {a'}      {b' = b'}         _ q = ≤-trans q (≤-max-right a' b')
+max-mono-≤ {suc _} {zero}                      (le ()) _
+max-mono-≤ {suc _} {suc a'}  {zero}  {b'}      p _ = ≤-trans p (≤-max-left (suc a') b')
+max-mono-≤ {suc _} {suc _}   {suc _} {zero}    _ (le ())
+max-mono-≤ {suc _} {suc _}   {suc _} {suc _}   p q = s≤s (max-mono-≤ (≤-pred p) (≤-pred q))
 
 ----------------------------------------------------------------------
 -- Disjoint sum (for the morphism classifications)
@@ -192,8 +218,14 @@ data _⊎_ (A B : Set) : Set where
 
 ----------------------------------------------------------------------
 -- More of the usual order, for the min-max instance and the morphisms
+-- Injectivity through a projection, not a match on refl: matching refl
+-- against suc m ≡ suc n needs constructor injectivity (see _≤_ above).
+pred : Nat → Nat
+pred zero    = zero
+pred (suc n) = n
+
 suc-injective : ∀ {m n} → suc m ≡ suc n → m ≡ n
-suc-injective refl = refl
+suc-injective = cong pred
 
 +-cancelˡ : ∀ k {m n} → k + m ≡ k + n → m ≡ n
 +-cancelˡ zero    p = p
@@ -212,18 +244,21 @@ suc-injective refl = refl
         (subst (λ y → p + m ≤ y) (+-comm p n) (+-monoʳ-≤ p q))
 
 max-lub : ∀ {a b c} → a ≤ c → b ≤ c → max a b ≤ c
-max-lub {zero}           _       q       = q
-max-lub {suc a} {zero}   p       _       = p
-max-lub {suc a} {suc b}  (s≤s p) (s≤s q) = s≤s (max-lub p q)
+max-lub {zero}                    _      q = q
+max-lub {suc _} {zero}            p      _ = p
+max-lub {suc _} {suc _} {zero}    (le ()) _
+max-lub {suc _} {suc _} {suc _}   p      q = s≤s (max-lub (≤-pred p) (≤-pred q))
 
 -- max m n is n once m ≤ n; min m n is m once m ≤ n.
 max-≤ : ∀ {m n} → m ≤ n → max m n ≡ n
-max-≤ z≤n     = refl
-max-≤ (s≤s p) = cong suc (max-≤ p)
+max-≤ {zero}          _      = refl
+max-≤ {suc _} {zero}  (le ())
+max-≤ {suc _} {suc _} p      = cong suc (max-≤ (≤-pred p))
 
 min-≤ : ∀ {m n} → m ≤ n → min m n ≡ m
-min-≤ z≤n     = refl
-min-≤ (s≤s p) = cong suc (min-≤ p)
+min-≤ {zero}          _      = refl
+min-≤ {suc _} {zero}  (le ())
+min-≤ {suc _} {suc _} p      = cong suc (min-≤ (≤-pred p))
 
 min-≥ : ∀ {m n} → n ≤ m → min m n ≡ n
 min-≥ {m} {n} p = trans (min-comm m n) (min-≤ p)

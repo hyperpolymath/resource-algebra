@@ -1,15 +1,91 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-= resource-algebra — Proof Needs
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Proof Requirements — resource-algebra
+:revdate: 2026-11-09
 
-This file replaced the RSR template placeholder on 2026-11-09. The template
-listed Idris2 ABI and API obligations (ABI-1..5, TP-1..2) that do not apply
-to this repository: it has no ABI or FFI surface, only Agda theory.
+What this repository owes, classified by the estate proof policy
+(`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
+discharged, and how, is in `PROOF-STATUS.adoc`.
 
-The claims ledger, including what is open, is
-link:PROOF-STATUS.adoc[PROOF-STATUS.adoc]. Open needs, in brief:
+== Classification
 
-* the PROOF-POLICY §2.1 invocation in the gate (`--cubical-compatible`);
-* per-theorem PWG-3 receipts (PROOF-POLICY §8), then Rocq and Lean legs;
-* a stated least-upper-bound lemma for C-2;
-* the items under "Open" in the ledger (L-2 import direction, M-2, H-2, N-2,
-  transport of K-CUT-LOSS along a morphism).
+Every obligation here is *theory* (policy §1): the algebra, its instances,
+the morphisms between them and the separations hold for any implementation.
+The repository ships no executable code, ABI, FFI, wire format or protocol.
+
+[cols="2,1,3",options="header"]
+|===
+| Obligation class | Applies? | Why
+
+| Theory (Agda, rechecked in Rocq and Lean)
+| Yes
+| Everything in `src/ResourceAlgebra/`.
+
+| APIs, ABIs and engineering properties (Idris2)
+| No
+| No exported functions, memory layout or foreign interface exist to state
+them about. The template's mandatory ABI rows (ABI-1..5) and its typing
+rows (TP-1, TP-2) named template example files, not this repository's code;
+they were removed with those files on 2026-11-09.
+
+| Rust (Creusot, Pearlite, Verus) and Ada (SPARK)
+| No
+| No Rust or Ada code.
+
+| Protocols (TLA+, policy §4 exception)
+| No
+| No concurrent or distributed behaviour.
+|===
+
+== Obligations
+
+[cols="1,4,2",options="header"]
+|===
+| # | Obligation | Where
+
+| PN-1
+| Every theorem in `PROOF-STATUS.adoc` checks in Agda under the canonical
+invocation `--safe --without-K --cubical-compatible` (policy §2.1), with no
+postulates, holes or libraries, under `-W error` (only
+`UnsupportedIndexedMatch` is suppressed) and the estate strict flag set.
+| `scripts/check-agda.sh`; CI `proofs.yml`
+
+| PN-2
+| Each theorem is rechecked in Rocq. Policy §2 puts Dedukti transport
+(Agda2Dedukti → Lambdapi → Rocq) first; for this development it is
+unavailable, so the leg is re-proved by hand (the evidence is in
+`PROOF-STATUS.adoc`). The statement correspondence is recorded per theorem
+(policy §2.2).
+| `verification/proofs/coq/`
+
+| PN-3
+| Each theorem is rechecked in Lean, re-proved by hand without Mathlib (no
+released exporter reaches Lean; policy §2). The statement correspondence is
+recorded per theorem.
+| `verification/proofs/lean4/`
+
+| PN-4
+| Every PROVEN row cites the declaration that discharges it, and each
+expected rejection fails with its stated message.
+| `tests/reject/`, `scripts/check-agda.sh`
+
+| PN-5
+| Close or keep stating the open theory rows: C-4b (an annihilating ordered
+algebra that is not a dioid) and M-2 (agreement with tropical-types' Lean
+semiring).
+| `PROOF-STATUS.adoc`
+|===
+
+== Out of scope here
+
+* K-CUT-LOSS, and its transport along a morphism, belong to
+`choreographic-types` (this repository's IS-NOT). This repository supplies
+the algebra it is parametric in.
+* occupancy-types' own algebra: HWM is a proposal to it (H-2).
+
+== Banned constructs
+
+No escape hatch may appear in a proof file: `postulate` (Agda, refused by
+`--safe`), `Admitted`/`admit`/`Axiom` without a recorded disposition (Rocq),
+`sorry`/`axiom` without a recorded disposition (Lean). `just
+proof-scan-dangerous` and CI's `panic-attack assail` enforce this.

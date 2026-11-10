@@ -29,8 +29,8 @@ module ResourceAlgebra.Morphism where
 
 open import ResourceAlgebra.Prelude
 open import ResourceAlgebra.Core
-open import ResourceAlgebra.Instances.Loss    as L using (Loss; fin; inf; _⊓g_; _+g_)
-open import ResourceAlgebra.Instances.MaxPlus as M using (MaxPlus; Tropical; val; bot; tAdd; tMul)
+open import ResourceAlgebra.Instances.Loss    as L using (Loss; fin; inf; _⊓g_; _+g_; fin-injective)
+open import ResourceAlgebra.Instances.MaxPlus as M using (MaxPlus; Tropical; val; bot; tAdd; tMul; val-injective)
 open import ResourceAlgebra.Instances.HWM     as H using (HWM; hwm; peak; _⊕h_; _⊗h_)
 open import ResourceAlgebra.Instances.MinMax  as N using (MinMax; _⊔g_)
 
@@ -193,9 +193,6 @@ support-hom = record
   ⊗-case (fin m) inf     = refl
   ⊗-case inf     b       = refl
 
-val-injective : ∀ {m n} → val m ≡ val n → m ≡ n
-val-injective refl = refl
-
 -- Every strict morphism Loss → MaxPlus is zero-test or support, pointwise.
 -- fin 0 ⊓g fin 1 = fin 0 forces h (fin 1) ∈ {bot, val 0}; every fin n is
 -- fin 1 sequenced n times, so h (fin 1) decides the rest.
@@ -269,9 +266,6 @@ support′-hom = record
   ⊗-case (val m) (val n) = refl
   ⊗-case (val m) bot     = refl
   ⊗-case bot     b       = refl
-
-fin-injective : ∀ {m n} → fin m ≡ fin n → m ≡ n
-fin-injective refl = refl
 
 -- val 0 ⊕ val 1 = val 1 forces h (val 1) = fin 0 ⊓g h (val 1), which rules
 -- out inf and pins every finite value to fin 0.

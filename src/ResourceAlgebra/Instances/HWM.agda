@@ -34,17 +34,23 @@ record Grade : Set where
 open Grade public using (peak; drift)
 
 -- Proofs of m ≤ n are unique, so a grade is determined by peak and drift.
+-- By recursion on the bounds: zero ≤ n is ⊤, whose proofs are equal by eta.
+≤ᵣ-irrelevant : ∀ m n (p q : m ≤ᵣ n) → p ≡ q
+≤ᵣ-irrelevant zero    _       _  _ = refl
+≤ᵣ-irrelevant (suc _) zero    () _
+≤ᵣ-irrelevant (suc m) (suc n) p  q = ≤ᵣ-irrelevant m n p q
+
 ≤-irrelevant : ∀ {m n} (p q : m ≤ n) → p ≡ q
-≤-irrelevant z≤n     z≤n     = refl
-≤-irrelevant (s≤s p) (s≤s q) = cong s≤s (≤-irrelevant p q)
+≤-irrelevant {m} {n} (le p) (le q) = cong le (≤ᵣ-irrelevant m n p q)
 
 hwm-≡ : ∀ {p p' n n'} {b : n ≤ p} {b' : n' ≤ p'}
       → p ≡ p' → n ≡ n' → hwm p n b ≡ hwm p' n' b'
 hwm-≡ {b = b} {b' = b'} refl refl = cong (hwm _ _) (≤-irrelevant b b')
 
 max-absorb-≤ : ∀ {n p} → n ≤ p → max p n ≡ p
-max-absorb-≤ {p = p} z≤n = max-zeroʳ p
-max-absorb-≤ (s≤s q)     = cong suc (max-absorb-≤ q)
+max-absorb-≤ {zero}  {p}     _      = max-zeroʳ p
+max-absorb-≤ {suc _} {zero}  (le ())
+max-absorb-≤ {suc _} {suc _} q      = cong suc (max-absorb-≤ (≤-pred q))
 
 ----------------------------------------------------------------------
 -- Operations

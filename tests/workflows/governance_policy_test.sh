@@ -85,7 +85,7 @@ const arrival = section(claude, "## Proofs — which prover for which obligation
 const guide = read("verification/proofs/README.adoc");
 const mapping = section(guide, "== Which prover for which obligation");
 const dependencies = section(guide, "== Third-party code");
-const layout = section(guide, "== Directory structure");
+const layout = section(guide, "== This repository");
 const adding = section(guide, "== Adding new proofs");
 
 for (const [name, text] of [["arrival guidance", arrival], ["proof guide", guide]]) {
@@ -163,17 +163,26 @@ for (const text of [dependencies, arrival]) {
 }
 console.log("PASS: third-party dependencies remain ASSUMED boundaries and verification is a preference");
 
-// Negative regression: a shipped example, even one with a gated manifest
-// entry, must never become evidence of completed proofs or a theory recheck.
+// Negative regression: the template's example modules were never evidence of
+// this repository's theorems. This child deleted them (as the template's own
+// guidance says to); none may come back, and the layout must name the real
+// source and legs.
 const examples = prose(layout);
 for (const file of ["Properties.agda", "TypeSafety.v", "ApiTypes.lean", "Types.idr", "StateMachine.tla"]) {
-  assert.ok(examples.includes(file), `layout guidance must identify example ${file}`);
+  assert.ok(examples.includes(file), `layout must record the deleted example ${file}`);
 }
-assert.match(examples, /layout examples, not evidence/);
-assert.match(examples, /quarantine.*MANIFEST/);
-assert.match(examples, /TypeSafety\.v and ApiTypes\.lean are not rechecks of Properties\.agda/);
-assert.match(examples, /replaces them with its own proofs or deletes them, and never counts them in docs\/status\/PROOF-STATUS\.adoc/);
-console.log("PASS: shipped examples cannot be counted as proof evidence or theory rechecks");
+for (const path of ["verification/proofs/agda/Properties.agda", "verification/proofs/coq/TypeSafety.v",
+                    "verification/proofs/lean4/ApiTypes.lean", "verification/proofs/idris2/Types.idr",
+                    "verification/proofs/idris2/ABI/Pointers.idr", "verification/proofs/idris2/ABI/Layout.idr",
+                    "verification/proofs/idris2/ABI/Platform.idr", "verification/proofs/idris2/ABI/Foreign.idr",
+                    "verification/proofs/idris2/ABI/Compliance.idr",
+                    "verification/proofs/tlaplus/StateMachine.tla"]) {
+  assert.ok(!existsSync(resolve(root, path)), `template example must not return: ${path}`);
+}
+assert.match(examples, /layout examples, not evidence, and were deleted/);
+assert.match(examples, /src\/ResourceAlgebra\/ # Agda: the source of truth/);
+assert.match(examples, /Each recheck leg, its route and its statement correspondence are recorded per theorem in docs\/status\/PROOF-STATUS\.adoc/);
+console.log("PASS: template examples stay deleted and cannot stand in for recheck legs");
 
 assert.match(prose(adding), /classify the obligation.*docs\/status\/PROOF-NEEDS\.adoc/i);
 assert.match(prose(adding), /put Rust and Ada proofs on the code/i);
@@ -190,10 +199,13 @@ console.log("PASS: new proof instructions require needs, verification, rechecks 
 // Update this expectation deliberately when adopting the next canon release.
 const field = (key) => execFileSync("bash", [resolve(root, "scripts/deed-field.sh"),
   resolve(root, "resource-algebra_chora.deed"), "canon", key], { encoding: "utf8" }).trim();
+// Canon 2.1.4 was an editorial PATCH; 2.1.5 changes the gates table (the
+// formal-proofs row needs a prover source file; a container no longer needs
+// its own directory). Both follow the template (rsr-template-repo#289, #298).
 assert.deepEqual([field("version"), field("criteria-sha256"), field("gates-sha256")], [
-  "2.1.3",
+  "2.1.5",
   "6a5aa8857bd0d0d58ef48827938ca17c251b6b854dacf59d306388d61694d82a",
-  "2f31f46d4753432e0aa8c9c28f339e18e062c98dc6e6ef4ecbb76993cf37638b",
-], "canon 2.1.3 must retain the criteria identity and adopt the new gates identity");
-console.log("PASS: the deed adopts the complete canon 2.1.3 identity");
+  "5c510bba025be718deebb12d0333bfe7db2da43c66578b728b1a334df65290b1",
+], "canon 2.1.5 keeps the criteria identity and adopts the new gates identity");
+console.log("PASS: the deed adopts the complete canon 2.1.5 identity");
 JS
