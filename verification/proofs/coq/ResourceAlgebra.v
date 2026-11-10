@@ -122,6 +122,14 @@ Section Order.
     rewrite (alt_comm (ralt R) a b), <- (alt_assoc (ralt R)), (alt_idem (ralt R)).
     reflexivity.
   Qed.
+
+  (** Agda [⊕-least]: any common upper bound of [a] and [b] is above [a ⊕ b],
+      so with [add_upperl]/[add_upperr] [⊕] is the join of [≼]. *)
+  Lemma add_least : forall a b c, Le R a c -> Le R b c -> Le R (radd R a b) c.
+  Proof.
+    unfold Le; intros a b c p q.
+    rewrite (alt_assoc (ralt R)), q. exact p.
+  Qed.
 End Order.
 
 Record IsOrdered (R : ResourceAlgebra) : Prop := {
@@ -570,6 +578,7 @@ Print Assumptions le_trans.
 Print Assumptions le_antisym.
 Print Assumptions add_upperl.
 Print Assumptions add_upperr.
+Print Assumptions add_least.
 Print Assumptions dioid_ordered.
 Print Assumptions dioid_not_annihilating.
 Print Assumptions Loss_dioid.

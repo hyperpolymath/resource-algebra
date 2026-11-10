@@ -1,9 +1,10 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 --
 -- Computed witnesses that the four instances are not interchangeable.
--- Each is `refl` plus a decidable inequality on ℕ, so each is TESTED by the
+-- S-1, S-2 and S-4 are `refl` plus a decidable inequality on ℕ; S-3 is two
+-- `refl`s (the opposite direction is implied, not stated).  Each is checked by the
 -- typechecker's evaluator, not argued in prose.  They discharge, as checked
 -- facts, four boundary sentences the family map currently states only in
 -- words:

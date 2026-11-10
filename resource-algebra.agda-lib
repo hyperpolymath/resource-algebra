@@ -1,3 +1,3 @@
 name: resource-algebra
 include: src
-flags: --safe --without-K --cubical-compatible
+flags: --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness

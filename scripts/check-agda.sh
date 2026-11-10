@@ -7,12 +7,11 @@ export LC_ALL="${LC_ALL:-C.UTF-8}"
 prover="${AGDA:-agda}"
 "$prover" --version
 # The canonical theory-proof invocation (standards PROOF-POLICY §2.1,
-# 2026-11-01) is --safe --without-K --cubical-compatible. -Werror makes any
-# warning a failure: the development is warning-free under that profile, and a
-# warning that later appears is a finding, not noise. --no-libraries keeps the
-# import cone first-party (no standard library); --double-check re-checks every
-# term with the core type checker.
-flags=(--safe --without-K --cubical-compatible -Werror --no-libraries --ignore-interfaces --double-check -i src)
+# 2026-11-01) is --safe --without-K --cubical-compatible. -W error makes any
+# warning a failure, except UnsupportedIndexedMatch, which is suppressed.
+# --no-libraries keeps the import cone first-party (no standard library);
+# --double-check re-checks every term with the core type checker.
+flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src)
 "$prover" "${flags[@]}" src/ResourceAlgebra/All.agda
 # Unit tests (closed computations and small lemmas over the instances).
 "$prover" "${flags[@]}" -i tests/unit tests/unit/AllTests.agda

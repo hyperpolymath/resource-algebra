@@ -240,6 +240,12 @@ theorem add_upperr (a b : R.Grade) : R.Le b (R.add a b) := by
   unfold Le
   rw [R.alt.comm a b, ← R.alt.assoc, R.alt.idem]
 
+/-- Agda `⊕-least`: any common upper bound of `a` and `b` is above `a ⊕ b`,
+so with `add_upperl`/`add_upperr` `⊕` is the join of `≼`. -/
+theorem add_least {a b c : R.Grade} (p : R.Le a c) (q : R.Le b c) :
+    R.Le (R.add a b) c :=
+  (R.alt.assoc a b c).trans ((congrArg (R.add a) q).trans p)
+
 end ResourceAlgebra
 
 structure IsOrdered (R : ResourceAlgebra) : Prop where
@@ -726,6 +732,7 @@ other answer. -/
 #print axioms RA.ResourceAlgebra.zero_least
 #print axioms RA.ResourceAlgebra.add_upperl
 #print axioms RA.ResourceAlgebra.add_upperr
+#print axioms RA.ResourceAlgebra.add_least
 #print axioms RA.IsDioid.ordered
 #print axioms RA.dioid_not_annihilating
 #print axioms RA.Loss

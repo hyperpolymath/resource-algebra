@@ -46,7 +46,8 @@ they were removed with those files on 2026-11-09.
 | PN-1
 | Every theorem in `PROOF-STATUS.adoc` checks in Agda under the canonical
 invocation `--safe --without-K --cubical-compatible` (policy §2.1), with no
-postulates, holes, libraries or warnings.
+postulates, holes or libraries, under `-W error` (only
+`UnsupportedIndexedMatch` is suppressed) and the estate strict flag set.
 | `scripts/check-agda.sh`; CI `proofs.yml`
 
 | PN-2
