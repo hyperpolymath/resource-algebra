@@ -1,5 +1,16 @@
 == Changelog
 
+== 2026-11-11 — Proof receipt and grades at f211fc1
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed`: the proof
+  receipt (PROOF-POLICY §8.5.1) for source commit `f211fc1`, from
+  `proofs.yml` run `43056527841`: the trusted base, and for each of the 29
+  rows its three legs and their receipts.
+* The standards reader derives PWG-1 for 27 rows and `ungraded` for the two
+  `OPEN` rows (C-4b, M-2). `docs/status/PROOF-STATUS.adoc` records those
+  grades, the new receipts and digests, and drops "at most `2ii`".
+* The grades hold at that commit only. No gate writes the receipt yet.
+
 == 2026-11-11 — Agda gate checks the prover's trusted base (PROOF-POLICY §8.4.7)
 
 * `scripts/check-agda.sh` takes the import cone from Agda

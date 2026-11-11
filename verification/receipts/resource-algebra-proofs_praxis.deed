@@ -1,0 +1,544 @@
+;; SPDX-License-Identifier: MPL-2.0
+;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+;;
+;; Proof receipt of resource-algebra (PROOF-POLICY §8.5.1, profile
+;; proof-receipt). It describes one source commit and the proofs.yml run on
+;; it. Every :pwg here is the value the reader derives from the legs and
+;; receipts (standards 1-formats/deed/tools/deed_lint.js --proof-receipt-json);
+;; the reader refuses a recorded grade that differs. The rows and their
+;; statement correspondence are in docs/status/PROOF-STATUS.adoc.
+;; A later commit that changes src/ or a recheck leg is not described here.
+(praxis-deed
+  :schema-version "1.0.0"
+  :canonical-name "resource-algebra-proof-receipt"
+  :beholding-chora #u5"estate/chora"
+  :profile proof-receipt
+  :repository "hyperpolymath/resource-algebra"
+  :source-commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+  (trusted-base
+    (primitive :prover agda :module "Agda.Primitive" :name "Level" :binding "BUILTIN LEVEL")
+    (primitive :prover agda :module "Agda.Primitive" :name "lzero" :binding "BUILTIN LEVELZERO")
+    (primitive :prover agda :module "Agda.Primitive" :name "lsuc" :binding "BUILTIN LEVELSUC")
+    (primitive :prover agda :module "Agda.Primitive" :name "_⊔_" :binding "BUILTIN LEVELMAX"))
+  (claim :id "C-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "C-2" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "C-3" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "C-4a" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "C-4b" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token open :state AGDA-PENDING)
+    (leg :prover rocq :route unavailable :reason "the claim is OPEN: no instance witnesses it yet")
+    (leg :prover lean :route unavailable :reason "the claim is OPEN: no instance witnesses it yet"))
+  (claim :id "L-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "M-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "M-2" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token open :state AGDA-PENDING)
+    (leg :prover rocq :route unavailable :reason "the claim is OPEN: a cross-prover bridge obligation with no mechanical link")
+    (leg :prover lean :route unavailable :reason "the claim is OPEN: a cross-prover bridge obligation with no mechanical link"))
+  (claim :id "H-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "H-3" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "N-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "Q-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "Q-2" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "Q-3" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "Q-4" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-2" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-3" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-4" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-5" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-6" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-7" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-8" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-9" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "F-10" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "S-1" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "S-2" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "S-3" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+  (claim :id "S-4" :pwg PWG-1 :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "agda 2.6.4.3"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
+               :state current))
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "rocq 9.3.0"
+               :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
+               :state current))
+    (leg :prover lean :route re-proved :token proven :state RECONCILED
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
+               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+               :checker "lean 4.35.0"
+               :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
+               :state current)))
+)

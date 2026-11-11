@@ -16,14 +16,16 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 29 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 29. Rows Q-1 to Q-4 and F-8 to F-10 were added on 2026-11-11 and
-have no receipt. Every grade is reset by the 2026-11-10 merge of main, which
-changed the Agda pragmas (the estate strict flag set) and added `⊕-least`
-(C-2) to the Agda source and to both legs. The receipts below are for
-source commit `9f175cc`, before that merge, so they grade nothing now. A
-`proofs.yml` run on the merged commit whose three legs pass restores the
-grades it supports (§8.4). Two rows are `OPEN` (C-4b, M-2).
+Out of 29 theory rows: PWG-1: 27 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 2. The grades hold at source commit
+`f211fc1406d345fa6e972bcfc960c0acd57df1cd` only, the commit the proof
+receipt describes (`verification/receipts/resource-algebra-proofs_praxis.deed`).
+The standards reader (`deed_lint.js --proof-receipt-json`) derives every
+grade there from the legs and receipts, and refuses a recorded grade that
+differs (§8.4). The two ungraded rows are `OPEN` (C-4b, M-2). No row rests
+on an axiom: the Agda leg is `--safe` with the trusted base below, the Rocq
+leg prints every theorem closed under the global context, and the Lean leg
+prints no axiom for any theorem.
 `foundation_diverse` is false for every row: Agda, Rocq and Lean are all
 dependent type theories (§8.3).
 
@@ -82,7 +84,7 @@ Unless a row says otherwise, every theorem row carries this record:
 | source
 | `PROVEN`
 | `AGDA-VERIFIED`
-| CI run `42629220745`, job `129200854374`
+| CI run `43056527841`, job `130647335990`
 
 | Rocq
 | `re-proved` (transport `unavailable`; see below)
@@ -90,21 +92,23 @@ Unless a row says otherwise, every theorem row carries this record:
 under the global context), and `rocqchk` rechecks the compiled file
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `42629220745`, job `129200854825`
+| CI run `43056527841`, job `130647335991`
 
 | Lean
 | `re-proved`, Lean core only, no Mathlib
 | `PROVEN`: no axiom (`#print axioms` reports none for every theorem)
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `42629220745`, job `129200854861`
+| CI run `43056527841`, job `130647335366`
 |===
 
 === Receipts
 
 All three legs passed in one `proofs.yml` run,
-https://github.com/hyperpolymath/resource-algebra/actions/runs/42629220745[`42629220745`],
-on source commit `9f175cc57f9c2c2db255c1b3161e24cfba4abc4d` (2026-11-09).
+https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841[`43056527841`],
+on source commit `f211fc1406d345fa6e972bcfc960c0acd57df1cd` (2026-11-11), the
+merge of resource-algebra#27. The machine-readable record is
+`verification/receipts/resource-algebra-proofs_praxis.deed` (§8.5.1).
 Each job's run summary holds its receipt: the checker and its asserted
 version, the invocation, the input digest, the result and the axioms.
 
@@ -114,29 +118,34 @@ version, the invocation, the input digest, the result and the axioms.
 
 | Agda
 | Agda 2.6.4.3 (Debian `agda-bin 2.6.4.3-1+b2`)
-| `dd29174a2570c0e8…0391365` over `src/`; `--safe`, so no postulate
+| `93e1e3c24f2cd877…b319084d` over `src/`; `--safe`, the postulate scan of
+`src/`, and the trusted base: `Level`, `lzero`, `lsuc` and `_⊔_` in
+`Agda.Primitive`, each bound by its `BUILTIN` pragma
 
 | Rocq
 | Rocq 9.3.0, stdlib 9.2.0, then `rocqchk`
-| `b409c3515a89638d…486f8714`; every printed theorem closed under the
+| `b98ca436c810a4fb…24228f00`; every printed theorem closed under the
 global context
 
 | Lean
 | Lean 4.35.0, core only
-| `e9cf75e17d55e5ba…53b064dd`; no printed theorem depends on an axiom
+| `7b4242279bcb645f…39a02053`; no printed theorem depends on an axiom
 |===
 
-These receipts are historical. After them, F-5's classifier in both legs
-changed to return a sum, as Agda's does; the 2026-11-10 merge of main
-changed the Agda pragmas; and `⊕-least` was added to the Agda source and
-to both legs (`add_least`). So they recheck no row of the merged commit, and
-every row is `ungraded` until a `proofs.yml` run on that commit passes. A
-failing run keeps the grades it does not support at `ungraded` (§8.4).
+The input digests above were computed from the tree at that commit, by the
+same commands the receipt steps of `proofs.yml` run.
 
-When graded, a row is at most `2ii`, not `1`. `PWG-1` also needs a current receipt for
-every witness on every source commit (§8.2). These receipts live in the
-run summaries, which GitHub expires, and are not yet kept with the
-commits they describe.
+The grades do not carry forward (§8.4). A later commit that changes `src/`,
+a recheck leg, the gate or the checker pins needs a new receipt for the
+new commit, and until then its rows fall back to the grade its receipts
+support. The receipt deed is written by hand from the run; no gate writes
+or recomputes it yet. The run summaries that hold the per-leg digests are
+kept by GitHub for a limited time.
+
+Earlier receipts: run `42629220745` on source commit
+`9f175cc57f9c2c2db255c1b3161e24cfba4abc4d` (2026-11-09). They are
+`superseded`: F-5's classifier, the strict flag set and `⊕-least` all
+changed after them.
 
 === The legs: where, how checked, toolchains
 
@@ -258,25 +267,25 @@ on an assumption beyond its prover's kernel.
 | `ResourceAlgebra`: alternatives form an idempotent commutative monoid and
 sequencing a monoid.
 | `PROVEN` (the definition, plus the derived `unitʳ`)
-| ungraded
+| 1
 
 | C-2
 | The relation `≼` induced by ⊕ is a partial order. `𝟘` is least and `⊕` is
 its join.
 | `PROVEN` (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`;
 the least-upper-bound half is `⊕-least`, from main #21)
-| ungraded
+| 1
 
 | C-3
 | Every dioid is ordered: distributivity makes `⊗` monotone on both sides.
 | `PROVEN` (`IsDioid.ordered`)
-| ungraded
+| 1
 
 | C-4a
 | A dioid need not be annihilating. HWM is a dioid and is not annihilating.
 | `PROVEN` (`HWM-dioid`, `HWM-not-annihilating`); control
 `tests/reject/HWMAnnihilates.agda`
-| ungraded
+| 1
 
 | C-4b
 | An annihilating ordered algebra need not be a dioid.
@@ -294,13 +303,13 @@ the least-upper-bound half is `⊕-least`, from main #21)
 | `Loss` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
 `IsAnnihilating`, with ⊕ = min, ⊗ = +, 𝟘 = inf and 𝟙 = fin 0.
 | `PROVEN` (Instances/Loss.agda)
-| ungraded
+| 1
 
 | M-1
 | `MaxPlus` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
 `IsAnnihilating`, with ⊕ = max, ⊗ = +, 𝟘 = bot and 𝟙 = val 0.
 | `PROVEN` (Instances/MaxPlus.agda)
-| ungraded
+| 1
 
 | M-2
 | `MaxPlus` agrees with tropical-types' `instance : CommSemiring Tropical`
@@ -313,13 +322,13 @@ none is claimed.
 | `HWM` (peak, drift, with drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`
 and `IsOrdered`, and 𝟘 ≡ 𝟙.
 | `PROVEN` (Instances/HWM.agda)
-| ungraded
+| 1
 
 | H-3
 | `HWM` has no annihilating zero.
 | `PROVEN` (`HWM-not-annihilating`); control
 `tests/reject/HWMAnnihilates.agda`
-| ungraded
+| 1
 
 | N-1
 | `MinMax` (the bottleneck algebra) is a `ResourceAlgebra`, `IsDioid`,
@@ -327,7 +336,7 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = min and ⊗ = max (`_⊔g_`, with `inf` absorbing), with 𝟘 = inf and
 𝟙 = fin 0.
 | `PROVEN` (Instances/MinMax.agda)
-| ungraded
+| 1
 
 | Q-1
 | `Questions n` (a "which" grade over `n` downstream questions) is a
@@ -336,19 +345,19 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = intersection and ⊗ = union, bit by bit, with 𝟘 = every question lost
 and 𝟙 = none lost.
 | `PROVEN` (Instances/Questions.agda)
-| ungraded
+| 1
 
 | Q-2
 | With two questions, `collapse` (loses question 1) and `shuffle` (loses
 question 0) each lose one question and are different grades: a count of
 lost questions cannot tell them apart.
 | `PROVEN` (`same-amount-different-loss`)
-| ungraded
+| 1
 
 | Q-3
 | In sequence, `collapse` then `shuffle` loses both questions.
 | `PROVEN` (`both-lost`)
-| ungraded
+| 1
 
 | Q-4
 | As alternatives, `collapse ⊕ shuffle` is 𝟙 (no question lost), while
@@ -356,7 +365,7 @@ neither branch is 𝟙. So ⊕ answers "is question i kept on some branch?"
 and not "does one branch keep every question?".
 | `PROVEN` (`no-branch-achieves-meet`, with Q-2); control
 `tests/reject/QuestionsMeetIsABranch.agda`
-| ungraded
+| 1
 |===
 
 == Morphisms (Morphism.agda)
@@ -373,26 +382,26 @@ it maps ⊗ to at most ⊗: that is what transporting a bound needs.
 | Both notions have identities and compose, and every strict morphism is
 lax.
 | `PROVEN` (`id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax`)
-| ungraded
+| 1
 
 | F-2
 | `peak : HWM → MaxPlus` is lax: the peak of a sequence never exceeds the
 sum of the peaks.
 | `PROVEN` (`peak-lax`)
-| ungraded
+| 1
 
 | F-3
 | `peak` is not strict: it does not preserve ⊗, whatever it does to the
 units.
 | `PROVEN` (`peak-not-strict`); control `tests/reject/PeakIsStrict.agda`
-| ungraded
+| 1
 
 | F-4
 | No strict morphism leaves HWM for an algebra with 𝟘 ≢ 𝟙. In particular,
 none goes to MaxPlus or to Loss.
 | `PROVEN` (`no-strict-from-HWM`, `no-strict-HWM→MaxPlus`,
 `no-strict-HWM→Loss`)
-| ungraded
+| 1
 
 | F-5
 | Exactly two strict morphisms Loss → MaxPlus exist, `zero-test` and
@@ -402,7 +411,7 @@ morphism is one of them (`Loss→MaxPlus`). They are distinct
 (`maps-disagree-at-positive`, tests/unit/MorphismTest.agda), and every
 morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
 `no-injective-Loss→MaxPlus`).
-| ungraded
+| 1
 
 | F-6
 | Exactly one strict morphism MaxPlus → Loss exists, `support′`.
@@ -410,13 +419,13 @@ resource-algebra#3 sketched this direction as "symmetric" to
 Loss → MaxPlus, but it is not: there is one map, not two. The issue's other
 claim, that every positive grade goes to a single point, holds.
 | `PROVEN` (`support′-hom`, `MaxPlus→Loss`)
-| ungraded
+| 1
 
 | F-7
 | The identity on the carrier is a lax morphism Loss → MinMax: a bottleneck
 never exceeds the sum.
 | `PROVEN` (`loss-bottleneck`)
-| ungraded
+| 1
 
 | F-8
 | Out of one question there is exactly one strict morphism into an algebra
@@ -424,20 +433,20 @@ never exceeds the sum.
 𝟘 ⊗ 𝟘 ≡ 𝟘, which every annihilating algebra has, and HWM too.
 | `PROVEN` (`one-question-hom`, `one-question-needs`,
 `one-question-unique`)
-| ungraded
+| 1
 
 | F-9
 | Taking the first question of `Questions (suc n)`, and dropping it, are
 strict morphisms. Composed, they read any single question alone.
 | `PROVEN` (`first-question`, `later-questions`)
-| ungraded
+| 1
 
 | F-10
 | The number of lost questions does not preserve ⊕: `collapse` and
 `shuffle` each count 1 and their ⊕ counts 0. So no map into Loss or MinMax
 that factors through the count is strict or lax.
 | `PROVEN` (`count-not-⊕`)
-| ungraded
+| 1
 |===
 
 == Separation (Separation.agda)
@@ -455,26 +464,26 @@ for checks over a bounded or sampled domain.
 | Sequencing peaks 2 and 3 gives 3 under HWM and 5 under MaxPlus: an
 occupancy bound is not a cost bound.
 | `PROVEN` (`occupancy-is-not-cost`)
-| ungraded
+| 1
 
 | S-2
 | On the same numbers, alternatives give `fin 2` under Loss and `val 3`
 under MaxPlus: echo's join is min, while tropical's is max.
 | `PROVEN` (`alternatives-differ`)
-| ungraded
+| 1
 
 | S-3
 | `val 1 ≼ val 2` in MaxPlus but `fin 2 ≼ fin 1` in Loss: the induced
 orders run in opposite directions.
 | `PROVEN` (`maxplus-order`, `loss-order-reversed`)
-| ungraded
+| 1
 
 | S-4
 | Sequencing 2 then 3 gives `fin 5` under Loss but `fin 3` under MinMax: a
 bottleneck bound is not a loss bound.
 | `PROVEN` (`bottleneck-is-not-sum`); `tests/reject/MinMaxIsLoss.agda`
 refuses the general identification
-| ungraded
+| 1
 |===
 
 == Correspondences with other repositories (not graded)
@@ -523,8 +532,9 @@ not classified. Its ⊕ reads a grade as
 chooses the branch (Q-4). A grade for alternatives that another party
 chooses, and a grade over merged pairs (which do not compose by union),
 are not stated.
-* Grades for every row: a passing `proofs.yml` run on the merged commit, and
-for `PWG-1` receipts kept per source commit (see Receipts).
+* A gate that writes the proof receipt for each commit and checks it with
+the standards reader. Today the receipt is written by hand, for one commit
+(see Receipts).
 
 == Discipline
 
