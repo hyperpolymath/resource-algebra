@@ -19,7 +19,8 @@ flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interface
 # find runs to a file, not a process substitution, so its own failure (a
 # directory it cannot read) stops the gate instead of leaving a partial cone.
 cone_list="$(mktemp)"
-trap 'rm -f "$cone_list"' EXIT
+work="$(mktemp -d)"
+trap 'rm -f "$cone_list"; rm -rf "$work"' EXIT
 find src -name '*.agda' -print0 > "$cone_list" \
   || { echo "ERROR: could not list the import cone (src/)" >&2; exit 1; }
 mapfile -d '' cone < "$cone_list"
@@ -29,7 +30,63 @@ if ! perl scripts/scan-postulates.pl "${cone[@]}"; then
   exit 1
 fi
 echo "PASS: no postulate in the import cone (src/)"
-"$prover" "${flags[@]}" src/ResourceAlgebra/All.agda
+"$prover" "${flags[@]}" --dependency-graph="$work/All.dot" src/ResourceAlgebra/All.agda
+# PROOF-POLICY §8.4.7: the prover's own modules are in the cone. The cone is
+# the module set Agda reports for the graded root (All.agda). Each module is
+# resolved to src/ or to the library supplied with the prover; a module found
+# in neither fails. Pattern: januskey scripts/check-agda.sh.
+sed -n 's/.*label="\([^"]*\)".*/\1/p' "$work/All.dot" | LC_ALL=C sort -u > "$work/cone.txt" \
+  || { echo "ERROR: could not read the dependency graph Agda wrote" >&2; exit 1; }
+agda_prim="$("$prover" --print-agda-dir)/lib/prim"
+first_party=0; prover_lib=()
+while IFS= read -r name; do
+  if [[ -f "src/${name//.//}.agda" ]]; then first_party=$((first_party + 1)); continue; fi
+  candidate="$agda_prim/${name//.//}.agda"
+  [[ -f "$candidate" ]] || { echo "ERROR: cannot resolve module $name of the import cone to a source file" >&2; exit 1; }
+  prover_lib+=("$candidate")
+done < "$work/cone.txt"
+(( first_party > 0 )) || { echo "ERROR: Agda reported no first-party module in the import cone" >&2; exit 1; }
+(( ${#prover_lib[@]} > 0 )) || { echo "ERROR: Agda reported no prover-supplied module in the import cone" >&2; exit 1; }
+# Modules supplied with the prover are its trusted base. The only postulates
+# allowed there are Agda.Primitive's universe-level primitives: exactly Level,
+# lzero, lsuc and _⊔_, each bound by its BUILTIN pragma. The check reads the
+# declared names and the bindings, not the file name, so a prover pin that
+# adds a postulate to Agda.Primitive fails here, and so does a postulate in
+# any other prover-supplied module of the cone.
+status=0; perl scripts/scan-postulates.pl "${prover_lib[@]}" > "$work/prover.hits" 2> "$work/prover.err" || status=$?
+(( status <= 1 )) || { cat "$work/prover.err" >&2; echo "ERROR: could not scan the prover-supplied modules" >&2; exit 1; }
+prim="$agda_prim/Agda/Primitive.agda"
+if grep -vqF -- "$prim:" "$work/prover.hits"; then
+  cat "$work/prover.hits"
+  echo "ERROR: a prover-supplied postulate outside Agda.Primitive" >&2; exit 1
+fi
+# The names the postulate blocks declare: the indented lines after a bare
+# `postulate`, up to the next line that is not indented; line comments removed.
+declared="$(LC_ALL=C awk '
+  { sub(/--.*/, "") }
+  /^postulate[ \t]*$/ { inblock = 1; next }
+  inblock && /^[ \t]*$/ { next }
+  inblock && /^[ \t]/ { split($0, lhs, ":"); n = split(lhs[1], names, /[ \t]+/)
+                        for (k = 1; k <= n; k++) if (names[k] != "") print names[k]; next }
+  { inblock = 0 }
+' "$prim" | LC_ALL=C sort | tr '\n' ' ')"
+expected="Level _⊔_ lsuc lzero "
+[[ "$declared" == "$expected" ]] || {
+  echo "ERROR: Agda.Primitive postulates '$declared', expected exactly '$expected'" >&2; exit 1; }
+# Every postulate hit is one of those block openers, so no postulate hides
+# in a shape the name reader above does not read.
+blocks="$(LC_ALL=C grep -cE '^postulate[[:space:]]*$' "$prim" || true)"
+[[ "$(wc -l < "$work/prover.hits" | tr -d ' ')" == "$blocks" ]] || {
+  cat "$work/prover.hits"
+  echo "ERROR: Agda.Primitive has a postulate outside its level blocks" >&2; exit 1; }
+mkdir -p _build/check-logs
+: > _build/check-logs/trusted-base.txt
+for binding in "LEVEL Level" "LEVELZERO lzero" "LEVELSUC lsuc" "LEVELMAX _⊔_"; do
+  LC_ALL=C grep -qE -- "^\{-#[[:space:]]+BUILTIN[[:space:]]+${binding% *}[[:space:]]+${binding#* }[[:space:]]+#-\}" "$prim" || {
+    echo "ERROR: Agda.Primitive does not bind ${binding#* } with BUILTIN ${binding% *}" >&2; exit 1; }
+  echo "agda Agda.Primitive ${binding#* } BUILTIN ${binding% *}" >> _build/check-logs/trusted-base.txt
+done
+echo "PASS: import cone has $first_party first-party and ${#prover_lib[@]} prover-supplied modules; Agda.Primitive postulates exactly ${expected% }, each bound by its BUILTIN pragma; no other prover-supplied postulate"
 # Unit tests (closed computations and small lemmas over the instances).
 "$prover" "${flags[@]}" -i tests/unit tests/unit/AllTests.agda
 echo "PASS: unit tests (tests/unit/AllTests.agda)"

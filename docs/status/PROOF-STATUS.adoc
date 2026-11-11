@@ -41,6 +41,15 @@ warning other than `UnsupportedIndexedMatch`.
 * *Import cone.* Only `src/ResourceAlgebra/`: no standard library and no
 other library. There is no `postulate` (refused by `--safe`), no hole and no
 `TERMINATING` or similar pragma.
+* *Trusted base (§8.4.7).* The cone Agda reports for `All.agda` also holds
+six modules supplied with the prover: `Agda.Primitive` and
+`Agda.Builtin.Bool`, `Equality`, `Nat`, `Sigma` and `Unit`. The gate scans
+them and allows exactly four postulates, all in `Agda.Primitive`: `Level`
+(`BUILTIN LEVEL`), `lzero` (`BUILTIN LEVELZERO`), `lsuc` (`BUILTIN
+LEVELSUC`) and `_⊔_` (`BUILTIN LEVELMAX`). It checks the declared names and
+the bindings. Any other postulate in a prover-supplied module stops the
+gate, and `tests/check_agda_trusted_base_test.sh` plants four such changes
+to show that it does. The receipt lists the four names and bindings.
 * *Receipt.* CI (`proofs.yml`) installs Agda 2.6.4.3, asserts the version
 and checks the proofs. It then writes a receipt to the run summary with the
 source commit, `agda --version`, the package version and its SHA256 from
