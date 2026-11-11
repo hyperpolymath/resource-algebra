@@ -1,5 +1,19 @@
 == Changelog
 
+== 2026-11-11 — Agda gate checks the prover's trusted base (PROOF-POLICY §8.4.7)
+
+* `scripts/check-agda.sh` takes the import cone from Agda
+  (`--dependency-graph` on `All.agda`), resolves each module to `src/` or to
+  the library supplied with the prover, and scans the prover-supplied
+  modules. It allows exactly `Level`, `lzero`, `lsuc` and `_⊔_` in
+  `Agda.Primitive`, each bound by its `BUILTIN` pragma, and no other
+  postulate. Pattern: januskey `scripts/check-agda.sh`.
+* `tests/check_agda_trusted_base_test.sh` plants a postulate in another
+  builtin module, an extra name, an inline postulate and a removed binding;
+  each must stop the gate. `proofs.yml` runs it and puts the four names and
+  bindings on the Agda receipt.
+* No grade changes here. A proof receipt for the merged commit follows.
+
 == 2026-11-11 — Questions: morphisms, unit test and a rejection control
 
 * `Morphism.agda`: out of one question there is exactly one strict morphism

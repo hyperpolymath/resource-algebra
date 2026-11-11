@@ -44,6 +44,8 @@ jobs:
         run: bash tests/scan_postulates_test.sh
       - name: Gate stops when find cannot list the import cone
         run: bash tests/check_agda_find_failure_test.sh
+      - name: Gate stops on a postulate outside the prover's named trusted base
+        run: bash tests/check_agda_trusted_base_test.sh
       - name: Core proofs and expected rejections
         run: bash scripts/check-agda.sh
       - name: Proof receipt
@@ -60,6 +62,7 @@ jobs:
             echo "- binary SHA256: \`$(sha256sum "$(command -v agda)" | cut -d' ' -f1)\`"
             echo "- invocation: \`$(sed -n 's/^flags=(\(.*\))$/\1/p' scripts/check-agda.sh)\`"
             echo "- import cone: \`src/ResourceAlgebra/All.agda\`, first-party only (\`--no-libraries\`), 0 postulates (\`--safe\`)"
+            echo "- trusted base (prover-supplied postulates, name and binding, checked by the gate): \`$(paste -sd';' _build/check-logs/trusted-base.txt)\`"
             echo "- input SHA256 (all of \`src/\`, sorted): \`$(find src -name '*.agda' | LC_ALL=C sort | xargs sha256sum | sha256sum | cut -d' ' -f1)\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
