@@ -16,11 +16,11 @@ work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
 fail=0
 run_case() { # run_case NAME WANT-MESSAGE ; the planted library is $work/$1
   local name="$1" want="$2" out rc
-  cat > "$work/$name.agda-stub" <<STUB
+  cat > "$work/$name.agda-stub" <<FAKE_AGDA
 #!/usr/bin/env bash
 if [ "\${1:-}" = --print-agda-dir ]; then echo "$work/$name"; exit 0; fi
 exec "$real" "\$@"
-STUB
+FAKE_AGDA
   chmod +x "$work/$name.agda-stub"
   out=$(AGDA="$work/$name.agda-stub" bash scripts/check-agda.sh 2>&1); rc=$?
   if [[ $rc -eq 0 ]] || grep -q 'PASS: import cone has' <<<"$out"; then
@@ -31,7 +31,7 @@ STUB
     echo "PASS: $name stops the gate (exit $rc): $want"
   fi
 }
-plant() { mkdir -p "$work/$1/lib" && cp -r "$real_dir/lib/prim" "$work/$1/lib/prim"; }
+plant() { local name="$1"; mkdir -p "$work/$name/lib" && cp -r "$real_dir/lib/prim" "$work/$name/lib/prim"; }
 
 plant other-module
 printf '\npostulate\n  planted : Set\n' >> "$work/other-module/lib/prim/Agda/Builtin/Unit.agda"
@@ -51,11 +51,11 @@ run_case unbound 'Agda.Primitive does not bind _⊔_ with BUILTIN LEVELMAX'
 
 # The unchanged library must pass, so a failure above is the planted change.
 plant unchanged
-cat > "$work/unchanged.agda-stub" <<STUB
+cat > "$work/unchanged.agda-stub" <<FAKE_AGDA
 #!/usr/bin/env bash
 if [ "\${1:-}" = --print-agda-dir ]; then echo "$work/unchanged"; exit 0; fi
 exec "$real" "\$@"
-STUB
+FAKE_AGDA
 chmod +x "$work/unchanged.agda-stub"
 if out=$(AGDA="$work/unchanged.agda-stub" bash scripts/check-agda.sh 2>&1) && grep -q 'PASS: import cone has' <<<"$out"; then
   echo "PASS: the unchanged library passes the trusted-base check"

@@ -40,9 +40,9 @@ sed -n 's/.*label="\([^"]*\)".*/\1/p' "$work/All.dot" | LC_ALL=C sort -u > "$wor
 agda_prim="$("$prover" --print-agda-dir)/lib/prim"
 first_party=0; prover_lib=()
 while IFS= read -r name; do
-  if [ -f "src/${name//.//}.agda" ]; then first_party=$((first_party + 1)); continue; fi
+  if [[ -f "src/${name//.//}.agda" ]]; then first_party=$((first_party + 1)); continue; fi
   candidate="$agda_prim/${name//.//}.agda"
-  [ -f "$candidate" ] || { echo "ERROR: cannot resolve module $name of the import cone to a source file" >&2; exit 1; }
+  [[ -f "$candidate" ]] || { echo "ERROR: cannot resolve module $name of the import cone to a source file" >&2; exit 1; }
   prover_lib+=("$candidate")
 done < "$work/cone.txt"
 (( first_party > 0 )) || { echo "ERROR: Agda reported no first-party module in the import cone" >&2; exit 1; }
@@ -71,12 +71,12 @@ declared="$(LC_ALL=C awk '
   { inblock = 0 }
 ' "$prim" | LC_ALL=C sort | tr '\n' ' ')"
 expected="Level _⊔_ lsuc lzero "
-[ "$declared" = "$expected" ] || {
+[[ "$declared" == "$expected" ]] || {
   echo "ERROR: Agda.Primitive postulates '$declared', expected exactly '$expected'" >&2; exit 1; }
 # Every postulate hit is one of those block openers, so no postulate hides
 # in a shape the name reader above does not read.
 blocks="$(LC_ALL=C grep -cE '^postulate[[:space:]]*$' "$prim" || true)"
-[ "$(wc -l < "$work/prover.hits" | tr -d ' ')" = "$blocks" ] || {
+[[ "$(wc -l < "$work/prover.hits" | tr -d ' ')" == "$blocks" ]] || {
   cat "$work/prover.hits"
   echo "ERROR: Agda.Primitive has a postulate outside its level blocks" >&2; exit 1; }
 mkdir -p _build/check-logs
