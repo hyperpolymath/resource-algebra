@@ -1,5 +1,20 @@
 == Changelog
 
+== 2026-11-11 — Questions instance: recheck legs and ledger
+
+* `Instances.Questions` (resource-algebra#24) is a "which" grade: `n`
+  booleans, one per downstream question, with ⊕ = intersection and
+  ⊗ = union. It is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
+  `IsAnnihilating`.
+* Rocq and Lean recheck legs for the instance and its three two-question
+  facts, re-proved by hand. The Lean leg stays axiom-free.
+* `docs/status/PROOF-STATUS.adoc`: rows Q-1 to Q-4, their statement
+  correspondence, and the limits of ⊕ in the open list. The census is 26
+  rows, all ungraded.
+* The module header no longer calls itself a sketch outside the ledger.
+* Not done: the deed's `:purpose` and the generated `CLAUDE.md` still name
+  four instances, and the module has no `SPDX-FileCopyrightText` line.
+
 == 2026-11-09 — PROOF-POLICY §2.1 invocation, grade records, ledger fixes
 
 * `scripts/check-agda.sh` runs every module, unit test and expected

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-09
+:revdate: 2026-11-11
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -16,8 +16,8 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 22 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 22. Every grade is reset by the 2026-11-10 merge of main, which
+Out of 26 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 26. Rows Q-1 to Q-4 were added on 2026-11-11 and have no receipt. Every grade is reset by the 2026-11-10 merge of main, which
 changed the Agda pragmas (the estate strict flag set) and added `⊕-least`
 (C-2) to the Agda source and to both legs. The receipts below are for
 source commit `9f175cc`, before that merge, so they grade nothing now. A
@@ -188,6 +188,14 @@ the legs. Both are the usual order on ℕ, so the carrier has the same
 elements, and in all three provers two grades are equal when their peak
 and drift are.
 
+* Questions' carrier `Q n` is defined by recursion on `n` in all three
+provers: Agda's `⊤` and `Σ` (both with eta), Lean's `Unit` and `Prod`, and
+Rocq's `unit` and `prod`. Rocq has no definitional eta for either, so its
+leg splits a grade into its bits before it computes; `zip` there takes the
+two projections where Agda matches on the pair. The statements are the
+same equations. Agda's `_∨_` and `_∧_` are defined by the same two
+equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
+
 [cols="1,2,2,2",options="header"]
 |===
 | Row | Agda | Lean (`RA.`) | Rocq
@@ -201,6 +209,10 @@ and drift are.
 | H-1 | `HWM`, `HWM-dioid`, `HWM-ordered` | `HWM`, `HWM_dioid`, `HWM_ordered`, `HWM_zero_eq_one` | the same names
 | H-3 | `HWM-not-annihilating` | `HWM_not_annihilating` | `HWM_not_annihilating`
 | N-1 | `MinMax`, `MinMax-dioid`, `MinMax-ordered`, `MinMax-annihilating` | `MinMax`, `MinMax_dioid`, `MinMax_ordered`, `MinMax_annihilating` | the same names
+| Q-1 | `Questions`, `Questions-dioid`, `Questions-ordered`, `Questions-annihilating` | `Questions`, `Questions_dioid`, `Questions_ordered`, `Questions_annihilating` | the same names
+| Q-2 | `same-amount-different-loss` | `same_amount_different_loss` | `same_amount_different_loss`
+| Q-3 | `both-lost` | `both_lost` | `both_lost`
+| Q-4 | `no-branch-achieves-meet` | `no_branch_achieves_meet` | `no_branch_achieves_meet`
 | F-1 | `id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax` | `idHom`, `Hom.comp`, `idLax`, `LaxHom.comp`, `lax` | `id_hom`, `comp_hom`, `id_lax`, `comp_lax`, `lax`
 | F-2 | `peak-lax` | `peakLax` | `peak_lax`
 | F-3 | `peak-not-strict` | `peak_not_strict` | `peak_not_strict`
@@ -301,6 +313,34 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = min and ⊗ = max (`_⊔g_`, with `inf` absorbing), with 𝟘 = inf and
 𝟙 = fin 0.
 | `PROVEN` (Instances/MinMax.agda)
+| ungraded
+
+| Q-1
+| `Questions n` (a "which" grade over `n` downstream questions) is a
+`ResourceAlgebra`, `IsDioid`, `IsOrdered` and `IsAnnihilating`. A grade is
+`n` booleans, `true` where a step loses that question. Its operations are
+⊕ = intersection and ⊗ = union, bit by bit, with 𝟘 = every question lost
+and 𝟙 = none lost.
+| `PROVEN` (Instances/Questions.agda)
+| ungraded
+
+| Q-2
+| With two questions, `collapse` (loses question 1) and `shuffle` (loses
+question 0) each lose one question and are different grades: a count of
+lost questions cannot tell them apart.
+| `PROVEN` (`same-amount-different-loss`)
+| ungraded
+
+| Q-3
+| In sequence, `collapse` then `shuffle` loses both questions.
+| `PROVEN` (`both-lost`)
+| ungraded
+
+| Q-4
+| As alternatives, `collapse ⊕ shuffle` is 𝟙 (no question lost), while
+neither branch is 𝟙. So ⊕ answers "is question i kept on some branch?"
+and not "does one branch keep every question?".
+| `PROVEN` (`no-branch-achieves-meet`, with Q-2)
 | ungraded
 |===
 
@@ -439,6 +479,12 @@ That theorem belongs with K-CUT-LOSS in choreographic-types, and it is
 `OPEN`.
 * Morphisms into or out of MinMax, other than `loss-bottleneck`, are not
 classified.
+* Questions: no morphism into or out of it is classified, and it has no
+unit test and no expected rejection as a control. Its ⊕ reads a grade as
+"lost on every branch", which is sound only when the reader of the grade
+chooses the branch (Q-4). A grade for alternatives that another party
+chooses, and a grade over merged pairs (which do not compose by union),
+are not stated.
 * Grades for every row: a passing `proofs.yml` run on the merged commit, and
 for `PWG-1` receipts kept per source commit (see Receipts).
 

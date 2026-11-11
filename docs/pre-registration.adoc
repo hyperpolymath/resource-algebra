@@ -32,6 +32,7 @@ which algebra a grade belongs to.
 | Loss grade (ℕ ∪ {∞}, min, +) | echo-types `experimental/echo-additive/Grade.agda` (R0, session-gated) | transcription; dioid and annihilation layers re-proved here
 | Tropical grade (ℕ ∪ {−∞}, max, +) | tropical-types `TropicalSessionTypes.lean` | transcription into Agda; same laws re-proved
 | High-water-mark grade (peak, drift) | the stack-height / peak-and-drift monoid of resource analysis; occupancy-types operational model for the reading | definition and proofs (DESIGNED instance)
+| Questions grade (n booleans, ∩, ∪) | the powerset lattice, a standard distributive lattice | definition, layers and the two-question example; added 2026-11-11, after the first proof
 | Dioid ⇒ ordered | standard | stated as a derived layer so instances prove distributivity once
 | Separation witnesses | — | ours; three family-map sentences made checkable
 |===

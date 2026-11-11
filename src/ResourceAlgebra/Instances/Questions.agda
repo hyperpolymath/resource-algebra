@@ -1,7 +1,8 @@
 {-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 -- SPDX-License-Identifier: MPL-2.0
 --
--- SKETCH, not yet in any ledger.  A "which", not a "how much", grade.
+-- A "which", not a "how much", grade.  Ledger: rows Q-1 to Q-4 of
+-- docs/status/PROOF-STATUS.adoc; rechecked in verification/proofs/.
 --
 -- Fix n downstream questions.  A grade is the set of questions a step may
 -- make unanswerable, as n booleans (true = this question is lost).
