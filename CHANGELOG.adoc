@@ -12,8 +12,9 @@
   correspondence, and the limits of ⊕ in the open list. The census is 26
   rows, all ungraded.
 * The module header no longer calls itself a sketch outside the ledger.
-* Not done: the deed's `:purpose` and the generated `CLAUDE.md` still name
-  four instances, and the module has no `SPDX-FileCopyrightText` line.
+* The deed `:purpose` names the instance, and `CLAUDE.md` is regenerated
+  from it (`just claude-md`). The module has its `SPDX-FileCopyrightText`
+  line, added at the owner's direction.
 
 == 2026-11-09 — PROOF-POLICY §2.1 invocation, grade records, ledger fixes
 

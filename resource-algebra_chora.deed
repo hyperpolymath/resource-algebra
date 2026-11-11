@@ -121,7 +121,7 @@
     :project "resource-algebra"
     :ecosystem "hyperpolymath"
     :position-type "library"
-    :purpose "Parametric resource algebra in Agda, with Loss, MaxPlus, HWM and MinMax instances and strict/lax morphisms."
+    :purpose "Parametric resource algebra in Agda, with Loss, MaxPlus, HWM, MinMax and Questions instances and strict/lax morphisms."
     :not ("a repository template"
           "the K-CUT statement, which belongs in choreographic-types"
           "occupancy-types' own algebra, for which HWM is a proposal")

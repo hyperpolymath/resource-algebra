@@ -1,5 +1,6 @@
 {-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 -- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 --
 -- A "which", not a "how much", grade.  Ledger: rows Q-1 to Q-4 of
 -- docs/status/PROOF-STATUS.adoc; rechecked in verification/proofs/.
