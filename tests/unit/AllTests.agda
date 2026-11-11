@@ -6,3 +6,4 @@ module AllTests where
 import MinMaxTest
 import MorphismTest
 import PreludeTest
+import QuestionsTest

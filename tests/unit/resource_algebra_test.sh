@@ -10,7 +10,7 @@ prover="${AGDA:-agda}"
 "$prover" --version
 "$prover" --safe --without-K --no-libraries --ignore-interfaces --double-check \
   -i src -i tests/unit tests/unit/AllTests.agda
-echo 'PASS: MinMax, morphism, and Prelude unit tests'
+echo 'PASS: MinMax, morphism, Prelude and Questions unit tests'
 
 # Keep the expected failures in the existing harness, which verifies that
 # they fail at their declarations rather than at parsing/import resolution.

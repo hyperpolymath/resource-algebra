@@ -66,5 +66,7 @@ Each file under `tests/reject/` must fail to typecheck at its invalid
 declaration, for the stated reason:
 
 * `HWMAnnihilates` — no annihilating zero in the high-water-mark algebra.
+* `QuestionsMeetIsABranch` — the grade of two alternatives need not be the
+  grade of either branch.
 * `LossWorstCase` — echo alternatives are min, not max.
 * `DriftExceedsPeak` — a grade cannot end holding more than its peak.

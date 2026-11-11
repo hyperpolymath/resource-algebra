@@ -1,5 +1,19 @@
 == Changelog
 
+== 2026-11-11 — Questions: morphisms, unit test and a rejection control
+
+* `Morphism.agda`: out of one question there is exactly one strict morphism
+  into an algebra `B`, and it exists exactly when `B` has 𝟘 ⊗ 𝟘 ≡ 𝟘 (F-8);
+  taking the first question and dropping it are strict (F-9); the number of
+  lost questions does not preserve ⊕, so it is not a morphism into Loss or
+  MinMax (F-10). Each is rechecked in Rocq and Lean.
+* `tests/unit/QuestionsTest.agda`: closed computations over three
+  questions, the exported layers and the new morphisms.
+* `tests/reject/QuestionsMeetIsABranch.agda`: the ninth expected rejection,
+  the control for Q-4.
+* `docs/status/PROOF-STATUS.adoc`: rows F-8 to F-10. The census is 29 rows,
+  all ungraded: these changes alter the inputs of all three legs.
+
 == 2026-11-11 — Questions instance: recheck legs and ledger
 
 * `Instances.Questions` (resource-algebra#24) is a "which" grade: `n`
