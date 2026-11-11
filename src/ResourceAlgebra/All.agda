@@ -10,5 +10,6 @@ import ResourceAlgebra.Instances.Loss
 import ResourceAlgebra.Instances.MaxPlus
 import ResourceAlgebra.Instances.HWM
 import ResourceAlgebra.Instances.MinMax
+import ResourceAlgebra.Instances.Questions
 import ResourceAlgebra.Separation
 import ResourceAlgebra.Morphism
