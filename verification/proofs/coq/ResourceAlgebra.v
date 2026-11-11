@@ -703,6 +703,77 @@ Proof. reflexivity. Qed.
 Lemma no_branch_achieves_meet : radd (Questions 2) collapse shuffle = qrep false 2.
 Proof. reflexivity. Qed.
 
+(** * Morphisms out of Questions (F-8 .. F-10) *)
+
+(** Lost goes to 𝟘, kept goes to 𝟙. *)
+Definition verdict (B : ResourceAlgebra) (b : bool) : Grade B :=
+  if b then rzero B else rone B.
+
+(** F-8: the one strict morphism out of one question. *)
+Definition one_question_hom (B : ResourceAlgebra)
+  (zz : rmul B (rzero B) (rzero B) = rzero B) : Hom (Questions 1) B.
+Proof.
+  refine (@Build_Hom (Questions 1) B (fun x => verdict B (fst x)) eq_refl eq_refl _ _).
+  - intros [[] []] [[] []]; simpl; symmetry.
+    + apply (alt_idem (ralt B)).
+    + apply (alt_unitl (ralt B)).
+    + apply (alt_unitr (ralt B)).
+    + apply (alt_idem (ralt B)).
+  - intros [[] []] [[] []]; simpl; symmetry.
+    + exact zz.
+    + apply (seq_unitr (rseq B)).
+    + apply (seq_unitl (rseq B)).
+    + apply (seq_unitl (rseq B)).
+Defined.
+
+(** F-8: the condition is necessary. *)
+Lemma one_question_needs (B : ResourceAlgebra) (h : Hom (Questions 1) B) :
+  rmul B (rzero B) (rzero B) = rzero B.
+Proof.
+  pose proof (hmap_mul h (qrep true 1) (qrep true 1)) as m.
+  pose proof (hmap_zero h) as z.
+  simpl in m, z. rewrite z in m. symmetry. exact m.
+Qed.
+
+(** F-8: every strict morphism out of one question is that map. *)
+Lemma one_question_unique (B : ResourceAlgebra) (h : Hom (Questions 1) B) :
+  forall x, hmap h x = verdict B (fst x).
+Proof.
+  intros [[] []]; simpl.
+  - exact (hmap_zero h).
+  - exact (hmap_one h).
+Qed.
+
+(** F-9: each question can be read alone. *)
+Definition first_question (n : nat) : Hom (Questions (S n)) (Questions 1).
+Proof.
+  refine (@Build_Hom (Questions (S n)) (Questions 1) (fun x => (fst x, tt))
+            eq_refl eq_refl _ _); intros; reflexivity.
+Defined.
+
+Definition later_questions (n : nat) : Hom (Questions (S n)) (Questions n).
+Proof.
+  refine (@Build_Hom (Questions (S n)) (Questions n) (fun x => snd x)
+            eq_refl eq_refl _ _); intros; reflexivity.
+Defined.
+
+(** [count]: how many questions are lost. *)
+Fixpoint qcount (n : nat) : Q n -> nat :=
+  match n with
+  | 0 => fun _ => 0
+  | S n => fun x => if fst x then S (qcount n (snd x)) else qcount n (snd x)
+  end.
+
+Arguments qcount : clear implicits.
+
+(** F-10: the number of lost questions does not preserve alternatives. *)
+Lemma count_not_add :
+  ~ (forall a b : Q 2, fin (qcount 2 (radd (Questions 2) a b))
+                       = lmin (fin (qcount 2 a)) (fin (qcount 2 b))).
+Proof.
+  intro f. pose proof (f collapse shuffle) as h. simpl in h. discriminate h.
+Qed.
+
 (** * Assumptions (PROOF-POLICY §8.4): each must print "Closed under the
     global context". *)
 Print Assumptions alt_unitr.
@@ -747,3 +818,9 @@ Print Assumptions Questions_annihilating.
 Print Assumptions same_amount_different_loss.
 Print Assumptions both_lost.
 Print Assumptions no_branch_achieves_meet.
+Print Assumptions one_question_hom.
+Print Assumptions one_question_needs.
+Print Assumptions one_question_unique.
+Print Assumptions first_question.
+Print Assumptions later_questions.
+Print Assumptions count_not_add.

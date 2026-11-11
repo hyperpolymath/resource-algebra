@@ -840,6 +840,76 @@ theorem both_lost : (Questions 2).mul collapse shuffle = qrep true 2 := rfl
 /-- Q-4 -/
 theorem no_branch_achieves_meet : (Questions 2).add collapse shuffle = qrep false 2 := rfl
 
+/-! ## Morphisms out of Questions (F-8 .. F-10) -/
+
+/-- Lost goes to 𝟘, kept goes to 𝟙. -/
+def verdict (B : ResourceAlgebra) : Bool → B.Grade
+  | true => B.zero
+  | false => B.one
+
+theorem verdict_and (B : ResourceAlgebra) :
+    ∀ a b, verdict B (and a b) = B.add (verdict B a) (verdict B b)
+  | true, true => (B.alt.idem B.zero).symm
+  | true, false => (B.alt.unitl B.one).symm
+  | false, true => (B.alt.unitr B.one).symm
+  | false, false => (B.alt.idem B.one).symm
+
+theorem verdict_or (B : ResourceAlgebra) (zz : B.mul B.zero B.zero = B.zero) :
+    ∀ a b, verdict B (or a b) = B.mul (verdict B a) (verdict B b)
+  | true, true => zz.symm
+  | true, false => (B.seq.unitr B.zero).symm
+  | false, true => (B.seq.unitl B.zero).symm
+  | false, false => (B.seq.unitl B.one).symm
+
+/-- F-8: the one strict morphism out of one question. -/
+def oneQuestionHom (B : ResourceAlgebra) (zz : B.mul B.zero B.zero = B.zero) :
+    Hom (Questions 1) B where
+  map x := verdict B x.1
+  map_zero := rfl
+  map_one := rfl
+  map_add x y := verdict_and B x.1 y.1
+  map_mul x y := verdict_or B zz x.1 y.1
+
+/-- F-8: the condition is necessary. -/
+theorem one_question_needs {B : ResourceAlgebra} (h : Hom (Questions 1) B) :
+    B.mul B.zero B.zero = B.zero :=
+  have z : h.map (qrep true 1) = B.zero := h.map_zero
+  have m : h.map (qrep true 1) = B.mul (h.map (qrep true 1)) (h.map (qrep true 1)) :=
+    h.map_mul (qrep true 1) (qrep true 1)
+  (congrArg (fun g => B.mul g g) z).symm.trans (m.symm.trans z)
+
+/-- F-8: every strict morphism out of one question is that map. -/
+theorem one_question_unique {B : ResourceAlgebra} (h : Hom (Questions 1) B) :
+    ∀ x : Q 1, h.map x = verdict B x.1
+  | (true, ()) => h.map_zero
+  | (false, ()) => h.map_one
+
+/-- F-9: each question can be read alone. -/
+def firstQuestion (n : Nat) : Hom (Questions (n + 1)) (Questions 1) where
+  map x := (x.1, ())
+  map_zero := rfl
+  map_one := rfl
+  map_add _ _ := rfl
+  map_mul _ _ := rfl
+
+def laterQuestions (n : Nat) : Hom (Questions (n + 1)) (Questions n) where
+  map x := x.2
+  map_zero := rfl
+  map_one := rfl
+  map_add _ _ := rfl
+  map_mul _ _ := rfl
+
+/-- `count`: how many questions are lost. -/
+def qcount : (n : Nat) → Q n → Nat
+  | 0, _ => 0
+  | n + 1, x => cond x.1 (qcount n x.2 + 1) (qcount n x.2)
+
+/-- F-10: the number of lost questions does not preserve alternatives. -/
+theorem count_not_add :
+    ¬ ∀ a b : Q 2, fin (qcount 2 ((Questions 2).add a b))
+        = lmin (fin (qcount 2 a)) (fin (qcount 2 b)) := fun f =>
+  absurd (fin_injective (f collapse shuffle) : (0 : Nat) = 1) (by decide)
+
 end RA
 
 /-! ## Axioms (PROOF-POLICY §8.4)
@@ -896,3 +966,9 @@ other answer. -/
 #print axioms RA.same_amount_different_loss
 #print axioms RA.both_lost
 #print axioms RA.no_branch_achieves_meet
+#print axioms RA.oneQuestionHom
+#print axioms RA.one_question_needs
+#print axioms RA.one_question_unique
+#print axioms RA.firstQuestion
+#print axioms RA.laterQuestions
+#print axioms RA.count_not_add

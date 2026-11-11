@@ -16,8 +16,9 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 26 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 26. Rows Q-1 to Q-4 were added on 2026-11-11 and have no receipt. Every grade is reset by the 2026-11-10 merge of main, which
+Out of 29 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 29. Rows Q-1 to Q-4 and F-8 to F-10 were added on 2026-11-11 and
+have no receipt. Every grade is reset by the 2026-11-10 merge of main, which
 changed the Agda pragmas (the estate strict flag set) and added `⊕-least`
 (C-2) to the Agda source and to both legs. The receipts below are for
 source commit `9f175cc`, before that merge, so they grade nothing now. A
@@ -33,7 +34,7 @@ dependent type theories (§8.3).
 -W error -W noUnsupportedIndexedMatch -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
-(`tests/unit/AllTests.agda`) and the eight expected rejections. A rejection
+(`tests/unit/AllTests.agda`) and the nine expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
 warning other than `UnsupportedIndexedMatch`.
@@ -53,10 +54,11 @@ receipts for the canonical profile. On 2026-11-09, `_≤_` and the
 constructor-injectivity lemmas were restated so that the core checks under
 `--cubical-compatible` with no `UnsupportedIndexedMatch` warning. The
 statements of the theorems below did not change.
-* *Expected rejections.* Eight claims must be refused, each with the message
+* *Expected rejections.* Nine claims must be refused, each with the message
 its `-- EXPECT:` line names. In order, those messages are:
 `min m n != max m n`, `p != zero`, `suc _ != zero`, `max m n != m + n`,
-`max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3` and `… != bot`.
+`max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3`, `… != bot` and
+`false != true`.
 These are controls for the PROVEN rows. They are not themselves theorems.
 
 == Recheck legs (every row)
@@ -220,6 +222,9 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | F-5 | `zero-test-hom`, `support-hom`, `Loss→MaxPlus`, `maps-disagree-at-positive`, `Loss→MaxPlus-collapses`, `no-injective-Loss→MaxPlus` | `zeroTestHom`, `supportHom`, `Loss_to_MaxPlus`, `maps_disagree_at_positive`, `Loss_to_MaxPlus_collapses`, `no_injective_Loss_to_MaxPlus` | `zero_test_hom`, `support_hom`, `Loss_to_MaxPlus`, `maps_disagree_at_positive`, `Loss_to_MaxPlus_collapses`, `no_injective_Loss_to_MaxPlus`
 | F-6 | `support′-hom`, `MaxPlus→Loss` | `support'Hom`, `MaxPlus_to_Loss` | `support'_hom`, `MaxPlus_to_Loss`
 | F-7 | `loss-bottleneck` | `lossBottleneck` | `loss_bottleneck`
+| F-8 | `one-question-hom`, `one-question-needs`, `one-question-unique` | `oneQuestionHom`, `one_question_needs`, `one_question_unique` | `one_question_hom`, `one_question_needs`, `one_question_unique`
+| F-9 | `first-question`, `later-questions` | `firstQuestion`, `laterQuestions` | `first_question`, `later_questions`
+| F-10 | `count-not-⊕` | `count_not_add` | `count_not_add`
 | S-1 | `occupancy-is-not-cost` | `occupancy_is_not_cost` | `occupancy_is_not_cost`
 | S-2 | `alternatives-differ` | `alternatives_differ` | `alternatives_differ`
 | S-3 | `maxplus-order`, `loss-order-reversed` | `maxplus_order`, `loss_order_reversed` | `maxplus_order`, `loss_order_reversed`
@@ -340,7 +345,8 @@ lost questions cannot tell them apart.
 | As alternatives, `collapse ⊕ shuffle` is 𝟙 (no question lost), while
 neither branch is 𝟙. So ⊕ answers "is question i kept on some branch?"
 and not "does one branch keep every question?".
-| `PROVEN` (`no-branch-achieves-meet`, with Q-2)
+| `PROVEN` (`no-branch-achieves-meet`, with Q-2); control
+`tests/reject/QuestionsMeetIsABranch.agda`
 | ungraded
 |===
 
@@ -401,6 +407,27 @@ claim, that every positive grade goes to a single point, holds.
 | The identity on the carrier is a lax morphism Loss → MinMax: a bottleneck
 never exceeds the sum.
 | `PROVEN` (`loss-bottleneck`)
+| ungraded
+
+| F-8
+| Out of one question there is exactly one strict morphism into an algebra
+`B`: lost goes to 𝟘 and kept goes to 𝟙. It exists exactly when `B` has
+𝟘 ⊗ 𝟘 ≡ 𝟘, which every annihilating algebra has, and HWM too.
+| `PROVEN` (`one-question-hom`, `one-question-needs`,
+`one-question-unique`)
+| ungraded
+
+| F-9
+| Taking the first question of `Questions (suc n)`, and dropping it, are
+strict morphisms. Composed, they read any single question alone.
+| `PROVEN` (`first-question`, `later-questions`)
+| ungraded
+
+| F-10
+| The number of lost questions does not preserve ⊕: `collapse` and
+`shuffle` each count 1 and their ⊕ counts 0. So no map into Loss or MinMax
+that factors through the count is strict or lax.
+| `PROVEN` (`count-not-⊕`)
 | ungraded
 |===
 
@@ -472,15 +499,17 @@ defines locally.
 algebra it will be parametric in. The expected shape, also `OPEN`, is that
 the equality needs only the core record and the K-CUT-WARRANT bound also
 needs `IsOrdered`.
-* Transport of K-CUT-LOSS along a morphism. F-1..F-7 supply the maps and
+* Transport of K-CUT-LOSS along a morphism. F-1..F-10 supply the maps and
 say which ones exist. No theorem here states that a strict morphism
 carries a cut-loss equality, or that a lax one carries a cut-loss bound.
 That theorem belongs with K-CUT-LOSS in choreographic-types, and it is
 `OPEN`.
 * Morphisms into or out of MinMax, other than `loss-bottleneck`, are not
 classified.
-* Questions: no morphism into or out of it is classified, and it has no
-unit test and no expected rejection as a control. Its ⊕ reads a grade as
+* Questions: strict morphisms out of one question are classified (F-8).
+Morphisms out of `Questions n` for n ≥ 2, other than the projections of
+F-9 and their composites with F-8, and every morphism into Questions, are
+not classified. Its ⊕ reads a grade as
 "lost on every branch", which is sound only when the reader of the grade
 chooses the branch (Q-4). A grade for alternatives that another party
 chooses, and a grade over merged pairs (which do not compose by union),

@@ -25,6 +25,11 @@
 --   loss-bottleneck   the identity on the carrier is lax Loss → MinMax
 --                     (a bottleneck never exceeds the sum); it is not strict
 --                     (Separation S-4).
+--   Questions         out of one question there is exactly one strict map
+--                     into any algebra with 𝟘 ⊗ 𝟘 ≡ 𝟘 (one-question-hom);
+--                     each question can be read alone (first-question,
+--                     later-questions); the number of lost questions is
+--                     not a morphism (count-not-⊕).
 module ResourceAlgebra.Morphism where
 
 open import ResourceAlgebra.Prelude
@@ -33,6 +38,8 @@ open import ResourceAlgebra.Instances.Loss    as L using (Loss; fin; inf; _⊓g_
 open import ResourceAlgebra.Instances.MaxPlus as M using (MaxPlus; Tropical; val; bot; tAdd; tMul; val-injective)
 open import ResourceAlgebra.Instances.HWM     as H using (HWM; hwm; peak; _⊕h_; _⊗h_)
 open import ResourceAlgebra.Instances.MinMax  as N using (MinMax; _⊔g_)
+open import ResourceAlgebra.Instances.Questions as Qn using (Questions; rep; collapse; shuffle)
+open import Agda.Builtin.Bool using (Bool; true; false)
 
 ----------------------------------------------------------------------
 -- The two notions
@@ -305,3 +312,87 @@ loss-bottleneck = record
   ⊗-case (fin m) (fin n) = cong fin (min-≥ (max-≤-+ m n))
   ⊗-case (fin m) inf     = refl
   ⊗-case inf     b       = refl
+
+----------------------------------------------------------------------
+-- Questions: one question is the two-element Boolean dioid
+--
+-- The carrier of `Questions 1` has two grades, its 𝟘 (lost) and its 𝟙
+-- (kept), so a strict morphism out of it has no freedom: it sends lost to
+-- 𝟘 and kept to 𝟙.  That map is a morphism exactly when the target has
+-- 𝟘 ⊗ 𝟘 ≡ 𝟘, which every annihilating algebra has and HWM has too.
+module _ (B : ResourceAlgebra) where
+  private
+    module B  = ResourceAlgebra B
+    module BA = IsAltMonoid B.alt
+    module BS = IsSeqMonoid B.seq
+
+  verdict : Bool → B.Grade
+  verdict true  = B.𝟘
+  verdict false = B.𝟙
+
+  -- F-8: the one strict morphism out of one question.
+  one-question-hom : B.𝟘 B.⊗ B.𝟘 ≡ B.𝟘 → Hom (Questions 1) B
+  one-question-hom 𝟘𝟘 = record
+    { map   = λ x → verdict (fst x)
+    ; map-𝟘 = refl
+    ; map-𝟙 = refl
+    ; map-⊕ = λ x y → ∧-case (fst x) (fst y)
+    ; map-⊗ = λ x y → ∨-case (fst x) (fst y)
+    }
+    where
+    ∧-case : ∀ a b → verdict (a Qn.∧ b) ≡ verdict a B.⊕ verdict b
+    ∧-case true  true  = sym (BA.idem B.𝟘)
+    ∧-case true  false = sym (BA.unitˡ B.𝟙)
+    ∧-case false true  = sym (BA.unitʳ B.𝟙)
+    ∧-case false false = sym (BA.idem B.𝟙)
+
+    ∨-case : ∀ a b → verdict (a Qn.∨ b) ≡ verdict a B.⊗ verdict b
+    ∨-case true  true  = sym 𝟘𝟘
+    ∨-case true  false = sym (BS.unitʳ B.𝟘)
+    ∨-case false true  = sym (BS.unitˡ B.𝟘)
+    ∨-case false false = sym (BS.unitˡ B.𝟙)
+
+  -- The condition is necessary: a morphism carries lost ⊗ lost ≡ lost over.
+  one-question-needs : Hom (Questions 1) B → B.𝟘 B.⊗ B.𝟘 ≡ B.𝟘
+  one-question-needs h =
+    trans (sym (cong₂ B._⊗_ (Hom.map-𝟘 h) (Hom.map-𝟘 h)))
+    (trans (sym (Hom.map-⊗ h (rep true 1) (rep true 1))) (Hom.map-𝟘 h))
+
+  -- Every strict morphism out of one question is that map, pointwise.
+  one-question-unique : (h : Hom (Questions 1) B) → ∀ x → Hom.map h x ≡ verdict (fst x)
+  one-question-unique h (true  , tt) = Hom.map-𝟘 h
+  one-question-unique h (false , tt) = Hom.map-𝟙 h
+
+-- F-9: each question can be read alone.  Taking the first question, and
+-- dropping it, are strict; composed, they reach any single question.
+first-question : ∀ n → Hom (Questions (suc n)) (Questions 1)
+first-question n = record
+  { map   = λ x → fst x , tt
+  ; map-𝟘 = refl
+  ; map-𝟙 = refl
+  ; map-⊕ = λ _ _ → refl
+  ; map-⊗ = λ _ _ → refl
+  }
+
+later-questions : ∀ n → Hom (Questions (suc n)) (Questions n)
+later-questions n = record
+  { map   = snd
+  ; map-𝟘 = refl
+  ; map-𝟙 = refl
+  ; map-⊕ = λ _ _ → refl
+  ; map-⊗ = λ _ _ → refl
+  }
+
+-- F-10: how many questions are lost is not a morphism.  Counting does not
+-- preserve alternatives: collapse and shuffle each lose one question and
+-- their ⊕ loses none.  Loss and MinMax share ⊕ = ⊓g, so no map into either
+-- that factors through the count is strict or lax.
+count : ∀ n → Qn.Q n → Nat
+count zero    _           = zero
+count (suc n) (true  , q) = suc (count n q)
+count (suc n) (false , q) = count n q
+
+count-not-⊕ : ¬ (∀ a b → fin (count 2 (ResourceAlgebra._⊕_ (Questions 2) a b))
+                        ≡ fin (count 2 a) ⊓g fin (count 2 b))
+count-not-⊕ f with f collapse shuffle
+... | ()
