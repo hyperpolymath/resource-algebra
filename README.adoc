@@ -13,7 +13,7 @@ monoid `(⊕, 𝟘)`, sequence forms a monoid `(⊗, 𝟙)`. Optional layers add
 (`IsDioid`, which yields `IsOrdered` by a proof, not a second obligation),
 and an annihilating zero (`IsAnnihilating`).
 
-Four instances are checked against it:
+Five instances are checked against it:
 
 [cols="1,2,2,1",options="header"]
 |===
@@ -22,6 +22,7 @@ Four instances are checked against it:
 | `Instances.MaxPlus` | tropical-types `TropicalSessionTypes.lean`, transcribed | max / + on ℕ ∪ {−∞} | transcribed, PROVEN; Lean bridge OPEN
 | `Instances.HWM` | occupancy-types' occupancy algebra, which adopts it (its O-1) | componentwise max / peak-and-drift | PROVEN; signed drift OPEN
 | `Instances.MinMax` | typed-wasm L11 bottleneck (`Tropical.tropMax`), which now transcribes it (`tropMax = minMaxSeq`) | min / max on ℕ ∪ {∞} | PROVEN; typed-wasm transcription TESTED there
+| `Instances.Questions` | ours: the powerset lattice of `n` downstream questions, a "which" grade | intersection / union on `n` booleans | PROVEN; sound per question, not jointly (Q-4)
 |===
 
 This repository is a kernel module of the family, not a family of its own.
@@ -83,7 +84,7 @@ only from its first green run.
 ----
 src/ResourceAlgebra/Prelude.agda      ℕ lemmas (+, max, min, ≤), proved here
 src/ResourceAlgebra/Core.agda         the record and its layers
-src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax
+src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions
 src/ResourceAlgebra/Separation.agda   checked separation witnesses
 src/ResourceAlgebra/Morphism.agda     strict and lax morphisms, classifications
 tests/reject/*.agda                   expected rejections (must fail)

@@ -571,6 +571,138 @@ Proof. reflexivity. Qed.
 Lemma bottleneck_is_not_sum : lmax (fin 2) (fin 3) <> lplus (fin 2) (fin 3).
 Proof. simpl. discriminate. Qed.
 
+(** * Questions (Q-1 .. Q-4) *)
+
+(** [Q n]: n booleans, by recursion on n. [true] means the question is lost. *)
+Fixpoint Q (n : nat) : Type :=
+  match n with
+  | 0 => unit
+  | S n => (bool * Q n)%type
+  end.
+
+Fixpoint qrep (b : bool) (n : nat) : Q n :=
+  match n with
+  | 0 => tt
+  | S n => (b, qrep b n)
+  end.
+
+Fixpoint qzip (f : bool -> bool -> bool) (n : nat) : Q n -> Q n -> Q n :=
+  match n with
+  | 0 => fun _ _ => tt
+  | S n => fun x y => (f (fst x) (fst y), qzip f n (snd x) (snd y))
+  end.
+
+Arguments qrep : clear implicits.
+Arguments qzip : clear implicits.
+
+(** Induct on the number of questions, split every grade into its bits, and
+    close each bit with the one-question law [p]. *)
+Ltac questions p :=
+  let n := fresh "n" in
+  let IH := fresh "IH" in
+  intro n; induction n as [|n IH]; simpl; intros;
+  repeat match goal with
+         | x : unit |- _ => destruct x
+         | x : (bool * Q _)%type |- _ => destruct x
+         end;
+  simpl; [reflexivity | rewrite ?p, ?IH; reflexivity].
+
+Section QLift.
+  Variable f : bool -> bool -> bool.
+
+  Lemma qzip_assoc : (forall a b c, f (f a b) c = f a (f b c)) ->
+    forall n x y z, qzip f n (qzip f n x y) z = qzip f n x (qzip f n y z).
+  Proof. intro p. questions p. Qed.
+
+  Lemma qzip_comm : (forall a b, f a b = f b a) ->
+    forall n x y, qzip f n x y = qzip f n y x.
+  Proof.
+    intros p n; induction n as [|n IH]; simpl; intros x y; [reflexivity|].
+    rewrite (p (fst x)), (IH (snd x)). reflexivity.
+  Qed.
+
+  Lemma qzip_idem : (forall a, f a a = a) -> forall n x, qzip f n x x = x.
+  Proof. intro p. questions p. Qed.
+
+  Lemma qzip_unitl : forall e, (forall a, f e a = a) ->
+    forall n x, qzip f n (qrep e n) x = x.
+  Proof. intros e p. questions p. Qed.
+
+  Lemma qzip_unitr : forall e, (forall a, f a e = a) ->
+    forall n x, qzip f n x (qrep e n) = x.
+  Proof. intros e p. questions p. Qed.
+
+  Lemma qzip_zerol : forall z, (forall a, f z a = z) ->
+    forall n x, qzip f n (qrep z n) x = qrep z n.
+  Proof. intros z p. questions p. Qed.
+
+  Lemma qzip_zeror : forall z, (forall a, f a z = z) ->
+    forall n x, qzip f n x (qrep z n) = qrep z n.
+  Proof. intros z p. questions p. Qed.
+End QLift.
+
+Lemma bor_band_l : forall a b c, orb a (andb b c) = andb (orb a b) (orb a c).
+Proof. intros [] [] []; reflexivity. Qed.
+
+Lemma bor_band_r : forall a b c, orb (andb a b) c = andb (orb a c) (orb b c).
+Proof. intros [] [] []; reflexivity. Qed.
+
+Lemma Questions_alt (n : nat) : IsAltMonoid (qzip andb n) (qrep true n).
+Proof.
+  split.
+  - apply qzip_assoc. intros [] [] []; reflexivity.
+  - apply qzip_comm. intros [] []; reflexivity.
+  - apply qzip_idem. intros []; reflexivity.
+  - apply qzip_unitl. reflexivity.
+Qed.
+
+Lemma Questions_seq (n : nat) : IsSeqMonoid (qzip orb n) (qrep false n).
+Proof.
+  split.
+  - apply qzip_assoc. intros [] [] []; reflexivity.
+  - apply qzip_unitl. reflexivity.
+  - apply qzip_unitr. intros []; reflexivity.
+Qed.
+
+(** Q-1: ⊕ = intersection ([andb]), ⊗ = union ([orb]), 𝟘 = all lost, 𝟙 = none lost. *)
+Definition Questions (n : nat) : ResourceAlgebra :=
+  {| Grade := Q n; radd := qzip andb n; rmul := qzip orb n;
+     rzero := qrep true n; rone := qrep false n;
+     ralt := Questions_alt n; rseq := Questions_seq n |}.
+
+Lemma Questions_dioid (n : nat) : IsDioid (Questions n).
+Proof.
+  split; simpl.
+  - revert n. questions bor_band_l.
+  - revert n. questions bor_band_r.
+Qed.
+
+Lemma Questions_ordered (n : nat) : IsOrdered (Questions n).
+Proof. exact (dioid_ordered (Questions_dioid n)). Qed.
+
+Lemma Questions_annihilating (n : nat) : IsAnnihilating (Questions n).
+Proof.
+  split; simpl.
+  - apply qzip_zerol. reflexivity.
+  - apply qzip_zeror. intros []; reflexivity.
+Qed.
+
+(** Question 0: the order of the pieces. Question 1: do the two copies differ. *)
+Definition collapse : Q 2 := (false, (true, tt)).
+Definition shuffle : Q 2 := (true, (false, tt)).
+
+(** Q-2 *)
+Lemma same_amount_different_loss : collapse <> shuffle.
+Proof. discriminate. Qed.
+
+(** Q-3 *)
+Lemma both_lost : rmul (Questions 2) collapse shuffle = qrep true 2.
+Proof. reflexivity. Qed.
+
+(** Q-4 *)
+Lemma no_branch_achieves_meet : radd (Questions 2) collapse shuffle = qrep false 2.
+Proof. reflexivity. Qed.
+
 (** * Assumptions (PROOF-POLICY §8.4): each must print "Closed under the
     global context". *)
 Print Assumptions alt_unitr.
@@ -610,3 +742,8 @@ Print Assumptions alternatives_differ.
 Print Assumptions maxplus_order.
 Print Assumptions loss_order_reversed.
 Print Assumptions bottleneck_is_not_sum.
+Print Assumptions Questions_dioid.
+Print Assumptions Questions_annihilating.
+Print Assumptions same_amount_different_loss.
+Print Assumptions both_lost.
+Print Assumptions no_branch_achieves_meet.

@@ -719,6 +719,127 @@ theorem loss_order_reversed : Loss.Le (fin 2) (fin 1) := rfl
 /-- S-4 -/
 theorem bottleneck_is_not_sum : lmax (fin 2) (fin 3) ≠ lplus (fin 2) (fin 3) := by decide
 
+/-! ## Questions (Q-1 .. Q-4) -/
+
+/-- `Q n`: n booleans, by recursion on n. `true` means the question is lost. -/
+def Q : Nat → Type
+  | 0 => Unit
+  | n + 1 => Bool × Q n
+
+/-- `rep` -/
+def qrep (b : Bool) : (n : Nat) → Q n
+  | 0 => ()
+  | n + 1 => (b, qrep b n)
+
+/-- `zip` -/
+def qzip (f : Bool → Bool → Bool) : (n : Nat) → Q n → Q n → Q n
+  | 0, _, _ => ()
+  | n + 1, x, y => (f x.1 y.1, qzip f n x.2 y.2)
+
+theorem qcons_eq {n : Nat} {a a' : Bool} {q q' : Q n} :
+    a = a' → q = q' → ((a, q) : Q (n + 1)) = (a', q')
+  | rfl, rfl => rfl
+
+theorem qzip_assoc {f : Bool → Bool → Bool} (p : ∀ a b c, f (f a b) c = f a (f b c)) :
+    ∀ n (x y z : Q n), qzip f n (qzip f n x y) z = qzip f n x (qzip f n y z)
+  | 0, _, _, _ => rfl
+  | n + 1, x, y, z => qcons_eq (p x.1 y.1 z.1) (qzip_assoc p n x.2 y.2 z.2)
+
+theorem qzip_comm {f : Bool → Bool → Bool} (p : ∀ a b, f a b = f b a) :
+    ∀ n (x y : Q n), qzip f n x y = qzip f n y x
+  | 0, _, _ => rfl
+  | n + 1, x, y => qcons_eq (p x.1 y.1) (qzip_comm p n x.2 y.2)
+
+theorem qzip_idem {f : Bool → Bool → Bool} (p : ∀ a, f a a = a) :
+    ∀ n (x : Q n), qzip f n x x = x
+  | 0, _ => rfl
+  | n + 1, (a, x) => qcons_eq (p a) (qzip_idem p n x)
+
+theorem qzip_unitl {f : Bool → Bool → Bool} (e : Bool) (p : ∀ a, f e a = a) :
+    ∀ n (x : Q n), qzip f n (qrep e n) x = x
+  | 0, _ => rfl
+  | n + 1, (a, x) => qcons_eq (p a) (qzip_unitl e p n x)
+
+theorem qzip_unitr {f : Bool → Bool → Bool} (e : Bool) (p : ∀ a, f a e = a) :
+    ∀ n (x : Q n), qzip f n x (qrep e n) = x
+  | 0, _ => rfl
+  | n + 1, (a, x) => qcons_eq (p a) (qzip_unitr e p n x)
+
+theorem qzip_zerol {f : Bool → Bool → Bool} (z : Bool) (p : ∀ a, f z a = z) :
+    ∀ n (x : Q n), qzip f n (qrep z n) x = qrep z n
+  | 0, _ => rfl
+  | n + 1, x => qcons_eq (p x.1) (qzip_zerol z p n x.2)
+
+theorem qzip_zeror {f : Bool → Bool → Bool} (z : Bool) (p : ∀ a, f a z = z) :
+    ∀ n (x : Q n), qzip f n x (qrep z n) = qrep z n
+  | 0, _ => rfl
+  | n + 1, x => qcons_eq (p x.1) (qzip_zeror z p n x.2)
+
+/-- Q-1: ⊕ = intersection (`and`), ⊗ = union (`or`), 𝟘 = all lost, 𝟙 = none lost. -/
+abbrev Questions (n : Nat) : ResourceAlgebra where
+  Grade := Q n
+  add := qzip and n
+  mul := qzip or n
+  zero := qrep true n
+  one := qrep false n
+  alt := {
+    assoc := qzip_assoc (by intro a b c; cases a <;> rfl) n
+    comm := qzip_comm (by intro a b; cases a <;> cases b <;> rfl) n
+    idem := qzip_idem (by intro a; cases a <;> rfl) n
+    unitl := qzip_unitl true (fun _ => rfl) n }
+  seq := {
+    assoc := qzip_assoc (by intro a b c; cases a <;> rfl) n
+    unitl := qzip_unitl false (fun _ => rfl) n
+    unitr := qzip_unitr false (by intro a; cases a <;> rfl) n }
+
+theorem bor_band_l : ∀ a b c : Bool, or a (and b c) = and (or a b) (or a c)
+  | true, _, _ => rfl
+  | false, _, _ => rfl
+
+theorem bor_band_r : ∀ a b c : Bool, or (and a b) c = and (or a c) (or b c)
+  | true, true, true => rfl
+  | true, true, false => rfl
+  | true, false, true => rfl
+  | true, false, false => rfl
+  | false, true, true => rfl
+  | false, true, false => rfl
+  | false, false, true => rfl
+  | false, false, false => rfl
+
+theorem qzip_distribl : ∀ n (a b c : Q n),
+    qzip or n a (qzip and n b c) = qzip and n (qzip or n a b) (qzip or n a c)
+  | 0, _, _, _ => rfl
+  | n + 1, a, b, c => qcons_eq (bor_band_l a.1 b.1 c.1) (qzip_distribl n a.2 b.2 c.2)
+
+theorem qzip_distribr : ∀ n (a b c : Q n),
+    qzip or n (qzip and n a b) c = qzip and n (qzip or n a c) (qzip or n b c)
+  | 0, _, _, _ => rfl
+  | n + 1, a, b, c => qcons_eq (bor_band_r a.1 b.1 c.1) (qzip_distribr n a.2 b.2 c.2)
+
+theorem Questions_dioid (n : Nat) : IsDioid (Questions n) where
+  distribl := qzip_distribl n
+  distribr := qzip_distribr n
+
+theorem Questions_ordered (n : Nat) : IsOrdered (Questions n) := (Questions_dioid n).ordered
+
+theorem Questions_annihilating (n : Nat) : IsAnnihilating (Questions n) where
+  annihill := qzip_zerol true (fun _ => rfl) n
+  annihilr := qzip_zeror true (by intro a; cases a <;> rfl) n
+
+/-- Question 0: the order of the pieces. Question 1: do the two copies differ. -/
+def collapse : Q 2 := (false, true, ())
+def shuffle : Q 2 := (true, false, ())
+
+/-- Q-2 -/
+theorem same_amount_different_loss : collapse ≠ shuffle :=
+  fun h => Bool.noConfusion (congrArg Prod.fst h)
+
+/-- Q-3 -/
+theorem both_lost : (Questions 2).mul collapse shuffle = qrep true 2 := rfl
+
+/-- Q-4 -/
+theorem no_branch_achieves_meet : (Questions 2).add collapse shuffle = qrep false 2 := rfl
+
 end RA
 
 /-! ## Axioms (PROOF-POLICY §8.4)
@@ -769,3 +890,9 @@ other answer. -/
 #print axioms RA.maxplus_order
 #print axioms RA.loss_order_reversed
 #print axioms RA.bottleneck_is_not_sum
+#print axioms RA.Questions
+#print axioms RA.Questions_dioid
+#print axioms RA.Questions_annihilating
+#print axioms RA.same_amount_different_loss
+#print axioms RA.both_lost
+#print axioms RA.no_branch_achieves_meet
