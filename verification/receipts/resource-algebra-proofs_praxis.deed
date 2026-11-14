@@ -14,7 +14,7 @@
 (praxis-deed
   :schema-version "1.0.0"
   :canonical-name "resource-algebra-proof-receipt"
-  :beholding-chora #u5"estate/chora"
+  :beholding-chora #u8"chora:estate/github.com/hyperpolymath"
   :profile proof-receipt
   :repository "hyperpolymath/resource-algebra"
   :source-commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"

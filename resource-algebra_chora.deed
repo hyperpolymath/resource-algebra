@@ -17,7 +17,7 @@
 (repo-deed
   :schema-version "1.0.0"
   :canonical-name "resource-algebra"
-  :beholding-chora #u5"estate/chora"
+  :beholding-chora #u8"chora:estate/github.com/hyperpolymath"
   :repo-uuid #u5"github.com/hyperpolymath/resource-algebra"
   ; The canon pin: which release of hyperpolymath/standards canon.lock this
   ; repo implements. It is the ONLY canon pin in this deed (deed_canon
