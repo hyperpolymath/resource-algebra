@@ -1101,4 +1101,33 @@
     ; A non-empty :unassigned list means the mint did not fully render;
     ; the validation step below already fails on a leftover token.
     (substitutions :rendered 34 :unassigned ()))
+  ; mint-answers — what just repo-init was answered on 2026-10-14, recovered after the
+  ; fact from .machine_readable/ai/PLACEHOLDERS.adoc, whose value column the
+  ; old mint filled in place. A value here is PROVEN by that file. A field left
+  ; "" is UNPROVEN (not recoverable), not empty by choice: :author-email-alt,
+  ; :project-type, :openssf-bp-id, :service-name, :port, :registry, :archetype,
+  ; :package-uuid and, where its row there is still an unfilled token,
+  ; :author-orcid. Nothing is invented. :author-org "" is a proven blank.
+  (mint-answers
+    :project-name "Resource Algebra"
+    :repo "resource-algebra"
+    :owner "hyperpolymath"
+    :author "Jonathan D.A. Jewell"
+    :author-email "j.d.a.jewell@open.ac.uk"
+    :author-org "The Open University"
+    :author-email-alt ""
+    :author-orcid ""
+    :description "The parametric grade algebra shared by the hyperpolymath type family"
+    :forge "github.com"
+    :security-email "j.d.a.jewell@open.ac.uk"
+    :conduct-email "j.d.a.jewell@open.ac.uk"
+    :project-type ""
+    :website "https://github.com/hyperpolymath/resource-algebra"
+    :openssf-bp-id ""
+    :service-name ""
+    :port ""
+    :registry ""
+    :archetype ""
+    :package-uuid ""
+    :mint-date "2026-10-14")
 )
