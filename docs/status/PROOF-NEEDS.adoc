@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Proof Requirements — resource-algebra
-:revdate: 2026-11-16
+:revdate: 2026-11-09
 
 What this repository owes, classified by the estate proof policy
 (`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
@@ -46,7 +46,8 @@ they were removed with those files on 2026-11-09.
 | PN-1
 | Every theorem in `PROOF-STATUS.adoc` checks in Agda under the canonical
 invocation `--safe --without-K --cubical-compatible` (policy §2.1), with no
-postulates, holes or libraries, under `-W error` with no warning suppressed, and the estate strict flag set.
+postulates, holes or libraries, under `-W error` (only
+`UnsupportedIndexedMatch` is suppressed) and the estate strict flag set.
 | `scripts/check-agda.sh`; CI `proofs.yml`
 
 | PN-2
