@@ -6,9 +6,9 @@
 ;;   guix build -f build/guix.scm          # installs the source tree to share/resource-algebra
 ;;   guix shell -D -f build/guix.scm       # the full development toolchain
 ;;
-;; This is a SOURCE package, and says so: a hermetic compiled build needs this
-;; repository's idris2 and zig dependencies packaged in Guix, which they are not
-;; (Guix builds offline). The toolchain below is real — `guix shell -D -f build/guix.scm`
+;; This is a SOURCE package, and says so: it installs the source tree and builds
+;; nothing (the Agda proofs are checked by scripts/check-agda.sh, which Guix does
+;; not run). The toolchain below is real — `guix shell -D -f build/guix.scm`
 ;; then `just setup` gives a working environment. See docs/SETUP.adoc §Guix.
 (use-modules (guix packages) (guix gexp)
              (guix build-system copy)
@@ -37,10 +37,10 @@
   (build-system copy-build-system)
   (arguments (list #:install-plan #~'(("." "share/resource-algebra/"))))
   (native-inputs (map spec->input (list "git" "bash" "coreutils" "nss-certs" "just" "mise"
-                                        "shellcheck" "chez-scheme" "gmp" "gcc-toolchain" "zig")))
+                                        "shellcheck")))
   (home-page "https://github.com/hyperpolymath/resource-algebra")
   (synopsis "Rhodium Standard Repository template")
-  (description "The estate's repository template: the RSR layout, an Idris2 ABI
-seam with a Zig FFI, CI gates, and the provisioning set (launcher, Justfile,
+  (description "The estate's repository template: the RSR layout, CI gates,
+and the provisioning set (launcher, Justfile,
 mise, Guix, setup and AI-assisted installation guides).")
   (license license:mpl2.0))

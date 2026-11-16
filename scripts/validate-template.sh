@@ -158,6 +158,13 @@ has_placeholder() {
 # VALIDATION PHASE 1: CORE STRUCTURE
 #==============================================================================
 
+# The ABI/FFI seam (Idris2 ABI over a Zig FFI) is inherited from the template spine.
+# A repository that pruned src/interface/ (recorded in its deed as
+# (variant (paths :removed))) is complete without it; a tree that carries the
+# directory must carry all of it, so deleting one part of a present seam still fails.
+HAS_SEAM=0
+[ -d "$REPO_ROOT/src/interface" ] && HAS_SEAM=1
+
 echo ""
 log_info "Phase 1: Core repository structure"
 echo ""
@@ -173,9 +180,13 @@ check_file_either "AUDIT.adoc" "docs/AUDIT.adoc" "Release audit gate"
 # Directories
 check_dir_either ".machine_readable" "machine-readable" "Machine-readable metadata"
 check_dir_exists ".github" "GitHub community metadata"
-check_abi_dir_exists "Idris2 ABI definitions"
-check_dir_exists "src/interface/ffi" "Zig FFI implementation"
-check_dir_exists "src/interface/generated/abi" "Generated C headers"
+if [ "$HAS_SEAM" = 1 ]; then
+    check_abi_dir_exists "Idris2 ABI definitions"
+    check_dir_exists "src/interface/ffi" "Zig FFI implementation"
+    check_dir_exists "src/interface/generated/abi" "Generated C headers"
+else
+    log_info "ABI/FFI seam: not applicable (src/interface/ absent; recorded in the repo deed's (variant (paths :removed)))"
+fi
 check_dir_exists "docs" "Documentation"
 
 #==============================================================================
@@ -300,15 +311,19 @@ echo ""
 log_info "Phase 4: Idris2 ABI and Zig FFI source files"
 echo ""
 
-# Idris2 ABI files
-check_abi_file_exists "Types.idr" "Core type definitions"
-check_abi_file_exists "Layout.idr" "Memory layout specifications"
-check_abi_file_exists "Foreign.idr" "FFI foreign declarations"
+if [ "$HAS_SEAM" = 1 ]; then
+    # Idris2 ABI files
+    check_abi_file_exists "Types.idr" "Core type definitions"
+    check_abi_file_exists "Layout.idr" "Memory layout specifications"
+    check_abi_file_exists "Foreign.idr" "FFI foreign declarations"
 
-# Zig FFI files
-check_file_exists "src/interface/ffi/build.zig" "Zig build configuration"
-check_file_exists "src/interface/ffi/src/main.zig" "Zig implementation"
-check_file_exists "src/interface/ffi/test/integration_test.zig" "Integration tests"
+    # Zig FFI files
+    check_file_exists "src/interface/ffi/build.zig" "Zig build configuration"
+    check_file_exists "src/interface/ffi/src/main.zig" "Zig implementation"
+    check_file_exists "src/interface/ffi/test/integration_test.zig" "Integration tests"
+else
+    log_info "ABI/FFI source files: not applicable (src/interface/ absent)"
+fi
 
 #==============================================================================
 # VALIDATION PHASE 5: PLACEHOLDER TOKENS
@@ -401,49 +416,53 @@ echo ""
 log_info "Phase 7: Build system verification"
 echo ""
 
-# Check Zig build
-if [ -f "$REPO_ROOT/src/interface/ffi/build.zig" ]; then
-    if command -v zig &> /dev/null; then
-        cd "$REPO_ROOT/src/interface/ffi"
-        if zig build 2>&1 | grep -q "error"; then
-            log_error "Zig build failed"
-        else
-            log_pass "Zig build successful"
-        fi
-        cd - > /dev/null
-    else
-        log_warning "Zig compiler not found - skipping Zig build check"
-    fi
-else
-    log_error "Zig build.zig not found"
-fi
-
-# Check Idris2. Prefer a REAL typecheck via the package (abi.ipkg sets the
-# sourcedir so the `module Abi.*` namespace resolves); this catches namespace /
-# path / import breakage that a bare per-file `idris2 --check` masks as a
-# tolerated "module name does not match file name" warning.
-if command -v idris2 &> /dev/null; then
-    if [ -f "$REPO_ROOT/src/interface/abi.ipkg" ]; then
-        if (cd "$REPO_ROOT" && idris2 --typecheck src/interface/abi.ipkg) > /dev/null 2>&1; then
-            log_pass "Idris2 ABI typechecks (abi.ipkg)"
-        else
-            log_error "Idris2 ABI does NOT typecheck (abi.ipkg)"
-        fi
-    else
-        # No package: fall back to a best-effort per-file syntax check (warns on
-        # the expected namespace/path mismatch). Look in either case of the dir.
-        IDS_FILES=$(find "$REPO_ROOT/src/interface/Abi" "$REPO_ROOT/src/interface/abi" -name "*.idr" -type f 2>/dev/null || true)
-        while IFS= read -r ids_file; do
-            if [ -z "$ids_file" ]; then continue; fi
-            if ! idris2 --check "$ids_file" 2>&1 | grep -q "Error"; then
-                log_pass "Idris2 syntax OK: $(basename "$ids_file")"
+if [ "$HAS_SEAM" = 1 ]; then
+    # Check Zig build
+    if [ -f "$REPO_ROOT/src/interface/ffi/build.zig" ]; then
+        if command -v zig &> /dev/null; then
+            cd "$REPO_ROOT/src/interface/ffi"
+            if zig build 2>&1 | grep -q "error"; then
+                log_error "Zig build failed"
             else
-                log_warning "Idris2 syntax issue: $(basename "$ids_file")"
+                log_pass "Zig build successful"
             fi
-        done <<< "$IDS_FILES"
+            cd - > /dev/null
+        else
+            log_warning "Zig compiler not found - skipping Zig build check"
+        fi
+    else
+        log_error "Zig build.zig not found"
+    fi
+
+    # Check Idris2. Prefer a REAL typecheck via the package (abi.ipkg sets the
+    # sourcedir so the `module Abi.*` namespace resolves); this catches namespace /
+    # path / import breakage that a bare per-file `idris2 --check` masks as a
+    # tolerated "module name does not match file name" warning.
+    if command -v idris2 &> /dev/null; then
+        if [ -f "$REPO_ROOT/src/interface/abi.ipkg" ]; then
+            if (cd "$REPO_ROOT" && idris2 --typecheck src/interface/abi.ipkg) > /dev/null 2>&1; then
+                log_pass "Idris2 ABI typechecks (abi.ipkg)"
+            else
+                log_error "Idris2 ABI does NOT typecheck (abi.ipkg)"
+            fi
+        else
+            # No package: fall back to a best-effort per-file syntax check (warns on
+            # the expected namespace/path mismatch). Look in either case of the dir.
+            IDS_FILES=$(find "$REPO_ROOT/src/interface/Abi" "$REPO_ROOT/src/interface/abi" -name "*.idr" -type f 2>/dev/null || true)
+            while IFS= read -r ids_file; do
+                if [ -z "$ids_file" ]; then continue; fi
+                if ! idris2 --check "$ids_file" 2>&1 | grep -q "Error"; then
+                    log_pass "Idris2 syntax OK: $(basename "$ids_file")"
+                else
+                    log_warning "Idris2 syntax issue: $(basename "$ids_file")"
+                fi
+            done <<< "$IDS_FILES"
+        fi
+    else
+        log_warning "Idris2 compiler not found - skipping Idris2 syntax checks"
     fi
 else
-    log_warning "Idris2 compiler not found - skipping Idris2 syntax checks"
+    log_info "Zig and Idris2 builds: not applicable (src/interface/ absent)"
 fi
 
 #==============================================================================
@@ -454,7 +473,9 @@ echo ""
 log_info "Phase 8: Documentation requirements"
 echo ""
 
-check_file_exists "docs/developer/ABI-FFI-README.adoc" "ABI/FFI documentation"
+if [ "$HAS_SEAM" = 1 ]; then
+    check_file_exists "docs/developer/ABI-FFI-README.adoc" "ABI/FFI documentation"
+fi
 # TOPOLOGY may live at root or under docs/architecture/, .md or .adoc
 if [ -f "$REPO_ROOT/TOPOLOGY.adoc" ] || [ -f "$REPO_ROOT/TOPOLOGY.md" ] || \
    [ -f "$REPO_ROOT/docs/architecture/TOPOLOGY.adoc" ] || [ -f "$REPO_ROOT/docs/architecture/TOPOLOGY.md" ]; then

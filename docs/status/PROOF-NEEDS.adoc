@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Proof Requirements — resource-algebra
-:revdate: 2026-11-09
+:revdate: 2026-11-16
 
 What this repository owes, classified by the estate proof policy
 (`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
@@ -26,7 +26,10 @@ The repository ships no executable code, ABI, FFI, wire format or protocol.
 | No exported functions, memory layout or foreign interface exist to state
 them about. The template's mandatory ABI rows (ABI-1..5) and its typing
 rows (TP-1, TP-2) named template example files, not this repository's code;
-they were removed with those files on 2026-11-09.
+they were removed with those files on 2026-11-09. The ABI group applies to a
+repository that ships an ABI or FFI, whatever implements it, not only to an
+Idris2 one; this repository ships neither, so it carries no ABI/FFI proof
+obligations (see "Removed scaffold" below).
 
 | Rust (Creusot, Pearlite, Verus) and Ada (SPARK)
 | No
@@ -75,6 +78,19 @@ algebra that is not a dioid) and M-2 (agreement with tropical-types' Lean
 semiring).
 | `PROOF-STATUS.adoc`
 |===
+
+== Removed scaffold
+
+On 2026-11-16, by owner decision, the template's ABI/FFI scaffold was removed
+from this repository: `src/interface/` (the Idris2 ABI in `Abi/`, `abi.ipkg`,
+the Zig FFI in `ffi/`, and the `generated/` header stubs),
+`tests/ffi_strings_test.sh` and `docs/developer/ABI-FFI-README.adoc`. The
+reason is that this is a pure-theory Agda repository with no executable code, no
+foreign interface and no memory layout to state ABI or FFI properties about.
+No ABI or FFI exists here, so there are *no ABI/FFI proof obligations*. The
+paths are recorded as `(variant (paths :removed))` in the repo deed. If an ABI
+or FFI is ever added, its obligations must be stated here first, in the ABI
+group, against that interface's own files and verifier.
 
 == Out of scope here
 

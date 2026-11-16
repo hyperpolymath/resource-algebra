@@ -48,8 +48,6 @@ UNASSIGNED
 ----
 resource-algebra/
 ├── src/                  # Source code
-├── src/interface/Abi/              # Idris2 ABI definitions (if applicable)
-├── ffi/zig/              # Zig FFI bridge (if applicable)
 ├── tests/                # Test suite
 ├── docs/                 # Documentation
 ├── .machine_readable/    # Checkpoint files (STATE, META, ECOSYSTEM)

@@ -11,7 +11,7 @@ exactly what is written here, so this page is also what to read when they stop.
 
 [horizontal]
 Repository:: https://github.com/hyperpolymath/resource-algebra
-Kind:: library (idris2, zig)
+Kind:: library (Agda theory; no build language is detected)
 Toolchain declared in:: `mise.toml` (versions `latest`, made concrete in `mise.lock`), and
 `build/manifest.scm` / `build/guix.scm` / `build/channels.scm` for Guix
 Every command below is also a `just` recipe:: run `just` to list them
@@ -42,16 +42,6 @@ for you in step 3.
 NOTE: On Windows, use WSL2 (`wsl --install`) and follow the Linux steps inside
 it. The launcher detects the platform and says so in `./launcher.sh --version`.
 
-=== System packages for Idris2
-
-Idris2 is built by pack on top of Chez Scheme and GMP, which come from your OS:
-
-* Fedora: `sudo dnf install chez-scheme gmp-devel`
-* Debian/Ubuntu: `sudo apt install chezscheme libgmp-dev`
-* macOS: `brew install chezscheme gmp`
-
-The Guix development shell (`build/manifest.scm`) already includes both.
-
 == 2. Get the code
 
 [source,bash]
@@ -81,8 +71,7 @@ That installs:
 |===
 |Language |Tools |If mise cannot supply it
 
-|idris2 |`idris2` |not a mise tool: install pack (https://github.com/stefan-hoeck/idris2-pack#installation), then `pack install-app idris2`
-|zig |`zig` |https://ziglang.org/download/ or Guix `zig`
+|agda |`agda` (`just test` runs `scripts/check-agda.sh`; CI pins Debian `agda-bin` 2.6.4.3) |not a mise tool: install it from your OS package manager, e.g. `apt install agda-bin`
 |(recipes) |`just`, `shellcheck` |your OS package manager, e.g. `dnf install just ShellCheck`
 |===
 
@@ -98,7 +87,7 @@ just setup
 ----
 
 `just setup` repeats step 3 (harmless), fetches this repository's own
-dependencies (idris2, zig), and finishes by running `just doctor`.
+dependencies (none: no build language is detected), and finishes by running `just doctor`.
 
 == 5. Check it
 
@@ -144,8 +133,8 @@ guix time-machine -C build/channels.scm -- shell -m build/manifest.scm   # the e
 guix build -f build/guix.scm   # the package
 ----
 
-Tools Guix does not package: idris2 (via pack). The Guix shell includes mise, so
-inside it run `mise install` for those. `just dev-shell` picks Guix when it is present and mise
+Tools Guix does not package come from mise. The Guix shell includes mise, so
+inside it run `mise install`. `just dev-shell` picks Guix when it is present and mise
 when it is not.
 
 [[opsm]]

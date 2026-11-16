@@ -1,5 +1,28 @@
 == Changelog
 
+== 2026-11-16 — ABI/FFI scaffold removed (pure-theory Agda repository)
+
+* Owner decision: this repository ships no ABI or FFI, so the template's
+  Idris2 ABI / Zig FFI scaffold is removed: `src/interface/` (`Abi/`,
+  `abi.ipkg`, `ffi/`, `generated/`), `tests/ffi_strings_test.sh` and
+  `docs/developer/ABI-FFI-README.adoc`. The paths are recorded in the repo
+  deed as `(variant (paths :removed))`, as the template's own prune does.
+* `docs/status/PROOF-NEEDS.adoc` records that no ABI/FFI exists, so there are
+  no ABI/FFI proof obligations.
+* `just test` now runs `scripts/check-agda.sh` (the praxis deed's `:test`)
+  instead of `idris2 --typecheck` and `zig build test`. `just build`, `lint`,
+  `fmt` and `fmt-check` report that no language is detected and ran nothing;
+  they are not a pass. `just quality` therefore gates on the Agda check alone.
+* The template's guards for a pruned seam are ported: `validate.just` and
+  `scripts/validate-template.sh` accept a tree with no `src/interface/`
+  (a tree that has one must still carry all of it), and
+  `scripts/run-proven-suite.sh` reports the Zig lane as NOT APPLICABLE,
+  counted apart from passes. `--require-zig` still fails closed if an
+  `src/interface/ffi` returns without a compiler.
+* Zig is dropped from `mise.toml`, `mise.lock`, `build/manifest.scm`,
+  `build/guix.scm` and the `proven-tests.yml` job, and the Idris-Inside and
+  Zig badges and the ABI/FFI bullet are dropped from `README.adoc`.
+
 == 2026-11-11 — Proof receipt and grades at f211fc1
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed`: the proof
