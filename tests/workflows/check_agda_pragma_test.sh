@@ -9,7 +9,7 @@
 # {-# OPTIONS -W noerror #-} would undo `-W error` for that module. The gate
 # must refuse it in EVERY module it checks (src/, tests/unit, tests/reject),
 # before Agda runs, and name the file and line. Each case is a throwaway copy
-# of the gate with one planted module and a STUB prover that answers --version
+# of the gate with one planted module and a FAKE_AGDA prover that answers --version
 # and records any other call, so the refusal is tested on its own: nothing here
 # runs a real Agda, and a refused case must not reach the prover at all. The
 # clean cases must get past the scan (its PASS line is printed and no refusal).
@@ -25,14 +25,14 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 command -v perl >/dev/null || { echo "FAIL: perl is required" >&2; exit 1; }
 
-STUB="$WORK/stub-agda"
-cat >"$STUB" <<'FAKE'
+FAKE_AGDA="$WORK/fake-agda"
+cat >"$FAKE_AGDA" <<'FAKE'
 #!/usr/bin/env bash
 if [ "${1:-}" = "--version" ]; then echo "stub 0"; exit 0; fi
-printf '%s\n' "$*" >>"$STUB_LOG"
+printf '%s\n' "$*" >>"$FAKE_LOG"
 exit 0
 FAKE
-chmod +x "$STUB"
+chmod +x "$FAKE_AGDA"
 
 FAILED=0; CHECKS=0
 note() { CHECKS=$((CHECKS + 1)); if [ "$1" = ok ]; then echo "  PASS  $2"; else FAILED=$((FAILED + 1)); echo "  FAIL  $2"; fi; }
@@ -50,7 +50,7 @@ fixture() {
 # gate DIR — run the gate copy with the stub prover; sets OUT, RC and the stub log.
 gate() {
     : >"$WORK/stub.log"
-    OUT="$(cd "$1" && STUB_LOG="$WORK/stub.log" AGDA="$STUB" bash scripts/check-agda.sh 2>&1)"; RC=$?
+    OUT="$(cd "$1" && FAKE_LOG="$WORK/stub.log" AGDA="$FAKE_AGDA" bash scripts/check-agda.sh 2>&1)"; RC=$?
 }
 # refused LABEL DIR FILE:LINE — the gate stopped on the pragma, named the place,
 # and never ran the prover on a module.
