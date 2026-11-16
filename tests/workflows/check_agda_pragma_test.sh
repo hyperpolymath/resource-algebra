@@ -120,5 +120,13 @@ d="$(fixture reject-W)"
 plant "$d" tests/reject/Bad.agda $'{-# OPTIONS --safe --warning=noerror #-}\nmodule Bad where\n'
 refused "tests/reject: a warning flag is refused" "$d" tests/reject/Bad.agda:1
 
+d="$(fixture src-warn-abbrev)"
+plant "$d" src/ResourceAlgebra/All.agda $'{-# OPTIONS --safe --warn=noerror #-}\nmodule All where\n'
+refused "src: the --warn abbreviation is refused" "$d" src/ResourceAlgebra/All.agda:1
+
+d="$(fixture src-wa-short)"
+plant "$d" src/ResourceAlgebra/All.agda $'{-# OPTIONS --wa=noerror #-}\nmodule All where\n'
+refused "src: the shortest --wa abbreviation is refused" "$d" src/ResourceAlgebra/All.agda:1
+
 echo "$CHECKS controls, $FAILED failed"
 [ "$FAILED" -eq 0 ]

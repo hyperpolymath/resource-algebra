@@ -23,7 +23,7 @@ trap 'rm -rf "$WORK"' EXIT
 
 # A PATH with the shell tools the gate needs and NO prover; the fake is added per case.
 BASEBIN="$WORK/basebin"; mkdir -p "$BASEBIN"
-for t in bash sed grep find sort comm mktemp cat head dirname basename rm tr cut wc awk env; do
+for t in bash sed grep find sort comm mktemp cat head dirname basename rm tr cut wc awk env perl; do
     p="$(command -v "$t" 2>/dev/null || true)"
     [ -n "$p" ] && ln -s "$p" "$BASEBIN/$t"
 done
@@ -98,6 +98,19 @@ run "agda: the --warning spelling fails" 1 "$d" "OPTIONS pragma sets a warning f
 d="$(fixture agdawarnspace)"
 module "$d" $'{-# OPTIONS --safe --warning noerror #-}\nmodule A where\n'
 run "agda: --warning with a separate argument fails" 1 "$d" "OPTIONS pragma sets a warning flag"
+
+d="$(fixture agdamultiline)"
+module "$d" $'{-# OPTIONS --safe\n    -W noerror #-}\nmodule A where\n'
+run "agda: a pragma split over lines fails" 1 "$d" "OPTIONS pragma sets a warning flag"
+prover_ran "agda: the split pragma never reaches the prover" no
+
+d="$(fixture agdawarnabbrev)"
+module "$d" $'{-# OPTIONS --safe --warn=noerror #-}\nmodule A where\n'
+run "agda: the --warn abbreviation fails" 1 "$d" "OPTIONS pragma sets a warning flag"
+
+d="$(fixture agdawashort)"
+module "$d" $'{-# OPTIONS --wa=noerror #-}\nmodule A where\n'
+run "agda: the shortest --wa abbreviation fails" 1 "$d" "OPTIONS pragma sets a warning flag"
 
 echo "$CHECKS controls, $FAILED failed"
 [ "$FAILED" -eq 0 ]

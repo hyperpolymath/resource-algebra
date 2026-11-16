@@ -27,7 +27,10 @@ mapfile -d '' cone < "$cone_list"
 (( ${#cone[@]} > 0 )) || { echo "ERROR: no Agda sources in the import cone" >&2; exit 1; }
 # A module's own OPTIONS pragma overrides the command line, so one that sets a
 # warning flag (-W / --warning, e.g. {-# OPTIONS -W noerror #-}) would undo the
-# gate's -W error for that module. Refuse it before Agda runs, in every module
+# gate's -W error for that module. Agda also accepts any unambiguous prefix of a
+# long option (--warn=noerror and --wa=noerror both disable -W error on Agda
+# 2.6.3), and no other Agda option starts with --wa, so every --wa... spelling
+# is refused; --w alone is ambiguous with --with-K/--without-K and Agda rejects it. Refuse it before Agda runs, in every module
 # the gate checks: the import cone (src/), the unit tests and the expected-
 # rejection fixtures. The scan reads each file whole, so a pragma split over
 # several lines is read as one; a pragma-looking text inside a comment is also
@@ -40,9 +43,9 @@ mapfile -d '' pragma_files < "$pragma_list"
 (( ${#pragma_files[@]} > 0 )) || { echo "ERROR: no Agda modules to scan for OPTIONS pragmas" >&2; exit 1; }
 pragma_status=0
 perl -0777 -ne '
-  while (/\{-#\s*OPTIONS(?<opts>[^#]*)#-\}/g) {
+  while (/\{-#\s*OPTIONS(?<opts>.*?)#-\}/sg) {
     my ($start, $pragma, $opts) = ($-[0], $&, $+{opts});
-    next unless $opts =~ /(?:^|\s)(?:-W|--warning)/;
+    next unless $opts =~ /(?:^|\s)(?:-W|--wa)/;
     my $line = (substr($_, 0, $start) =~ tr/\n//) + 1;
     (my $hit = $pragma) =~ s/\s+/ /g;
     print "$ARGV:$line: $hit\n";

@@ -88,8 +88,14 @@ check_one() {
     # --cubical-compatible, with -W error so any warning fails. Suppress NO warning
     # (no -W noX). Do not weaken. A module's own OPTIONS pragma could override the
     # command line (e.g. {-# OPTIONS -W noerror #-}), so a gated module that sets
-    # any warning flag (-W / --warning) in a pragma fails before Agda runs.
-    agda)   if pragma="$(grep -nE '\{-#[[:space:]]*OPTIONS[^#]*(-W|--warning)' "$ROOT/$root/$rel")"; then
+    # any warning flag in a pragma fails before Agda runs. The whole file is read,
+    # so a pragma split over lines is caught; -W and every unambiguous prefix of
+    # --warning that Agda accepts (--wa, --warn, ...) are refused. A scan that
+    # cannot run fails closed.
+    agda)   pragma="$(perl -0777 -ne 'while (/\{-#\s*OPTIONS(.*?)#-\}/sg) { my ($s, $p, $o) = ($-[0], $&, $1); next unless $o =~ /(?:^|\s)(?:-W|--wa)/; my $l = (substr($_, 0, $s) =~ tr/\n//) + 1; $p =~ s/\s+/ /g; print "$l: $p\n" }' "$ROOT/$root/$rel")"; prc=$?
+            if [ "$prc" -ne 0 ]; then
+              out="Error: could not scan $rel for OPTIONS pragmas (perl exit $prc)"; rc=1
+            elif [ -n "$pragma" ]; then
               out="Error: OPTIONS pragma sets a warning flag, overriding the gate's -W error: $pragma"; rc=1
             else
               out="$(cd "$ROOT/$root" && agda --safe --without-K --cubical-compatible -W error "$rel" 2>&1)"; rc=$?
