@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-11
+:revdate: 2026-11-16
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -33,13 +33,16 @@ dependent type theories (§8.3).
 
 * *Invocation.* `scripts/check-agda.sh` runs `agda --safe --without-K
 --cubical-compatible --no-libraries --ignore-interfaces --double-check
--W error -W noUnsupportedIndexedMatch -i src`, and every module also
+-W error -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
 (`tests/unit/AllTests.agda`) and the nine expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
-warning other than `UnsupportedIndexedMatch`.
+warning: no warning is suppressed. The receipt at `f211fc1` was taken while
+the gate still passed `-W noUnsupportedIndexedMatch`, which the warning-free
+core had made redundant; the gate dropped it afterwards, so the next receipt
+records the invocation without it.
 * *Import cone.* Only `src/ResourceAlgebra/`: no standard library and no
 other library. There is no `postulate` (refused by `--safe`), no hole and no
 `TERMINATING` or similar pragma.

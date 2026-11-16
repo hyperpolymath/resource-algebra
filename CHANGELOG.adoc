@@ -1,5 +1,14 @@
 == Changelog
 
+== 2026-11-16 — Agda gate suppresses no warning
+
+* `scripts/check-agda.sh` drops `-W noUnsupportedIndexedMatch`. Since the
+  2026-11-09 restatement of `_≤_` and the injectivity lemmas the core raises no
+  `UnsupportedIndexedMatch` warning, so under `-W error` every warning now
+  fails the gate (owner ruling 2026-11-09: a warning-free profile).
+* `docs/status/PROOF-STATUS.adoc` and `PROOF-NEEDS.adoc` say so. The receipt
+  at `f211fc1` keeps the invocation it ran; the next receipt records the new one.
+
 == 2026-11-11 — Proof receipt and grades at f211fc1
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed`: the proof
