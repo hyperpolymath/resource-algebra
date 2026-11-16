@@ -1,7 +1,12 @@
 == Changelog
 
-== 2026-11-16 — Agda gate suppresses no warning
+== 2026-11-16 — Agda gate suppresses no warning; F-5 lemma moves into the cone
 
+* F-5's distinctness lemma `maps-disagree-at-positive` moves from
+  `tests/unit/MorphismTest.agda` into `src/ResourceAlgebra/Morphism.agda`.
+  The ledger cites it as part of F-5, but in the unit tests it sat outside the
+  graded import cone (`All.agda`) and so outside the Agda receipt's inputs
+  manifest: a change to it would not have invalidated F-5's receipt.
 * `scripts/check-agda.sh` drops `-W noUnsupportedIndexedMatch`. Since the
   2026-11-09 restatement of `_≤_` and the injectivity lemmas the core raises no
   `UnsupportedIndexedMatch` warning, so under `-W error` every warning now
