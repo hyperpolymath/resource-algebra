@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-11
+:revdate: 2026-11-16
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -535,6 +535,28 @@ are not stated.
 * A gate that writes the proof receipt for each commit and checks it with
 the standards reader. Today the receipt is written by hand, for one commit
 (see Receipts).
+
+== Rust verifiers (not run)
+
+PROOF-POLICY §1.2 names *Creusot* with *Pearlite* contracts, and *Verus*,
+as the default Rust verifiers; Pearlite is Creusot's specification language,
+not a third verifier. Neither has been run in this repository, and no row
+above rests on Rust.
+
+* *Scope.* The repository's only first-party Rust is template tooling in
+`scripts/` (`merge-actions-lock.rs`, `prune-dependabot-ecosystems.rs`,
+`strip-instruction-blocks.rs`), run through `scripts/rust-tool.sh` and
+exercised by `tests/workflows/mint_cleanup_test.sh`. It implements no
+theorem in `PROOF-NEEDS.adoc` and carries no Creusot or Verus contracts.
+* *Creusot / Pearlite:* not run. No proof obligation is recorded for the
+tooling; this is a gap, not a pass.
+* *Verus:* not run, for the same reason.
+* *Kani and Aeneas:* not applicable. There is no `unsafe` or FFI seam (the
+ABI/FFI scaffold was removed on 2026-11-16, see `PROOF-NEEDS.adoc`), and no
+Rust implements an Agda-proved theorem.
+
+If Rust that implements a theorem here is ever added, both verifiers must be
+scoped for it, and this section updated with what ran.
 
 == Discipline
 

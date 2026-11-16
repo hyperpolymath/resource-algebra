@@ -134,7 +134,10 @@ guix build -f build/guix.scm   # the package
 ----
 
 Tools Guix does not package come from mise. The Guix shell includes mise, so
-inside it run `mise install`. `just dev-shell` picks Guix when it is present and mise
+inside it run `mise install`. Agda comes from neither: the manifest does
+not list it and it is not a mise tool, so install it separately, as in the
+step 3 table (CI pins Debian `agda-bin` 2.6.4.3), before `just test`.
+`just dev-shell` picks Guix when it is present and mise
 when it is not.
 
 [[opsm]]
