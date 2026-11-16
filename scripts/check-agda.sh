@@ -25,6 +25,41 @@ find src -name '*.agda' -print0 > "$cone_list" \
   || { echo "ERROR: could not list the import cone (src/)" >&2; exit 1; }
 mapfile -d '' cone < "$cone_list"
 (( ${#cone[@]} > 0 )) || { echo "ERROR: no Agda sources in the import cone" >&2; exit 1; }
+# A module's own OPTIONS pragma overrides the command line, so one that sets a
+# warning flag (-W / --warning, e.g. {-# OPTIONS -W noerror #-}) would undo the
+# gate's -W error for that module. Refuse it before Agda runs, in every module
+# the gate checks: the import cone (src/), the unit tests and the expected-
+# rejection fixtures. The scan reads each file whole, so a pragma split over
+# several lines is read as one; a pragma-looking text inside a comment is also
+# refused (fail closed). The listing runs to a file so a find failure stops the
+# gate, as for the cone above.
+pragma_list="$work/pragma-files"
+find src tests/unit tests/reject -name '*.agda' -print0 > "$pragma_list" \
+  || { echo "ERROR: could not list the modules the gate checks (src/, tests/unit, tests/reject)" >&2; exit 1; }
+mapfile -d '' pragma_files < "$pragma_list"
+(( ${#pragma_files[@]} > 0 )) || { echo "ERROR: no Agda modules to scan for OPTIONS pragmas" >&2; exit 1; }
+pragma_status=0
+perl -0777 -ne '
+  while (/\{-#\s*OPTIONS(?<opts>[^#]*)#-\}/g) {
+    my ($start, $pragma, $opts) = ($-[0], $&, $+{opts});
+    next unless $opts =~ /(?:^|\s)(?:-W|--warning)/;
+    my $line = (substr($_, 0, $start) =~ tr/\n//) + 1;
+    (my $hit = $pragma) =~ s/\s+/ /g;
+    print "$ARGV:$line: $hit\n";
+    $found = 1;
+  }
+  END { $? = 3 if $found }
+' "${pragma_files[@]}" > "$work/pragma.hits" || pragma_status=$?
+if (( pragma_status == 3 )); then
+  while IFS= read -r hit; do
+    echo "Error: OPTIONS pragma sets a warning flag, overriding the gate's -W error: $hit" >&2
+  done < "$work/pragma.hits"
+  exit 1
+elif (( pragma_status != 0 )); then
+  echo "ERROR: could not scan the modules for OPTIONS pragmas (perl exit $pragma_status)" >&2
+  exit 1
+fi
+echo "PASS: no OPTIONS pragma sets a warning flag in the ${#pragma_files[@]} modules the gate checks"
 if ! perl scripts/scan-postulates.pl "${cone[@]}"; then
   echo "ERROR: postulate in the import cone (src/), or an unreadable file" >&2
   exit 1

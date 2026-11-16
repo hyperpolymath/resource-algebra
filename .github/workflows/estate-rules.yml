@@ -226,3 +226,7 @@ jobs:
           set -euo pipefail
           bash tests/workflows/squabble_gate_test.sh
           bash scripts/check-required-contexts.sh .
+      - name: Proof gate self-test, agda branch (stub prover; a warning pragma is refused)
+        run: bash tests/workflows/check_proofs_agda_test.sh
+      - name: Agda gate self-test (an OPTIONS pragma that sets a warning flag is refused)
+        run: bash tests/workflows/check_agda_pragma_test.sh
