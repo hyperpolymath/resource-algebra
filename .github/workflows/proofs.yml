@@ -46,6 +46,8 @@ jobs:
         run: bash tests/check_agda_find_failure_test.sh
       - name: Gate stops on a postulate outside the prover's named trusted base
         run: bash tests/check_agda_trusted_base_test.sh
+      - name: Gate refuses any Agda warning, UnsupportedIndexedMatch included
+        run: bash tests/check_agda_warning_gate_test.sh
       - name: Core proofs and expected rejections
         run: bash scripts/check-agda.sh
       - name: Proof receipt
