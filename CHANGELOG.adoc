@@ -1,5 +1,27 @@
 == Changelog
 
+== 2026-11-16 — Port of the template's open PR #421 (f846da9) and proof wording
+
+* `CLAUDE.md`: the Rust row of the Proofs table names Creusot with Pearlite
+  contracts, and Verus, and a paragraph says to name all three in Rust
+  verification plans. The block is hand-authored below the generated
+  `ARRIVAL-PACK` region, so it is edited in place; `generate.sh` and
+  `verify.sh` agree with the file.
+* `build/just/container.just` and `build/container/stapeln/ct-build.sh`
+  refuse a container engine other than podman, nerdctl or docker (exit 2).
+  `tests/workflows/container_engine_test.sh` covers it and runs in
+  `estate-rules.yml`.
+* `scripts/check-agda.sh` refuses, before Agda runs, an `OPTIONS` pragma that
+  sets a warning flag (`-W` or `--warning`) in any module the gate checks
+  (`src/`, `tests/unit`, `tests/reject`); `scripts/check-proofs.sh` does the
+  same for its agda branch and passes `-W error`. The gate's existing
+  `-W noUnsupportedIndexedMatch` is unchanged. Tests:
+  `tests/workflows/check_agda_pragma_test.sh` and
+  `tests/workflows/check_proofs_agda_test.sh`, both in `estate-rules.yml`.
+* Unmerged upstream: the changes follow
+  `hyperpolymath/rsr-template-repo#421` as it stood at `f846da9`, and may need
+  to be revisited if that pull request changes.
+
 == 2026-11-16 — ABI/FFI scaffold removed (pure-theory Agda repository)
 
 * Owner decision: this repository ships no ABI or FFI, so the template's
