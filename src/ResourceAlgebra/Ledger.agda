@@ -11,8 +11,10 @@
 -- A ledger is a list of rows, newest first.  Row 0 is the head; row i + 1
 -- is row i of the tail.  A row's dependencies are indices into the rows
 -- after it, so a row can depend only on older rows and no dependency cycle
--- can be written.  An index past the end names no row, and the derivation
--- reads it as proven (𝟙).  So any reader of a ledger must refuse such a
+-- can be written.  An index at or past the number of rows after its own row
+-- names no row, even when it is below the ledger's length, and the derivation
+-- reads it as proven (𝟙).  So any reader of a ledger must check each
+-- dependency against the length of that row's tail and refuse a
 -- dangling reference, as an unregistered row ID, before it derives a
 -- status.  That is a precondition every reader must enforce, not a
 -- guarantee given here: no reader exists yet, and the theorems below hold

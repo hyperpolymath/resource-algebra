@@ -449,8 +449,11 @@ cycle can be written. The derived status of a row, `eff`, is its own
 evidence in sequence (⊗ of `Evidence`) with the derived statuses of the rows
 it depends on. This is README-EXPLAINME's rule that a row is only as strong
 as the weakest step it depends on, as a theorem rather than a convention.
-A reference past the end of the ledger names no row, and `eff` reads it as
-`proven`. So any reader of a ledger must refuse such a reference, as an
+A dependency index counts into the rows after its own row. An index at or
+past the number of those rows names no row, even when it is below the
+ledger's length, and `eff` reads it as
+`proven`. So any reader of a ledger must check each dependency against the
+length of that row's tail and refuse one that fails, as an
 unregistered row ID, before it derives a status. That is a precondition
 every reader must enforce, not a guarantee this repository gives: no
 reader exists yet (the standards ledger reader is planned), and the
