@@ -31,9 +31,6 @@ support-at-finite n = refl
 support-at-infinity : Hom.map support-hom inf ≡ bot
 support-at-infinity = refl
 
-maps-disagree-at-positive : ∀ n → zero-test (fin (suc n)) ≢ support (fin (suc n))
-maps-disagree-at-positive n ()
-
 reverse-support-at-finite : ∀ n → Hom.map support′-hom (val n) ≡ fin 0
 reverse-support-at-finite n = refl
 

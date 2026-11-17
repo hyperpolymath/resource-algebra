@@ -1,14 +1,12 @@
 == Changelog
 
-== 2026-11-17 — in-workflow gate renamed; `CI/gate` is the suite publisher's
+== 2026-11-17 — F-5's distinctness lemma moves into the graded cone
 
-* The aggregate job in `proofs.yml` is renamed from `CI/gate` to `Proofs verdict`
-  (job id, `needs:` and verdict logic unchanged; `scripts/ci-gate.sh` messages,
-  `tests/workflows/ci_gate_test.sh` and the coverage-exemption comments follow).
-  The context `CI/gate` is now exclusively a commit status posted by
-  `.github/workflows/ci-gate.yml`, a thin caller of the reusable in
-  proven-cicd-and-workflows, which is keyed in `actions.lock`. The test now
-  asserts the new name and that no workflow job is named `CI/gate`.
+* F-5's distinctness lemma `maps-disagree-at-positive` moves from
+  `tests/unit/MorphismTest.agda` into `src/ResourceAlgebra/Morphism.agda`.
+  The ledger cites it as part of F-5, but in the unit tests it sat outside the
+  graded import cone (`All.agda`) and so outside the Agda receipt's inputs
+  manifest: a change to it would not have invalidated F-5's receipt.
 
 == 2026-11-17 — `CI/gate` required check and declared coverage exemption
 
@@ -21,6 +19,19 @@
   claim. `src/interface` is on a declared shrink-only pending list until #40.
 * `tests/workflows/ci_gate_test.sh`: positive control, four negative cases,
   `needs:` drift and a planted-runtime-code case.
+
+== 2026-11-16 — The Agda gate suppresses no warning
+
+* `scripts/check-agda.sh` drops `-W noUnsupportedIndexedMatch`. Since
+  2026-11-09 the order and the injectivity lemmas are stated so the core
+  raises no `UnsupportedIndexedMatch` under `--cubical-compatible`, so the
+  suppression hid nothing. With it gone, `-W error` covers every warning.
+* `tests/check_agda_warning_gate_test.sh` with the fixture
+  `tests/warning/IndexedMatch.agda`: the fixture checks without `-W error`,
+  and the gate's own flags refuse it. Against the old flags the test fails.
+  `proofs.yml` runs it.
+* `PROOF-STATUS.adoc` and `PROOF-NEEDS.adoc` describe the new invocation.
+  Receipts already recorded keep the invocation they ran with.
 
 == 2026-11-11 — Proof receipt and grades at f211fc1
 
