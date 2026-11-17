@@ -774,6 +774,349 @@ Proof.
   intro f. pose proof (f collapse shuffle) as h. simpl in h. discriminate h.
 Qed.
 
+(** * Evidence (E-1) *)
+
+(** The status of a proof-ledger row, as a chain, weakest first:
+    [openRow < testedOnly < argued < provenWithPostulates < proven].
+    A status is coded by its rank (0 to 4); alternatives take the max of the
+    ranks and sequence the min, as in Agda's [Instances/Evidence.agda]. *)
+
+(** [min m n ≤ m] (Agda: [min-≤-left]). *)
+Lemma rmin_le_left : forall m n, rmin m n <= m.
+Proof. intros m n. rewrite rmin_eq. lia. Qed.
+
+(** [min m n ≤ n] (Agda: [min-≤-right]). *)
+Lemma rmin_le_right : forall m n, rmin m n <= n.
+Proof. intros m n. rewrite rmin_eq. lia. Qed.
+
+(** [k ≤ m → k ≤ n → k ≤ min m n] (Agda: [min-glb]). *)
+Lemma rmin_glb : forall k m n, k <= m -> k <= n -> k <= rmin m n.
+Proof. intros k m n p q. rewrite rmin_eq. lia. Qed.
+
+(** [min a (max b c) = max (min a b) (min a c)] (Agda: [min-distribˡ-max]). *)
+Lemma rmin_rmax_l : forall a b c, rmin a (rmax b c) = rmax (rmin a b) (rmin a c).
+Proof. intros a b c. unfold_rmm. lia. Qed.
+
+(** [max m n = n → m ≤ n] (Agda: [max-≡→≤]). *)
+Lemma rmax_eq_le : forall m n, rmax m n = n -> m <= n.
+Proof. intros m n p. rewrite rmax_eq in p. lia. Qed.
+
+(** The closed status vocabulary of PROOF-POLICY §5, weakest first. *)
+Inductive Status : Type :=
+  | openRow | testedOnly | argued | provenWithPostulates | proven.
+
+Definition rank (s : Status) : nat :=
+  match s with
+  | openRow => 0
+  | testedOnly => 1
+  | argued => 2
+  | provenWithPostulates => 3
+  | proven => 4
+  end.
+
+(** Every rank from 4 up names [proven]. *)
+Definition from_rank (n : nat) : Status :=
+  match n with
+  | 0 => openRow
+  | 1 => testedOnly
+  | 2 => argued
+  | 3 => provenWithPostulates
+  | S (S (S (S _))) => proven
+  end.
+
+Lemma from_rank_rank : forall s, from_rank (rank s) = s.
+Proof. intros []; reflexivity. Qed.
+
+Lemma rank_le_4 : forall s, rank s <= 4.
+Proof. intros []; simpl; lia. Qed.
+
+Lemma rank_from_rank : forall n, n <= 4 -> rank (from_rank n) = n.
+Proof.
+  intros [|[|[|[|[|n]]]]] p; try reflexivity. lia.
+Qed.
+
+(** Two statuses with one rank are one status. *)
+Lemma rank_injective : forall s t, rank s = rank t -> s = t.
+Proof.
+  intros s t p. rewrite <- (from_rank_rank s), <- (from_rank_rank t), p.
+  reflexivity.
+Qed.
+
+(** [_⊔e_]: alternatives keep the stronger status. *)
+Definition ejoin (s t : Status) : Status := from_rank (rmax (rank s) (rank t)).
+
+(** [_⊓e_]: sequence keeps the weaker status. *)
+Definition emeet (s t : Status) : Status := from_rank (rmin (rank s) (rank t)).
+
+Lemma rank_ejoin : forall s t, rank (ejoin s t) = rmax (rank s) (rank t).
+Proof.
+  intros s t. apply rank_from_rank.
+  pose proof (rank_le_4 s). pose proof (rank_le_4 t). rewrite rmax_eq. lia.
+Qed.
+
+Lemma rank_emeet : forall s t, rank (emeet s t) = rmin (rank s) (rank t).
+Proof.
+  intros s t. apply rank_from_rank.
+  pose proof (rank_le_4 s). rewrite rmin_eq. lia.
+Qed.
+
+(** Rewrite both sides to ranks and close the arithmetic. *)
+Ltac by_rank :=
+  apply rank_injective;
+  repeat (first [rewrite rank_ejoin | rewrite rank_emeet]);
+  cbn [rank];
+  unfold_rmm; lia.
+
+Lemma Evidence_alt : IsAltMonoid ejoin openRow.
+Proof.
+  split.
+  - intros a b c. by_rank.
+  - intros a b. by_rank.
+  - intros a. by_rank.
+  - intros a. by_rank.
+Qed.
+
+Lemma Evidence_seq : IsSeqMonoid emeet proven.
+Proof.
+  split.
+  - intros a b c. by_rank.
+  - intros a. pose proof (rank_le_4 a). by_rank.
+  - intros a. pose proof (rank_le_4 a). by_rank.
+Qed.
+
+(** E-1: ⊕ = the stronger, ⊗ = the weaker, 𝟘 = [openRow], 𝟙 = [proven]. *)
+Definition Evidence : ResourceAlgebra :=
+  {| Grade := Status; radd := ejoin; rmul := emeet; rzero := openRow; rone := proven;
+     ralt := Evidence_alt; rseq := Evidence_seq |}.
+
+Lemma Evidence_dioid : IsDioid Evidence.
+Proof. split; cbn [rmul radd Evidence]; intros a b c; by_rank. Qed.
+
+Lemma Evidence_ordered : IsOrdered Evidence.
+Proof. exact (dioid_ordered Evidence_dioid). Qed.
+
+Lemma Evidence_annihilating : IsAnnihilating Evidence.
+Proof. split; cbn [rmul rzero Evidence]; intro a; by_rank. Qed.
+
+(** E-1: the order is the rank order, and sequence is its meet. *)
+
+(** Agda [≼→≤]. *)
+Lemma le_to_rank : forall a b, Le Evidence a b -> rank a <= rank b.
+Proof.
+  unfold Le; simpl; intros a b p.
+  apply rmax_eq_le. rewrite <- rank_ejoin, p. reflexivity.
+Qed.
+
+(** Agda [≤→≼]. *)
+Lemma rank_to_le : forall a b, rank a <= rank b -> Le Evidence a b.
+Proof.
+  unfold Le; simpl; intros a b p.
+  apply rank_injective. rewrite rank_ejoin, rmax_eq. lia.
+Qed.
+
+(** Agda [≼-proven]. *)
+Lemma le_proven : forall a, Le Evidence a proven.
+Proof. intro a. apply rank_to_le, rank_le_4. Qed.
+
+(** Agda [⊓e-lowerˡ]. *)
+Lemma emeet_lowerl : forall a b, Le Evidence (emeet a b) a.
+Proof. intros a b. apply rank_to_le. rewrite rank_emeet. apply rmin_le_left. Qed.
+
+(** Agda [⊓e-lowerʳ]. *)
+Lemma emeet_lowerr : forall a b, Le Evidence (emeet a b) b.
+Proof. intros a b. apply rank_to_le. rewrite rank_emeet. apply rmin_le_right. Qed.
+
+(** Agda [⊓e-greatest]. *)
+Lemma emeet_greatest : forall a b c,
+  Le Evidence c a -> Le Evidence c b -> Le Evidence c (emeet a b).
+Proof.
+  intros a b c p q. apply rank_to_le. rewrite rank_emeet.
+  apply rmin_glb; apply le_to_rank; assumption.
+Qed.
+
+(** * Evidence ledger (E-2, E-3) *)
+
+(** A ledger is a list of rows, newest first. A row's dependencies index the
+    rows after it, so no dependency cycle can be written.
+
+    [mem], [Dep], [Reach] and [Respects] are [Prop] here, where Agda's are
+    [Set] ([_⊎_] and [⊥] become [\/] and [False]). They occur only as
+    hypotheses, or, for [Respects], as a record whose fields conclude in
+    equations, so no statement changes strength. [Reach] takes its starting
+    row as an index, not a parameter. *)
+
+(** Agda's [map], by the same two equations. *)
+Fixpoint map_list {A B : Type} (f : A -> B) (xs : list A) : list B :=
+  match xs with
+  | nil => nil
+  | cons x xs => cons (f x) (map_list f xs)
+  end.
+
+(** [_∈_], by recursion on the list. *)
+Fixpoint mem (j : nat) (ks : list nat) : Prop :=
+  match ks with
+  | nil => False
+  | cons k ks => j = k \/ mem j ks
+  end.
+
+(** [⨅]: the meet of a list of statuses; the empty meet is [proven]. *)
+Fixpoint meet_all (ss : list Status) : Status :=
+  match ss with
+  | nil => proven
+  | cons s ss => emeet s (meet_all ss)
+  end.
+
+Lemma meet_all_lower : forall (f : nat -> Status) js j,
+  mem j js -> Le Evidence (meet_all (map_list f js)) (f j).
+Proof.
+  intros f js; induction js as [|k ks IH]; intros j p; simpl in p.
+  - destruct p.
+  - destruct p as [e|p].
+    + subst j. apply emeet_lowerl.
+    + eapply le_trans; [apply emeet_lowerr | exact (IH j p)].
+Qed.
+
+Lemma meet_all_greatest : forall (f : nat -> Status) z js,
+  (forall j, mem j js -> Le Evidence z (f j)) -> Le Evidence z (meet_all (map_list f js)).
+Proof.
+  intros f z js; induction js as [|k ks IH]; intro h; simpl.
+  - apply le_proven.
+  - apply emeet_greatest.
+    + apply h. left. reflexivity.
+    + apply IH. intros j p. apply h. right. exact p.
+Qed.
+
+Record Row : Type := row {
+  own  : Status;      (* the §5 token of the row's own artefact *)
+  deps : list nat     (* the rows it depends on, as indices into the rows after it *)
+}.
+
+Definition Ledger : Type := list Row.
+
+Fixpoint own_of (L : Ledger) (i : nat) : Status :=
+  match L, i with
+  | nil, _ => proven
+  | cons r _, 0 => own r
+  | cons _ L, S i => own_of L i
+  end.
+
+(** [Dep L i j]: row [i] depends directly on row [j]. *)
+Fixpoint Dep (L : Ledger) (i j : nat) : Prop :=
+  match L, i, j with
+  | nil, _, _ => False
+  | cons _ _, 0, 0 => False
+  | cons r _, 0, S j => mem j (deps r)
+  | cons _ _, S _, 0 => False
+  | cons _ L, S i, S j => Dep L i j
+  end.
+
+(** [Reach L i j]: row [i] depends on row [j] through zero or more steps. *)
+Inductive Reach (L : Ledger) : nat -> nat -> Prop :=
+  | stay : forall i, Reach L i i
+  | step : forall i k j, Dep L i k -> Reach L k j -> Reach L i j.
+
+(** The derived status. *)
+Fixpoint eff (L : Ledger) (i : nat) {struct L} : Status :=
+  match L, i with
+  | nil, _ => proven
+  | cons r L', 0 => emeet (own r) (meet_all (map_list (eff L') (deps r)))
+  | cons _ L', S i => eff L' i
+  end.
+
+(** E-2: never stronger than the row's own evidence. *)
+Lemma eff_le_own : forall L i, Le Evidence (eff L i) (own_of L i).
+Proof.
+  induction L as [|r L IH]; intros [|i]; simpl.
+  - apply le_refl.
+  - apply le_refl.
+  - apply emeet_lowerl.
+  - apply IH.
+Qed.
+
+(** E-2: nor than any row it depends on. *)
+Lemma eff_le_dep : forall L i j, Dep L i j -> Le Evidence (eff L i) (eff L j).
+Proof.
+  induction L as [|r L IH]; intros [|i] [|j] d; simpl in d |- *; try contradiction.
+  - eapply le_trans; [apply emeet_lowerr | exact (meet_all_lower (eff L) (deps r) j d)].
+  - exact (IH i j d).
+Qed.
+
+(** E-2: a row is only as strong as the weakest step it depends on. *)
+Lemma eff_le_reach : forall L i j, Reach L i j -> Le Evidence (eff L i) (own_of L j).
+Proof.
+  intros L i j r. induction r as [i|i k j d r IH].
+  - apply eff_le_own.
+  - eapply le_trans; [exact (eff_le_dep L i k d) | exact IH].
+Qed.
+
+(** An assignment respects a ledger when no row is stronger than its own
+    evidence or than a row it depends on. *)
+Record Respects (L : Ledger) (s : nat -> Status) : Prop := {
+  below_own : forall i, Le Evidence (s i) (own_of L i);
+  below_dep : forall i j, Dep L i j -> Le Evidence (s i) (s j)
+}.
+
+(** E-3 *)
+Lemma eff_respects : forall L, Respects L (eff L).
+Proof. intro L. split; [apply eff_le_own | apply eff_le_dep]. Qed.
+
+(** Restricting an assignment of [r :: L] to [L] keeps it respectful. *)
+Lemma restrict : forall r L s, Respects (cons r L) s -> Respects L (fun i => s (S i)).
+Proof.
+  intros r L s rho. split.
+  - intro i. exact (below_own rho (S i)).
+  - intros i j d. exact (below_dep rho (S i) (S j) d).
+Qed.
+
+(** E-3: every assignment that respects the ledger is below [eff]. *)
+Lemma eff_greatest : forall L s, Respects L s -> forall i, Le Evidence (s i) (eff L i).
+Proof.
+  induction L as [|r L IH]; intros s rho [|i]; simpl.
+  - apply le_proven.
+  - apply le_proven.
+  - apply emeet_greatest.
+    + exact (below_own rho 0).
+    + apply meet_all_greatest. intros j p.
+      eapply le_trans.
+      * exact (below_dep rho 0 (S j) p).
+      * exact (IH (fun k => s (S k)) (restrict rho) j).
+  - exact (IH (fun k => s (S k)) (restrict rho) i).
+Qed.
+
+(** The worked ledger of [tests/unit/EvidenceTest.agda], with its expected
+    values. They pin the chain order, which the laws above cannot see. *)
+
+Lemma sequence_keeps_the_weaker : rmul Evidence argued testedOnly = testedOnly.
+Proof. reflexivity. Qed.
+
+Lemma alternative_keeps_the_stronger : radd Evidence argued testedOnly = argued.
+Proof. reflexivity. Qed.
+
+Lemma provenWithPostulates_below_proven :
+  rmul Evidence proven provenWithPostulates = provenWithPostulates.
+Proof. reflexivity. Qed.
+
+Lemma open_annihilates : rmul Evidence proven openRow = openRow.
+Proof. reflexivity. Qed.
+
+(** Newest first; indices count back from each row. *)
+Definition example_ledger : Ledger :=
+  cons (row proven (cons 0 (cons 1 nil)))       (* row 4: on row 3 and row 2 *)
+  (cons (row testedOnly nil)                   (* row 3 *)
+  (cons (row proven (cons 0 (cons 1 nil)))      (* row 2: on row 1 and row 0 *)
+  (cons (row argued nil)                        (* row 1 *)
+  (cons (row proven nil)                        (* row 0 *)
+   nil)))).
+
+Lemma row2_is_argued : eff example_ledger 2 = argued.
+Proof. reflexivity. Qed.
+
+Lemma row4_is_tested_only : eff example_ledger 0 = testedOnly.
+Proof. reflexivity. Qed.
+
+Lemma row0_keeps_its_evidence : eff example_ledger 4 = proven.
+Proof. reflexivity. Qed.
+
 (** * Assumptions (PROOF-POLICY §8.4): each must print "Closed under the
     global context". *)
 Print Assumptions alt_unitr.
@@ -824,3 +1167,26 @@ Print Assumptions one_question_unique.
 Print Assumptions first_question.
 Print Assumptions later_questions.
 Print Assumptions count_not_add.
+Print Assumptions Evidence.
+Print Assumptions Evidence_dioid.
+Print Assumptions Evidence_ordered.
+Print Assumptions Evidence_annihilating.
+Print Assumptions le_to_rank.
+Print Assumptions rank_to_le.
+Print Assumptions le_proven.
+Print Assumptions emeet_lowerl.
+Print Assumptions emeet_lowerr.
+Print Assumptions emeet_greatest.
+Print Assumptions eff_le_own.
+Print Assumptions eff_le_dep.
+Print Assumptions eff_le_reach.
+Print Assumptions eff_respects.
+Print Assumptions restrict.
+Print Assumptions eff_greatest.
+Print Assumptions sequence_keeps_the_weaker.
+Print Assumptions alternative_keeps_the_stronger.
+Print Assumptions provenWithPostulates_below_proven.
+Print Assumptions open_annihilates.
+Print Assumptions row2_is_argued.
+Print Assumptions row4_is_tested_only.
+Print Assumptions row0_keeps_its_evidence.
