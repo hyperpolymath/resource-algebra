@@ -1,5 +1,24 @@
 == Changelog
 
+== 2026-11-17 — `CI/gate` comes from the suite publisher; `Proofs verdict`
+
+* `.github/workflows/ci-gate.yml` calls the reusable `ci-gate.yml` in
+  hyperpolymath/proven-cicd-and-workflows, which posts the commit status
+  `CI/gate` (the context the live Branch-Floor ruleset requires) from the
+  required-check list in that suite's `profiles/ci-gate/`. It runs on
+  `workflow_run` (`completed`, `in_progress`), on a 15-minute schedule and on
+  `workflow_dispatch`. Statuses are last-writer-wins, so a stale status can
+  stand until the next evaluation; the suite's `docs/CI-GATE.adoc` states the
+  limit.
+* The `proofs.yml` job that was named `CI/gate` is renamed `Proofs verdict`
+  (job id, `needs:` and verdict logic unchanged). It is one of the checks the
+  publisher requires.
+* `scripts/check-required-contexts.sh` accepts a typed mapping
+  `<context> => status:<workflow>`, verifying that the publisher triggers on
+  `workflow_run`, calls the suite reusable at a 40-hex pin and passes the
+  exact context. `.machine_readable/required-contexts-allow.txt` maps
+  `CI/gate` that way.
+
 == 2026-11-17 — Proof receipt and grades at 47de4a8
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
