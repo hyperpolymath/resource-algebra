@@ -1,5 +1,17 @@
 == Changelog
 
+== 2026-11-17 — Proof receipt and grades at 47de4a8
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `47de4a8` (the merge of #36), from `proofs.yml` run
+  `44015282682`: the Agda invocation without `-W noUnsupportedIndexedMatch`
+  (#37), and an Agda inputs manifest that now holds F-5's
+  `maps-disagree-at-positive`. The Rocq and Lean inputs are unchanged.
+* The standards reader derives PWG-1 for 27 rows and `ungraded` for the two
+  `OPEN` rows, and every git check of `check-proof-receipt.sh` (§8.5.3) holds.
+  `docs/status/PROOF-STATUS.adoc` cites the new run, jobs and digest, and
+  lists the receipt at `f211fc1` as superseded.
+
 == 2026-11-17 — F-5's distinctness lemma moves into the graded cone
 
 * F-5's distinctness lemma `maps-disagree-at-positive` moves from
