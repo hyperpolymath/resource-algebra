@@ -1,5 +1,13 @@
 == Changelog
 
+== 2026-11-17 — F-5's distinctness lemma moves into the graded cone
+
+* F-5's distinctness lemma `maps-disagree-at-positive` moves from
+  `tests/unit/MorphismTest.agda` into `src/ResourceAlgebra/Morphism.agda`.
+  The ledger cites it as part of F-5, but in the unit tests it sat outside the
+  graded import cone (`All.agda`) and so outside the Agda receipt's inputs
+  manifest: a change to it would not have invalidated F-5's receipt.
+
 == 2026-11-17 — `CI/gate` required check and declared coverage exemption
 
 * `proofs.yml` gains a job named exactly `CI/gate` (the context the live

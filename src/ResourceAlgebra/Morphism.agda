@@ -254,6 +254,10 @@ no-injective-Loss→MaxPlus : (h : Hom Loss MaxPlus)
 no-injective-Loss→MaxPlus h inj with inj (fin 1) (fin 2) (Loss→MaxPlus-collapses h)
 ... | ()
 
+-- The two morphisms are distinct: they disagree at every positive finite grade.
+maps-disagree-at-positive : ∀ n → zero-test (fin (suc n)) ≢ support (fin (suc n))
+maps-disagree-at-positive n ()
+
 ----------------------------------------------------------------------
 -- MaxPlus → Loss: exactly one strict morphism
 support′ : Tropical → L.Grade

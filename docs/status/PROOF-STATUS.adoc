@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-11
+:revdate: 2026-11-17
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -144,6 +144,13 @@ new commit, and until then its rows fall back to the grade its receipts
 support. The receipt deed is written by hand from the run; no gate writes
 or recomputes it yet. The run summaries that hold the per-leg digests are
 kept by GitHub for a limited time.
+
+One gap in the receipt at `f211fc1`: F-5 cites `maps-disagree-at-positive`,
+which was then in `tests/unit/MorphismTest.agda`. The run checked it (the
+gate checks the unit tests), but the Agda leg's inputs manifest lists only
+`src/`, so a change to that file would not have invalidated F-5's receipt.
+The lemma is now in `src/ResourceAlgebra/Morphism.agda`, inside the cone, and
+the next receipt covers it.
 
 Earlier receipts: run `42629220745` on source commit
 `9f175cc57f9c2c2db255c1b3161e24cfba4abc4d` (2026-11-09). They are
@@ -411,7 +418,7 @@ none goes to MaxPlus or to Loss.
 `support`. Neither distinguishes `fin 1` from `fin 2`.
 | `PROVEN`. Both are morphisms (`zero-test-hom`, `support-hom`) and every
 morphism is one of them (`Loss→MaxPlus`). They are distinct
-(`maps-disagree-at-positive`, tests/unit/MorphismTest.agda), and every
+(`maps-disagree-at-positive`), and every
 morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
 `no-injective-Loss→MaxPlus`).
 | 1
