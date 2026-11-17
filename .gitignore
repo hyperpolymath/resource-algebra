@@ -145,3 +145,6 @@ verification/proofs/coq/.lia.cache
 # Agda compiled proof artifacts
 verification/proofs/agda/*.agdai
 
+
+# Agda interface files are build output (the gate runs --ignore-interfaces).
+*.agdai
