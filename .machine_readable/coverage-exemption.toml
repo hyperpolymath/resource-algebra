@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MPL-2.0
+# Declared code-coverage exemption, verified by scripts/check-coverage-exemption.sh
+# (job `coverage-exemption` in .github/workflows/proofs.yml, aggregated by CI/gate).
+#
+# This repository is prover-only: Agda, rechecked in Rocq and Lean. It has no
+# runtime code, so a line-coverage percentage is undefined, not 0%. The claim is
+# checked, not trusted: the job fails if runtime code appears under a product root.
+measurable-runtime-code = false
+product-roots = ["src"]
+runtime-extensions = ["rs", "zig", "idr", "js", "ts", "py", "go", "c", "h", "cpp", "ex", "res"]
+# Shrink-only. The Idris2/Zig ABI/FFI scaffold is still on main and is removed by
+# hyperpolymath/resource-algebra#40; delete this entry when that merges.
+pending-removal = ["src/interface"]
