@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MPL-2.0
 # SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
-# CI/gate must be a verdict, not a rubber stamp. Positive control: all green
+# The `Proofs verdict` job must be a verdict, not a rubber stamp. Positive control: all green
 # passes. Negative cases: failure, cancelled, skipped, empty and malformed
 # input each fail. Drift: the gate's `needs:` must list every other job in
 # proofs.yml. Exemption: planting runtime code under src/ makes the declared
@@ -24,7 +24,9 @@ wf=.github/workflows/proofs.yml
 jobs="$(sed -n '/^jobs:/,$ s/^  \([a-z0-9-]*\):$/\1/p' "$wf" | grep -vx 'gate' | sort | tr '\n' ' ')"
 needs="$(sed -n 's/^    needs: \[\(.*\)\]$/\1/p' "$wf" | tr -d ',' | tr ' ' '\n' | sort | tr '\n' ' ')"
 if [ "$jobs" = "$needs" ]; then echo "ok   gate needs every other job ($needs)"; else echo "FAIL needs drift: jobs=[$jobs] needs=[$needs]"; fail=1; fi
-grep -q '^    name: CI/gate$' "$wf" && echo "ok   job name is exactly CI/gate" || { echo "FAIL job name"; fail=1; }
+grep -q '^    name: Proofs verdict$' "$wf" && echo "ok   job name is exactly Proofs verdict" || { echo "FAIL job name"; fail=1; }
+# `CI/gate` belongs to the suite publisher (ci-gate.yml, a commit status): no workflow job may be named it.
+if grep -rEq '^\s+name:\s*"?CI/gate"?\s*$' .github/workflows --include='*.yml' --include='*.yaml'; then echo "FAIL a workflow job is named CI/gate"; fail=1; else echo "ok   no workflow job is named CI/gate"; fi
 
 work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
 git ls-files -z | xargs -0 -I{} cp --parents {} "$work" 2>/dev/null

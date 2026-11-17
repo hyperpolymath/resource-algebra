@@ -1,5 +1,15 @@
 == Changelog
 
+== 2026-11-17 — in-workflow gate renamed; `CI/gate` is the suite publisher's
+
+* The aggregate job in `proofs.yml` is renamed from `CI/gate` to `Proofs verdict`
+  (job id, `needs:` and verdict logic unchanged; `scripts/ci-gate.sh` messages,
+  `tests/workflows/ci_gate_test.sh` and the coverage-exemption comments follow).
+  The context `CI/gate` is now exclusively a commit status posted by
+  `.github/workflows/ci-gate.yml`, a thin caller of the reusable in
+  proven-cicd-and-workflows, which is keyed in `actions.lock`. The test now
+  asserts the new name and that no workflow job is named `CI/gate`.
+
 == 2026-11-17 — `CI/gate` required check and declared coverage exemption
 
 * `proofs.yml` gains a job named exactly `CI/gate` (the context the live
