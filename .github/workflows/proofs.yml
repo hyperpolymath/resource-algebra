@@ -125,6 +125,29 @@ jobs:
             echo "- input SHA256: \`$(sha256sum verification/proofs/lean4/ResourceAlgebra.lean | cut -d' ' -f1)\`"
             echo "- axioms: $n_free of $n_print printed theorems depend on no axiom"
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Bridge check fails on a broken or axiom-dependent bridge
+        run: bash tests/check_lean_bridge_test.sh
+      # M-2: MaxPlus agrees with tropical-types' Tropical semiring. The bridge
+      # imports one file of hyperpolymath/tropical-types at the commit
+      # scripts/check-lean-bridge.sh pins (PROOF-POLICY §8.5.1, imported
+      # repositories).
+      - name: M-2 bridge to tropical-types, and receipt
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          out="$(bash scripts/check-lean-bridge.sh)"
+          echo "$out"
+          {
+            echo "## M-2 bridge receipt"
+            echo ""
+            echo "- source commit: \`$SOURCE_SHA\`"
+            echo "- checker: \`$(lean --version)\`"
+            echo "- invocation: \`bash scripts/check-lean-bridge.sh\`"
+            sed -n 's/^import: \(.*\) \(.*\) \(.*\) \(.*\)$/- import: `\1` at `\2`, `\3` SHA256 `\4`/p' <<<"$out"
+            sed -n 's/^bridge: \(.*\) \(.*\)$/- bridge: `\1` SHA256 `\2`/p' <<<"$out"
+            sed -n 's/^PASS: .*; \(.*\)$/- axioms: \1/p' <<<"$out"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   # Rocq recheck leg (PROOF-POLICY §2): re-proved by hand. Dedukti transport
   # is unavailable for this development (docs/status/PROOF-STATUS.adoc).

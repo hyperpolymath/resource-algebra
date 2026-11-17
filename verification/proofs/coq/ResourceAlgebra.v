@@ -321,6 +321,65 @@ Qed.
 Lemma dioid_not_annihilating : IsDioid HWM /\ ~ IsAnnihilating HWM.
 Proof. exact (conj HWM_dioid HWM_not_annihilating). Qed.
 
+(** * Diamond (C-4b)
+
+    The diamond lattice M3: join for alternatives, meet for sequence, the
+    bottom for 𝟘 and the top for 𝟙. Meet is monotone and the bottom
+    annihilates, but M3 is not distributive, so meet does not distribute
+    over join. Every law is a closed statement over five constructors. *)
+
+Inductive DGrade : Type := dbot | dtop | da | db | dc.
+
+(** Agda [_⊔d_], the join. *)
+Definition djoin (x y : DGrade) : DGrade :=
+  match x, y with
+  | dbot, y => y
+  | dtop, _ => dtop
+  | da, dbot => da | da, dtop => dtop | da, da => da | da, db => dtop | da, dc => dtop
+  | db, dbot => db | db, dtop => dtop | db, da => dtop | db, db => db | db, dc => dtop
+  | dc, dbot => dc | dc, dtop => dtop | dc, da => dtop | dc, db => dtop | dc, dc => dc
+  end.
+
+(** Agda [_⊓d_], the meet. *)
+Definition dmeet (x y : DGrade) : DGrade :=
+  match x, y with
+  | dbot, _ => dbot
+  | dtop, y => y
+  | da, dbot => dbot | da, dtop => da | da, da => da | da, db => dbot | da, dc => dbot
+  | db, dbot => dbot | db, dtop => db | db, da => dbot | db, db => db | db, dc => dbot
+  | dc, dbot => dbot | dc, dtop => dc | dc, da => dbot | dc, db => dbot | dc, dc => dc
+  end.
+
+Lemma Diamond_alt : IsAltMonoid djoin dbot.
+Proof. split; intros; repeat match goal with x : DGrade |- _ => destruct x end; reflexivity. Qed.
+
+Lemma Diamond_seq : IsSeqMonoid dmeet dtop.
+Proof. split; intros; repeat match goal with x : DGrade |- _ => destruct x end; reflexivity. Qed.
+
+Definition Diamond : ResourceAlgebra :=
+  {| Grade := DGrade; radd := djoin; rmul := dmeet; rzero := dbot; rone := dtop;
+     ralt := Diamond_alt; rseq := Diamond_seq |}.
+
+Lemma Diamond_ordered : IsOrdered Diamond.
+Proof.
+  split; unfold Le; simpl; intros z x y p;
+    destruct z, x, y; simpl in *; try reflexivity; discriminate p.
+Qed.
+
+Lemma Diamond_annihilating : IsAnnihilating Diamond.
+Proof. split; simpl; intros x; destruct x; reflexivity. Qed.
+
+(** Not a dioid: [a ⊓ (b ⊔ c) = a], while [(a ⊓ b) ⊔ (a ⊓ c) = ⊥]. *)
+Lemma Diamond_not_dioid : ~ IsDioid Diamond.
+Proof.
+  intro d. pose proof (distribl d da db dc) as h. simpl in h. discriminate h.
+Qed.
+
+(** C-4b: an annihilating ordered algebra need not be a dioid. *)
+Lemma ordered_annihilating_not_dioid :
+  IsOrdered Diamond /\ IsAnnihilating Diamond /\ ~ IsDioid Diamond.
+Proof. exact (conj Diamond_ordered (conj Diamond_annihilating Diamond_not_dioid)). Qed.
+
 (** * MinMax (N-1) *)
 
 Definition lmax (a b : LGrade) : LGrade :=
@@ -784,6 +843,10 @@ Print Assumptions add_upperr.
 Print Assumptions add_least.
 Print Assumptions dioid_ordered.
 Print Assumptions dioid_not_annihilating.
+Print Assumptions Diamond_ordered.
+Print Assumptions Diamond_annihilating.
+Print Assumptions Diamond_not_dioid.
+Print Assumptions ordered_annihilating_not_dioid.
 Print Assumptions Loss_dioid.
 Print Assumptions Loss_annihilating.
 Print Assumptions MaxPlus_dioid.

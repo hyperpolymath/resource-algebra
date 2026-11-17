@@ -70,10 +70,12 @@ expected rejection fails with its stated message.
 | `tests/reject/`, `scripts/check-agda.sh`
 
 | PN-5
-| Close or keep stating the open theory rows: C-4b (an annihilating ordered
-algebra that is not a dioid) and M-2 (agreement with tropical-types' Lean
-semiring).
-| `PROOF-STATUS.adoc`
+| Grade the two ungraded theory rows, or keep stating why they are not.
+C-4b (an annihilating ordered algebra that is not a dioid) is PROVEN in all
+three legs and needs a receipt for a commit that contains it. M-2
+(agreement with tropical-types' Lean semiring) is PROVEN by a Lean bridge
+only; it has no Agda witness, so it cannot reach PWG-3.
+| `PROOF-STATUS.adoc`, `verification/bridges/tropical-types/`
 |===
 
 == Out of scope here
