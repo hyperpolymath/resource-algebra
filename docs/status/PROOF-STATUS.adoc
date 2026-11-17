@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-16
+:revdate: 2026-11-17
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -18,7 +18,7 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 Out of 29 theory rows: PWG-1: 27 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
 ungraded: 2. The grades hold at source commit
-`f211fc1406d345fa6e972bcfc960c0acd57df1cd` only, the commit the proof
+`47de4a8ee49df37b9bc5f7fede2f54e83e243160` only, the commit the proof
 receipt describes (`verification/receipts/resource-algebra-proofs_praxis.deed`).
 The standards reader (`deed_lint.js --proof-receipt-json`) derives every
 grade there from the legs and receipts, and refuses a recorded grade that
@@ -33,13 +33,16 @@ dependent type theories (§8.3).
 
 * *Invocation.* `scripts/check-agda.sh` runs `agda --safe --without-K
 --cubical-compatible --no-libraries --ignore-interfaces --double-check
--W error -W noUnsupportedIndexedMatch -i src`, and every module also
+-W error -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
 (`tests/unit/AllTests.agda`) and the nine expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
-warning other than `UnsupportedIndexedMatch`.
+warning, `UnsupportedIndexedMatch` included. Until 2026-11-16 the gate
+suppressed that one warning; the core raised none, and
+`tests/check_agda_warning_gate_test.sh` now shows the gate's flags refuse
+an indexed match.
 * *Import cone.* Only `src/ResourceAlgebra/`: no standard library and no
 other library. There is no `postulate` (refused by `--safe`), no hole and no
 `TERMINATING` or similar pragma.
@@ -84,7 +87,7 @@ Unless a row says otherwise, every theorem row carries this record:
 | source
 | `PROVEN`
 | `AGDA-VERIFIED`
-| CI run `43056527841`, job `130647335990`
+| CI run `44015282682`, job `133811607634`
 
 | Rocq
 | `re-proved` (transport `unavailable`; see below)
@@ -92,22 +95,23 @@ Unless a row says otherwise, every theorem row carries this record:
 under the global context), and `rocqchk` rechecks the compiled file
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `43056527841`, job `130647335991`
+| CI run `44015282682`, job `133811607685`
 
 | Lean
 | `re-proved`, Lean core only, no Mathlib
 | `PROVEN`: no axiom (`#print axioms` reports none for every theorem)
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `43056527841`, job `130647335366`
+| CI run `44015282682`, job `133811607731`
 |===
 
 === Receipts
 
 All three legs passed in one `proofs.yml` run,
-https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841[`43056527841`],
-on source commit `f211fc1406d345fa6e972bcfc960c0acd57df1cd` (2026-11-11), the
-merge of resource-algebra#27. The machine-readable record is
+https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682[`44015282682`],
+on source commit `47de4a8ee49df37b9bc5f7fede2f54e83e243160` (2026-11-17), the
+merge of resource-algebra#36. The same run passed the `CI/gate` job and the
+coverage-exemption check. The machine-readable record is
 `verification/receipts/resource-algebra-proofs_praxis.deed` (§8.5.1).
 Each job's run summary holds its receipt: the checker and its asserted
 version, the invocation, the input digest, the result and the axioms.
@@ -118,7 +122,7 @@ version, the invocation, the input digest, the result and the axioms.
 
 | Agda
 | Agda 2.6.4.3 (Debian `agda-bin 2.6.4.3-1+b2`)
-| `93e1e3c24f2cd877…b319084d` over `src/`; `--safe`, the postulate scan of
+| `2a8edcaf4f58379a…0e2f4f8c4` over `src/`; `--safe`, the postulate scan of
 `src/`, and the trusted base: `Level`, `lzero`, `lsuc` and `_⊔_` in
 `Agda.Primitive`, each bound by its `BUILTIN` pragma
 
@@ -142,10 +146,19 @@ support. The receipt deed is written by hand from the run; no gate writes
 or recomputes it yet. The run summaries that hold the per-leg digests are
 kept by GitHub for a limited time.
 
-Earlier receipts: run `42629220745` on source commit
-`9f175cc57f9c2c2db255c1b3161e24cfba4abc4d` (2026-11-09). They are
-`superseded`: F-5's classifier, the strict flag set and `⊕-least` all
-changed after them.
+Earlier receipts, all `superseded`:
+
+* Run `43056527841` on source commit
+`f211fc1406d345fa6e972bcfc960c0acd57df1cd` (2026-11-11). After it, the gate
+dropped `-W noUnsupportedIndexedMatch` (resource-algebra#37) and F-5's
+`maps-disagree-at-positive` moved from `tests/unit/MorphismTest.agda` into
+`src/ResourceAlgebra/Morphism.agda` (resource-algebra#36). That run checked
+the lemma, because the gate checks the unit tests, but the Agda leg's inputs
+manifest listed only `src/`, so a change to the test file would not have
+invalidated F-5's receipt. The current receipt's manifest covers it.
+* Run `42629220745` on source commit
+`9f175cc57f9c2c2db255c1b3161e24cfba4abc4d` (2026-11-09). F-5's classifier,
+the strict flag set and `⊕-least` all changed after it.
 
 === The legs: where, how checked, toolchains
 
@@ -408,7 +421,7 @@ none goes to MaxPlus or to Loss.
 `support`. Neither distinguishes `fin 1` from `fin 2`.
 | `PROVEN`. Both are morphisms (`zero-test-hom`, `support-hom`) and every
 morphism is one of them (`Loss→MaxPlus`). They are distinct
-(`maps-disagree-at-positive`, tests/unit/MorphismTest.agda), and every
+(`maps-disagree-at-positive`), and every
 morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
 `no-injective-Loss→MaxPlus`).
 | 1

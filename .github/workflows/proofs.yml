@@ -46,6 +46,8 @@ jobs:
         run: bash tests/check_agda_find_failure_test.sh
       - name: Gate stops on a postulate outside the prover's named trusted base
         run: bash tests/check_agda_trusted_base_test.sh
+      - name: Gate refuses any Agda warning, UnsupportedIndexedMatch included
+        run: bash tests/check_agda_warning_gate_test.sh
       - name: Core proofs and expected rejections
         run: bash scripts/check-agda.sh
       - name: Proof receipt
@@ -187,3 +189,45 @@ jobs:
             echo "- input SHA256: \`$(sha256sum ResourceAlgebra.v | cut -d' ' -f1)\`"
             echo "- assumptions: $n_closed of $n_print printed theorems closed under the global context"
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # Declared coverage exemption (see .machine_readable/coverage-exemption.toml).
+  # The live Branch-Floor ruleset carries an 80% code_coverage rule; a prover-only
+  # repository has no runtime code to measure. The exemption is declared in a
+  # file and checked here, so it cannot go stale silently.
+  coverage-exemption:
+    name: Coverage exemption holds
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Declared exemption is still true
+        run: bash scripts/check-coverage-exemption.sh
+
+  # The in-workflow verdict `Proofs verdict` (NOT the required context: `CI/gate`
+  # of the live Branch-Floor ruleset 25434034 is a commit status published by
+  # ci-gate.yml, the only producer of it). It aggregates every other job in this workflow
+  # with `needs:` and fails
+  # unless ALL of them succeeded: failure, cancellation and skipping all fail,
+  # so it is never a rubber stamp. `if: always()` makes it run (and fail) when
+  # a needed job fails instead of being skipped, which a required check would
+  # report as passing-by-absence. tests/workflows/ci_gate_test.sh fails if a new
+  # job is added here without being added to `needs:`.
+  # Read-only permissions; the one `uses:` is the checkout already pinned in actions.lock.
+  gate:
+    name: Proofs verdict
+    needs: [proofs, lean-leg, rocq-leg, coverage-exemption]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: All required jobs succeeded
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: bash scripts/ci-gate.sh

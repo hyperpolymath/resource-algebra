@@ -17,7 +17,7 @@
   :beholding-chora #u8"chora:estate/github.com/hyperpolymath"
   :profile proof-receipt
   :repository "hyperpolymath/resource-algebra"
-  :source-commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+  :source-commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
   (trusted-base
     (primitive :prover agda :module "Agda.Primitive" :name "Level" :binding "BUILTIN LEVEL")
     (primitive :prover agda :module "Agda.Primitive" :name "lzero" :binding "BUILTIN LEVELZERO")
@@ -25,11 +25,11 @@
     (primitive :prover agda :module "Agda.Primitive" :name "_⊔_" :binding "BUILTIN LEVELMAX"))
   (claim :id "C-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -39,14 +39,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -56,8 +56,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -69,11 +69,11 @@
                (axioms))))
   (claim :id "C-2" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -83,14 +83,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -100,8 +100,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -113,11 +113,11 @@
                (axioms))))
   (claim :id "C-3" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -127,14 +127,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -144,8 +144,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -157,11 +157,11 @@
                (axioms))))
   (claim :id "C-4a" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -171,14 +171,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -188,8 +188,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -205,11 +205,11 @@
     (leg :prover lean :route unavailable :reason "the claim is OPEN: no instance witnesses it yet"))
   (claim :id "L-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -219,14 +219,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -236,8 +236,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -249,11 +249,11 @@
                (axioms))))
   (claim :id "M-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -263,14 +263,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -280,8 +280,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -297,11 +297,11 @@
     (leg :prover lean :route unavailable :reason "the claim is OPEN: a cross-prover bridge obligation with no mechanical link"))
   (claim :id "H-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -311,14 +311,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -328,8 +328,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -341,11 +341,11 @@
                (axioms))))
   (claim :id "H-3" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -355,14 +355,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -372,8 +372,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -385,11 +385,11 @@
                (axioms))))
   (claim :id "N-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -399,14 +399,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -416,8 +416,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -429,11 +429,11 @@
                (axioms))))
   (claim :id "Q-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -443,14 +443,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -460,8 +460,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -473,11 +473,11 @@
                (axioms))))
   (claim :id "Q-2" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -487,14 +487,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -504,8 +504,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -517,11 +517,11 @@
                (axioms))))
   (claim :id "Q-3" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -531,14 +531,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -548,8 +548,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -561,11 +561,11 @@
                (axioms))))
   (claim :id "Q-4" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -575,14 +575,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -592,8 +592,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -605,11 +605,11 @@
                (axioms))))
   (claim :id "F-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -619,14 +619,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -636,8 +636,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -649,11 +649,11 @@
                (axioms))))
   (claim :id "F-2" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -663,14 +663,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -680,8 +680,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -693,11 +693,11 @@
                (axioms))))
   (claim :id "F-3" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -707,14 +707,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -724,8 +724,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -737,11 +737,11 @@
                (axioms))))
   (claim :id "F-4" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -751,14 +751,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -768,8 +768,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -781,11 +781,11 @@
                (axioms))))
   (claim :id "F-5" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -795,14 +795,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -812,8 +812,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -825,11 +825,11 @@
                (axioms))))
   (claim :id "F-6" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -839,14 +839,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -856,8 +856,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -869,11 +869,11 @@
                (axioms))))
   (claim :id "F-7" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -883,14 +883,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -900,8 +900,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -913,11 +913,11 @@
                (axioms))))
   (claim :id "F-8" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -927,14 +927,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -944,8 +944,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -957,11 +957,11 @@
                (axioms))))
   (claim :id "F-9" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -971,14 +971,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -988,8 +988,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -1001,11 +1001,11 @@
                (axioms))))
   (claim :id "F-10" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -1015,14 +1015,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -1032,8 +1032,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -1045,11 +1045,11 @@
                (axioms))))
   (claim :id "S-1" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -1059,14 +1059,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -1076,8 +1076,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -1089,11 +1089,11 @@
                (axioms))))
   (claim :id "S-2" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -1103,14 +1103,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -1120,8 +1120,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -1133,11 +1133,11 @@
                (axioms))))
   (claim :id "S-3" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -1147,14 +1147,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -1164,8 +1164,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
@@ -1177,11 +1177,11 @@
                (axioms))))
   (claim :id "S-4" :pwg PWG-1 :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335990"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607634"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "agda 2.6.4.3"
-               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "93e1e3c24f2cd877217fc2e8fdef8f07c5795e748d466a2e2f3621e7b319084d"
+               :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
+               :inputs-sha256 "2a8edcaf4f58379a4f297fa03a1678fd67127ab2b44b6251ac3618a0e2f4f8c4"
                :state current
                (inputs-manifest
                  (file :path "src/ResourceAlgebra/All.agda" :sha256 "e8f06b38f814b3acdc8393ee2673fa98dde5f32d048a948b0d576e97553fe913")
@@ -1191,14 +1191,14 @@
                  (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
                  (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
                  (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "be87d8e508e55e0255506f34c9fc1d6d215d9f896f9b17818006e3c4e4c62b49")
+                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
                  (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "f42487167effd05d4fc5e4fb43c9e2d8864de018ae7a8aa10556d609f79c92e9")
                  (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0")
                )
                (axioms)))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335991"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607685"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "rocq 9.3.0"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
                :inputs-sha256 "26598632d47c01911184a9b884cb2e3caf21f60a5cdf7bd7d4bc894363c6f596"
@@ -1208,8 +1208,8 @@
                )
                (axioms)))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
-      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/43056527841/job/130647335366"
-               :commit "f211fc1406d345fa6e972bcfc960c0acd57df1cd"
+      (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682/job/133811607731"
+               :commit "47de4a8ee49df37b9bc5f7fede2f54e83e243160"
                :checker "lean 4.35.0"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only"
                :inputs-sha256 "f0de90eefd14fd61f32078ad6fddb0def17fb7f9d71a14e8594b767548573b8b"
