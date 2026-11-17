@@ -9,12 +9,12 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 stub=$(mktemp -d); trap 'rm -rf "$stub"' EXIT
 
 make_stub() { # $1 name, $2 what the stub prints when checking the bridge, $3 its exit code
-  cat > "$stub/$1" <<STUB
+  cat > "$stub/$1" <<FAKE_LEAN
 #!/usr/bin/env bash
 if [ "\$1" = "-o" ]; then : > "\$2"; exit 0; fi
 printf '%s\n' "$2"
 exit $3
-STUB
+FAKE_LEAN
   chmod +x "$stub/$1"
 }
 
