@@ -228,8 +228,10 @@ jobs:
       - name: Declared exemption is still true
         run: bash scripts/check-coverage-exemption.sh
 
-  # The required status check `CI/gate` (live Branch-Floor ruleset 25434034).
-  # It aggregates every other job in this workflow with `needs:` and fails
+  # The in-workflow verdict `Proofs verdict` (NOT the required context: `CI/gate`
+  # of the live Branch-Floor ruleset 25434034 is a commit status published by
+  # ci-gate.yml, the only producer of it). It aggregates every other job in this workflow
+  # with `needs:` and fails
   # unless ALL of them succeeded: failure, cancellation and skipping all fail,
   # so it is never a rubber stamp. `if: always()` makes it run (and fail) when
   # a needed job fails instead of being skipped, which a required check would
@@ -237,7 +239,7 @@ jobs:
   # job is added here without being added to `needs:`.
   # Read-only permissions; the one `uses:` is the checkout already pinned in actions.lock.
   gate:
-    name: CI/gate
+    name: Proofs verdict
     needs: [proofs, lean-leg, rocq-leg, coverage-exemption]
     if: ${{ always() }}
     runs-on: ubuntu-latest

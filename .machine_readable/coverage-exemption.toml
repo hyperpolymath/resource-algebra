@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 # Declared code-coverage exemption, verified by scripts/check-coverage-exemption.sh
-# (job `coverage-exemption` in .github/workflows/proofs.yml, aggregated by CI/gate).
+# (job `coverage-exemption` in .github/workflows/proofs.yml, aggregated by the `Proofs verdict` job).
 #
 # This repository is prover-only: Agda, rechecked in Rocq and Lean. It has no
 # runtime code, so a line-coverage percentage is undefined, not 0%. The claim is
