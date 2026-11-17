@@ -1,5 +1,17 @@
 == Changelog
 
+== 2026-11-17 — `CI/gate` required check and declared coverage exemption
+
+* `proofs.yml` gains a job named exactly `CI/gate` (the context the live
+  Branch-Floor ruleset requires). It aggregates `proofs`, `lean-leg`, `rocq-leg`
+  and `coverage-exemption` with `needs:` and fails if any failed, was cancelled
+  or was skipped, or if none were aggregated (`scripts/ci-gate.sh`).
+* `.machine_readable/coverage-exemption.toml` declares that the repository has no
+  measurable runtime code; `scripts/check-coverage-exemption.sh` checks the
+  claim. `src/interface` is on a declared shrink-only pending list until #40.
+* `tests/workflows/ci_gate_test.sh`: positive control, four negative cases,
+  `needs:` drift and a planted-runtime-code case.
+
 == 2026-11-11 — Proof receipt and grades at f211fc1
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed`: the proof
