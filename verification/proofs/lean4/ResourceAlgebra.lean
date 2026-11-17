@@ -910,6 +910,92 @@ theorem count_not_add :
         = lmin (fin (qcount 2 a)) (fin (qcount 2 b)) := fun f =>
   absurd (fin_injective (f collapse shuffle) : (0 : Nat) = 1) (by decide)
 
+/-! ## Diamond (C-4b)
+
+The diamond lattice M3: join for alternatives, meet for sequence, bottom
+for 𝟘 and top for 𝟙. Meet is monotone and the bottom annihilates, but M3 is
+not distributive, so meet does not distribute over join. Every law is a
+closed statement over five constructors, discharged case by case. -/
+
+inductive DGrade where
+  | bot | top | a | b | c
+  deriving DecidableEq
+
+/-- Agda `_⊔d_`, the join. -/
+def djoin : DGrade → DGrade → DGrade
+  | .bot, y => y
+  | .top, _ => .top
+  | .a, .bot => .a
+  | .a, .top => .top
+  | .a, .a => .a
+  | .a, .b => .top
+  | .a, .c => .top
+  | .b, .bot => .b
+  | .b, .top => .top
+  | .b, .a => .top
+  | .b, .b => .b
+  | .b, .c => .top
+  | .c, .bot => .c
+  | .c, .top => .top
+  | .c, .a => .top
+  | .c, .b => .top
+  | .c, .c => .c
+
+/-- Agda `_⊓d_`, the meet. -/
+def dmeet : DGrade → DGrade → DGrade
+  | .bot, _ => .bot
+  | .top, y => y
+  | .a, .bot => .bot
+  | .a, .top => .a
+  | .a, .a => .a
+  | .a, .b => .bot
+  | .a, .c => .bot
+  | .b, .bot => .bot
+  | .b, .top => .b
+  | .b, .a => .bot
+  | .b, .b => .b
+  | .b, .c => .bot
+  | .c, .bot => .bot
+  | .c, .top => .c
+  | .c, .a => .bot
+  | .c, .b => .bot
+  | .c, .c => .c
+
+abbrev Diamond : ResourceAlgebra where
+  Grade := DGrade
+  add := djoin
+  mul := dmeet
+  zero := .bot
+  one := .top
+  alt := {
+    assoc := by intro x y z; cases x <;> cases y <;> cases z <;> rfl
+    comm := by intro x y; cases x <;> cases y <;> rfl
+    idem := by intro x; cases x <;> rfl
+    unitl := fun _ => rfl }
+  seq := {
+    assoc := by intro x y z; cases x <;> cases y <;> cases z <;> rfl
+    unitl := fun _ => rfl
+    unitr := by intro x; cases x <;> rfl }
+
+theorem Diamond_ordered : IsOrdered Diamond where
+  mono_l z {x y} p := by
+    cases z <;> cases x <;> cases y <;> first | rfl | (cases p)
+  mono_r z {x y} p := by
+    cases z <;> cases x <;> cases y <;> first | rfl | (cases p)
+
+theorem Diamond_annihilating : IsAnnihilating Diamond where
+  annihill _ := rfl
+  annihilr x := by cases x <;> rfl
+
+/-- Not a dioid: `a ⊓ (b ⊔ c) = a`, while `(a ⊓ b) ⊔ (a ⊓ c) = ⊥`. -/
+theorem Diamond_not_dioid : ¬ IsDioid Diamond := fun d =>
+  absurd (d.distribl .a .b .c : DGrade.a = DGrade.bot) (by decide)
+
+/-- C-4b: an annihilating ordered algebra need not be a dioid. -/
+theorem ordered_annihilating_not_dioid :
+    IsOrdered Diamond ∧ IsAnnihilating Diamond ∧ ¬ IsDioid Diamond :=
+  ⟨Diamond_ordered, Diamond_annihilating, Diamond_not_dioid⟩
+
 end RA
 
 /-! ## Axioms (PROOF-POLICY §8.4)
@@ -926,6 +1012,11 @@ other answer. -/
 #print axioms RA.ResourceAlgebra.add_least
 #print axioms RA.IsDioid.ordered
 #print axioms RA.dioid_not_annihilating
+#print axioms RA.Diamond
+#print axioms RA.Diamond_ordered
+#print axioms RA.Diamond_annihilating
+#print axioms RA.Diamond_not_dioid
+#print axioms RA.ordered_annihilating_not_dioid
 #print axioms RA.Loss
 #print axioms RA.Loss_dioid
 #print axioms RA.Loss_annihilating
