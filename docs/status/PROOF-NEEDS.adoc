@@ -74,6 +74,13 @@ expected rejection fails with its stated message.
 algebra that is not a dioid) and M-2 (agreement with tropical-types' Lean
 semiring).
 | `PROOF-STATUS.adoc`
+
+| PN-6
+| Recheck E-1, E-2 and E-3 (the `Evidence` algebra and the ledger status
+derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
+their statement correspondence. Until then they have the Agda leg only and
+no grade.
+| `verification/proofs/coq/`, `verification/proofs/lean4/`
 |===
 
 == Out of scope here
