@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# The M-2 bridge as a Lake package: scripts/check-lean-bridge.sh copies
+# ResourceAlgebra.lean, the pinned TropicalSessionTypes.lean and
+# TropicalBridge.lean into a work directory with this file and runs
+# `lake build` there. No dependencies: the tropical-types pin lives in the
+# script, not in a `require`.
+name = "resourceAlgebraTropicalBridge"
+defaultTargets = ["Bridge"]
+
+[[lean_lib]]
+name = "Bridge"
+roots = ["ResourceAlgebra", "TropicalSessionTypes", "TropicalBridge"]
