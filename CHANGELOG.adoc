@@ -14,7 +14,7 @@
 * The Rocq receipts name their digest-pinned image. The reader at standards
   `940a27af` derives PWG-2ii for 28 rows and `ungraded` for M-2. No row is
   PWG-1: since standards#1625, PWG-1 needs every counted checker to run in an
-  image pinned by digest, and the Agda and Lean legs do not yet (PN-6). The
+  image pinned by digest, and the Agda and Lean legs do not yet (PN-7). The
   27 earlier PWG-1 grades came from a reader that predates that rule; the
   proofs are unchanged. `check-proof-receipt.sh` holds for every check,
   the import included.

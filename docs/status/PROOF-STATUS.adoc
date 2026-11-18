@@ -16,8 +16,8 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 29 theory rows: PWG-1: 0 · PWG-2ii: 28 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 1. The grades hold at source commit
+Out of 32 theory rows: PWG-1: 0 · PWG-2ii: 28 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 4. The grades hold at source commit
 `2b9bf3fb0b0435705b0ad92b929edfe80a9be000` only, the merge of
 resource-algebra#48 and the commit the proof receipt describes
 (`verification/receipts/resource-algebra-proofs_praxis.deed`). The
@@ -34,7 +34,10 @@ the bare runner, so neither is isolated in that sense. The 27 rows that were
 PWG-1 at `47de4a8` were graded by an earlier reader, before that rule; the
 same evidence now gives PWG-2ii. The proofs did not change.
 
-The one ungraded row is M-2. It is `PROVEN` by a Lean bridge only. Its
+Four rows are ungraded. E-1, E-2 and E-3 (resource-algebra#45) postdate
+the receipt's commit: they are `PROVEN` in Agda and both recheck legs are
+re-proved for them with the statements reconciled, but no receipt records a
+run of those legs yet. M-2 is `PROVEN` by a Lean bridge only. Its
 statement names a Lean-only object, so it has no Agda witness and cannot
 reach PWG-3 (§8.1). C-4b has a receipt now and is PWG-2ii. No row rests
 on an axiom: the Agda leg is `--safe` with the trusted base below, the Rocq
@@ -50,7 +53,7 @@ dependent type theories (§8.3).
 -W error -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
-(`tests/unit/AllTests.agda`) and the ten expected rejections. A rejection
+(`tests/unit/AllTests.agda`) and the thirteen expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
 warning, `UnsupportedIndexedMatch` included. Until 2026-11-16 the gate
@@ -61,8 +64,9 @@ an indexed match.
 other library. There is no `postulate` (refused by `--safe`), no hole and no
 `TERMINATING` or similar pragma.
 * *Trusted base (§8.4.7).* The cone Agda reports for `All.agda` also holds
-six modules supplied with the prover: `Agda.Primitive` and
-`Agda.Builtin.Bool`, `Equality`, `Nat`, `Sigma` and `Unit`. The gate scans
+seven modules supplied with the prover: `Agda.Primitive` and
+`Agda.Builtin.Bool`, `Equality`, `List`, `Nat`, `Sigma` and `Unit`
+(`List` joined with `Ledger.agda`). The gate scans
 them and allows exactly four postulates, all in `Agda.Primitive`: `Level`
 (`BUILTIN LEVEL`), `lzero` (`BUILTIN LEVELZERO`), `lsuc` (`BUILTIN
 LEVELSUC`) and `_⊔_` (`BUILTIN LEVELMAX`). It checks the declared names and
@@ -82,17 +86,23 @@ receipts for the canonical profile. On 2026-11-09, `_≤_` and the
 constructor-injectivity lemmas were restated so that the core checks under
 `--cubical-compatible` with no `UnsupportedIndexedMatch` warning. The
 statements of the theorems below did not change.
-* *Expected rejections.* Ten claims must be refused, each with the message
-its `-- EXPECT:` line names. In order, those messages are:
+* *Expected rejections.* Thirteen claims must be refused, each with the
+message its `-- EXPECT:` line names. Those messages are:
 `min m n != max m n`, `p != zero`, `suc _ != zero`, `max m n != m + n`,
 `max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3`, `… != bot`,
-`false != true` and `a != bot of type Grade` (C-4b's control,
-`tests/reject/DiamondDistributes.agda`).
+`false != true`, `a != bot of type Grade` (C-4b's control,
+`tests/reject/DiamondDistributes.agda`), and for the evidence ledger
+`tested-only != argued`, `argued != proven` and `tested-only != proven`.
 These are controls for the PROVEN rows. They are not themselves theorems.
 
 == Recheck legs (every row)
 
-Unless a row says otherwise, every theorem row carries this record:
+Every theorem row carries this record, except that the receipts below
+predate E-1, E-2 and E-3. Their Rocq and Lean legs are re-proved by hand,
+in the same files and by the same routes as every other row, and their
+statements are reconciled (see Statement correspondence). No receipt yet
+records a run of those legs, so the three rows stay `ungraded` until one
+does.
 
 [cols="1,1,1,1,2",options="header"]
 |===
@@ -285,6 +295,9 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | S-2 | `alternatives-differ` | `alternatives_differ` | `alternatives_differ`
 | S-3 | `maxplus-order`, `loss-order-reversed` | `maxplus_order`, `loss_order_reversed` | `maxplus_order`, `loss_order_reversed`
 | S-4 | `bottleneck-is-not-sum` | `bottleneck_is_not_sum` | `bottleneck_is_not_sum`
+| E-1 | `Evidence`, `Evidence-dioid`, `Evidence-ordered`, `Evidence-annihilating`, `≼→≤`, `≤→≼`, `≼-proven`, `⊓e-lowerˡ`, `⊓e-lowerʳ`, `⊓e-greatest` | `Evidence`, `Evidence_dioid`, `Evidence_ordered`, `Evidence_annihilating`, `le_to_rank`, `rank_to_le`, `le_proven`, `eMeet_lowerl`, `eMeet_lowerr`, `eMeet_greatest` | `Evidence`, `Evidence_dioid`, `Evidence_ordered`, `Evidence_annihilating`, `le_to_rank`, `rank_to_le`, `le_proven`, `emeet_lowerl`, `emeet_lowerr`, `emeet_greatest`
+| E-2 | `eff-≼-own`, `eff-≼-dep`, `eff-≼-reach` | `eff_le_own`, `eff_le_dep`, `eff_le_reach` | the same names
+| E-3 | `Respects`, `eff-respects`, `restrict`, `eff-greatest` | `Respects`, `eff_respects`, `restrict`, `eff_greatest` | the same names
 |===
 
 C-4b's carrier is `Grade` in Agda and `DGrade` in Lean and Rocq; the join
@@ -301,6 +314,38 @@ only that a morphism is one of the two: a weaker statement, so the receipts
 at `9f175cc` do not recheck F-5's classifier either (see Receipts). No leg rests
 on an assumption beyond its prover's kernel.
 
+E-1, E-2 and E-3 have these residual differences:
+
+* Names follow each prover's convention. The statuses are `openRow`,
+`testedOnly`, `argued`, `provenWithPostulates` and `proven` in both legs.
+Rocq uses the Lean spelling, not snake case, because
+`scripts/scan-dangerous.sh` refuses any lowercase `postulate` in leg code,
+even inside a longer name. For the same reason the test Agda calls
+`postulates-below-proven` is `provenWithPostulates_below_proven` in both
+legs. `_⊔e_` and `_⊓e_` are `eJoin` and `eMeet` in Lean and `ejoin` and
+`emeet` in Rocq; `from-rank`, `own-of` and `⨅` are `fromRank`, `ownOf` and
+`meetAll` in Lean and `from_rank`, `own_of` and `meet_all` in Rocq. Each is
+defined by the same equations as in Agda, `rank` and `from-rank` included.
+Ledger.agda's own `map` is `mapList` in Lean and `map_list` in Rocq, by the
+same two equations.
+* Membership (`_∈_`) and `Dep` are defined by the same recursion in all
+three provers, but they are `Prop`-valued in the legs: Agda's `_⊎_` and `⊥`
+in `Set` become `∨` and `False`. `Reach` is an inductive `Prop` in the legs
+and `Respects` a `Prop` record. A proof-relevant membership witness in Agda
+can be one of several when an index is repeated, and a propositional one
+cannot. These types occur only as hypotheses, or, for `Respects`, as a
+record whose fields conclude in equations, so no statement changes
+strength.
+* Agda's `Reach` takes the starting row as a parameter that `step` varies;
+both legs take it as an index. The constructors and their types are the
+same.
+* The worked ledger and the expected values of
+`tests/unit/EvidenceTest.agda` are restated in both legs
+(`sequence_keeps_the_weaker`, `alternative_keeps_the_stronger`,
+`provenWithPostulates_below_proven`, `open_annihilates`, `row2_is_argued`,
+`row4_is_tested_only`, `row0_keeps_its_evidence`). They are tests, not
+rows. They pin the chain order, which the laws of E-1..E-3 cannot see: a
+relabelling of the chain satisfies every law.
 === M-2 bridge (Lean only)
 
 M-2 does not carry the record above. Its statement names tropical-types'
@@ -476,7 +521,65 @@ and not "does one branch keep every question?".
 | `PROVEN` (`no-branch-achieves-meet`, with Q-2); control
 `tests/reject/QuestionsMeetIsABranch.agda`
 | 2ii
+
+| E-1
+| `Evidence` (how strongly a proof-ledger row is supported) is a
+`ResourceAlgebra`, `IsDioid`, `IsOrdered` and `IsAnnihilating`. The
+carrier is the closed status vocabulary of standards PROOF-POLICY §5 as a
+chain, weakest first: `open-row` < `tested-only` < `argued` <
+`proven-with-postulates` < `proven` (owner ruling 2026-11-17). Its
+operations are ⊕ = the stronger (join) and ⊗ = the weaker (meet), with
+𝟘 = `open-row` and 𝟙 = `proven`. So `≼` reads "no stronger than", and ⊗ is
+the meet of `≼` (`⊓e-lowerˡ`, `⊓e-lowerʳ`, `⊓e-greatest`).
+| `PROVEN` (Instances/Evidence.agda); control
+`tests/reject/EvidenceArguedBelowTested.agda`
+| ungraded (no receipt yet)
 |===
+
+== Evidence ledger (Ledger.agda)
+
+A proof ledger is a list of rows. Each row has its own evidence, the §5
+token of its artefact, and the earlier rows it depends on, so no dependency
+cycle can be written. The derived status of a row, `eff`, is its own
+evidence in sequence (⊗ of `Evidence`) with the derived statuses of the rows
+it depends on. This is README-EXPLAINME's rule that a row is only as strong
+as the weakest step it depends on, as a theorem rather than a convention.
+A dependency index counts into the rows after its own row. An index at or
+past the number of those rows names no row, even when it is below the
+ledger's length, and `eff` reads it as
+`proven`. So any reader of a ledger must check each dependency against the
+length of that row's tail and refuse one that fails, as an
+unregistered row ID, before it derives a status. That is a precondition
+every reader must enforce, not a guarantee this repository gives: no
+reader exists yet (the standards ledger reader is planned), and the
+theorems below hold for every ledger, dangling references included.
+
+[cols="1,4,2,1",options="header"]
+|===
+| ID | Claim | Agda (§5) | pwg
+
+| E-2
+| Soundness: a row's derived status is no stronger than its own evidence,
+than any row it depends on, or than the evidence of any row it reaches
+through dependencies.
+| `PROVEN` (`eff-≼-own`, `eff-≼-dep`, `eff-≼-reach`); controls
+`tests/reject/EvidenceProvenOverTested.agda`,
+`tests/reject/EvidenceArguedLinkIgnored.agda`
+| ungraded (no receipt yet)
+
+| E-3
+| Maximality: `eff` respects the ledger, and every assignment of statuses
+that respects it is below `eff` row by row. So `eff` is the strongest
+status the ledger supports, and a recorded status above it is an
+overstatement.
+| `PROVEN` (`eff-respects`, `eff-greatest`)
+| ungraded (no receipt yet)
+|===
+
+The worked ledger in `tests/unit/EvidenceTest.agda` closes the loop on
+concrete rows. A theorem about a model, applied to the code through an
+argued link, derives `argued`. A claim proved on top of a tested-only row
+derives `tested-only`. A row with no dependencies keeps its own evidence.
 
 == Morphisms (Morphism.agda)
 
