@@ -1,5 +1,24 @@
 == Changelog
 
+== 2026-11-17 — C-4b and M-2 proved
+
+* C-4b: `src/ResourceAlgebra/Instances/Diamond.agda` adds the diamond
+  lattice M3 (⊕ = join, ⊗ = meet, 𝟘 = bottom, 𝟙 = top), with
+  `Diamond-ordered`, `Diamond-annihilating` and `Diamond-not-dioid`: an
+  annihilating ordered algebra that is not a dioid. The Lean and Rocq legs
+  re-prove it. A tenth expected rejection,
+  `tests/reject/DiamondDistributes.agda`, must fail with `a != bot of type
+  Grade`.
+* M-2: `verification/bridges/tropical-types/TropicalBridge.lean` proves in
+  Lean that `MaxPlus` is isomorphic to tropical-types' `Tropical` and that
+  the isomorphism carries ⊕, ⊗, 𝟘 and 𝟙 to its `CommSemiring` instance's
+  operations, against tropical-types pinned at `f2e465c`, with no axiom.
+  `scripts/check-lean-bridge.sh` runs it in the Lean leg of `proofs.yml`,
+  and `tests/check_lean_bridge_test.sh` shows it fails on an error, an
+  axiom or no printed theorem.
+* Both rows stay ungraded. The receipt still describes `47de4a8`, which
+  predates C-4b. M-2 has no Agda witness, so it cannot reach PWG-3.
+
 == 2026-11-17 — `CI/gate` starts on `pull_request`; tamper guard
 
 * `CI/gate` now also starts on `pull_request`, and a tamper guard is added.

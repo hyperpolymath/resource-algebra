@@ -13,5 +13,6 @@ import ResourceAlgebra.Instances.MinMax
 import ResourceAlgebra.Instances.Questions
 import ResourceAlgebra.Instances.Evidence
 import ResourceAlgebra.Ledger
+import ResourceAlgebra.Instances.Diamond
 import ResourceAlgebra.Separation
 import ResourceAlgebra.Morphism

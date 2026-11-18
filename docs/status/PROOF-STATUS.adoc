@@ -22,8 +22,13 @@ ungraded: 5. The grades hold at source commit
 receipt describes (`verification/receipts/resource-algebra-proofs_praxis.deed`).
 The standards reader (`deed_lint.js --proof-receipt-json`) derives every
 grade there from the legs and receipts, and refuses a recorded grade that
-differs (§8.4). Of the five ungraded rows, two are `OPEN` (C-4b, M-2).
-The other three (E-1, E-2, E-3) postdate that commit. They are `PROVEN` in
+differs (§8.4). None of the five ungraded rows is `OPEN`, but none has a
+grade. C-4b is `PROVEN` in all three legs on this tree, but the receipt
+describes `47de4a8`, which predates it: it stays ungraded until a receipt
+describes a commit that contains it. M-2 is `PROVEN` by a Lean bridge only.
+Its statement names a Lean-only object, so it has no Agda witness and
+cannot reach PWG-3 (§8.1): it stays ungraded until an Agda statement of it
+exists. E-1, E-2 and E-3 postdate that commit too. They are `PROVEN` in
 Agda, and both recheck legs are re-proved for them with the statements
 reconciled, but no receipt records a run of those legs, so no grade is
 derived for them. No row rests
@@ -40,7 +45,7 @@ dependent type theories (§8.3).
 -W error -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
-(`tests/unit/AllTests.agda`) and the twelve expected rejections. A rejection
+(`tests/unit/AllTests.agda`) and the thirteen expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
 warning, `UnsupportedIndexedMatch` included. Until 2026-11-16 the gate
@@ -73,12 +78,13 @@ receipts for the canonical profile. On 2026-11-09, `_≤_` and the
 constructor-injectivity lemmas were restated so that the core checks under
 `--cubical-compatible` with no `UnsupportedIndexedMatch` warning. The
 statements of the theorems below did not change.
-* *Expected rejections.* Twelve claims must be refused, each with the
-message its `-- EXPECT:` line names. In order, those messages are:
+* *Expected rejections.* Thirteen claims must be refused, each with the
+message its `-- EXPECT:` line names. Those messages are:
 `min m n != max m n`, `p != zero`, `suc _ != zero`, `max m n != m + n`,
 `max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3`, `… != bot`,
-`false != true`, and for the evidence ledger `tested-only != argued`,
-`argued != proven` and `tested-only != proven`.
+`false != true`, `a != bot of type Grade` (C-4b's control,
+`tests/reject/DiamondDistributes.agda`), and for the evidence ledger
+`tested-only != argued`, `argued != proven` and `tested-only != proven`.
 These are controls for the PROVEN rows. They are not themselves theorems.
 
 == Recheck legs (every row)
@@ -248,6 +254,7 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | C-2 | `≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ`, `⊕-upperʳ`, `⊕-least` | `ResourceAlgebra.le_refl`, `le_trans`, `le_antisym`, `zero_least`, `add_upperl`, `add_upperr`, `add_least` | `le_refl`, `le_trans`, `le_antisym`, `zero_least`, `add_upperl`, `add_upperr`, `add_least`
 | C-3 | `IsDioid.ordered` | `IsDioid.ordered` | `dioid_ordered`
 | C-4a | `HWM-dioid`, `HWM-not-annihilating` | `dioid_not_annihilating` (their conjunction) | `dioid_not_annihilating` (their conjunction)
+| C-4b | `Grade`, `Diamond`, `Diamond-ordered`, `Diamond-annihilating`, `Diamond-not-dioid` | `DGrade`, `Diamond`, `Diamond_ordered`, `Diamond_annihilating`, `Diamond_not_dioid`, and `ordered_annihilating_not_dioid` (their conjunction) | the same names
 | L-1 | `Loss`, `Loss-dioid`, `Loss-ordered`, `Loss-annihilating` | `Loss`, `Loss_dioid`, `Loss_ordered`, `Loss_annihilating` | the same names
 | M-1 | `MaxPlus`, `MaxPlus-dioid`, `MaxPlus-ordered`, `MaxPlus-annihilating` | `MaxPlus`, `MaxPlus_dioid`, `MaxPlus_ordered`, `MaxPlus_annihilating` | the same names
 | H-1 | `HWM`, `HWM-dioid`, `HWM-ordered` | `HWM`, `HWM_dioid`, `HWM_ordered`, `HWM_zero_eq_one` | the same names
@@ -275,6 +282,12 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | E-2 | `eff-≼-own`, `eff-≼-dep`, `eff-≼-reach` | `eff_le_own`, `eff_le_dep`, `eff_le_reach` | the same names
 | E-3 | `Respects`, `eff-respects`, `restrict`, `eff-greatest` | `Respects`, `eff_respects`, `restrict`, `eff_greatest` | the same names
 |===
+
+C-4b's carrier is `Grade` in Agda and `DGrade` in Lean and Rocq; the join
+and meet have the same tables in all three. Agda proves each law by
+evaluating one Boolean check over every choice of grades and reading it back
+through soundness lemmas; Lean and Rocq prove the same equations by case
+analysis on the grades. The statements do not change.
 
 F-5's classifier `Loss→MaxPlus` returns Agda's `_⊎_`, a sum in `Set` that
 says *which* of the two maps a morphism is. Both legs now return a sum too
@@ -316,6 +329,57 @@ same.
 `row4_is_tested_only`, `row0_keeps_its_evidence`). They are tests, not
 rows. They pin the chain order, which the laws of E-1..E-3 cannot see: a
 relabelling of the chain satisfies every law.
+=== M-2 bridge (Lean only)
+
+M-2 does not carry the record above. Its statement names tropical-types'
+`instance : CommSemiring Tropical`, a Lean 4 object, so it is proved in
+Lean against that object and in no other prover.
+
+[cols="1,1,1,1,2",options="header"]
+|===
+| Leg | Route | §5 | §2.2 | Receipts
+
+| Agda
+| `unavailable`: the statement names a Lean object
+| —
+| —
+| —
+
+| Rocq
+| `unavailable`: the statement names a Lean object
+| —
+| —
+| —
+
+| Lean
+| source, Lean core only, no Mathlib
+| `PROVEN`: no axiom (`#print axioms` reports none for any of the six
+printed theorems)
+| `LEAN-CHECKED`
+| none yet: the step runs in the Lean leg of `proofs.yml` and writes an
+"M-2 bridge receipt" to the job summary
+|===
+
+* *Bridge.* `verification/bridges/tropical-types/TropicalBridge.lean`
+imports this repository's Lean leg (`ResourceAlgebra.lean`) and
+tropical-types' `TropicalSessionTypes.lean`. It proves `rmax_eq_max`
+(this leg's `rmax` is Lean's `Nat.max`), that `toHT` and `ofHT` are
+inverse, and that `toHT` sends ⊕, ⊗, 𝟘 and 𝟙 to `tAdd`, `tMul`, `.bot` and
+`.val 0` (`maxplus_agrees_tropical`). Four `example`s check by `rfl` that
+these are the `+`, `*`, `0` and `1` of the instance.
+* *Pin.* `scripts/check-lean-bridge.sh` fetches
+`hyperpolymath/tropical-types` at
+`f2e465c966d14d4986dfc492875cc54653d9751e`, checks the fetched commit,
+compiles both modules with the pinned `lean` 4.35.0 and checks the bridge.
+It fails on any error, on any printed theorem that depends on an axiom, and
+when no theorem is printed (`tests/check_lean_bridge_test.sh`). It prints
+the SHA256 of the imported file and of the bridge, for a receipt's
+`(import …)` clause (§8.5.1).
+* *Trusted boundary.* tropical-types' own instance laws depend on `propext`
+and `Quot.sound` at that commit. The bridge theorems do not use those laws
+and depend on no axiom. The `example`s mention the instance and so are not
+counted.
+* *Grade.* None. PWG-3 needs an Agda witness (§8.1), and there is none.
 
 == Core (Core.agda)
 
@@ -348,9 +412,13 @@ the least-upper-bound half is `⊕-least`, from main #21)
 | 1
 
 | C-4b
-| An annihilating ordered algebra need not be a dioid.
-| `OPEN`: no instance witnesses it yet
-| ungraded
+| An annihilating ordered algebra need not be a dioid. The diamond lattice
+M3 (`Instances/Diamond.agda`: ⊕ = join, ⊗ = meet, 𝟘 = bottom, 𝟙 = top) is
+ordered and annihilating, and is not a dioid: a ⊗ (b ⊕ c) = a, while
+(a ⊗ b) ⊕ (a ⊗ c) = 𝟘.
+| `PROVEN` (`Diamond`, `Diamond-ordered`, `Diamond-annihilating`,
+`Diamond-not-dioid`); control `tests/reject/DiamondDistributes.agda`
+| ungraded: no receipt yet describes a commit that contains it
 |===
 
 == Instances
@@ -374,9 +442,15 @@ the least-upper-bound half is `⊕-least`, from main #21)
 | M-2
 | `MaxPlus` agrees with tropical-types' `instance : CommSemiring Tropical`
 (Lean 4).
-| `OPEN`: a cross-prover bridge obligation. No mechanical link exists, and
-none is claimed.
-| ungraded
+| `PROVEN` in Lean only, by the bridge
+`verification/bridges/tropical-types/TropicalBridge.lean`
+(`maxplus_agrees_tropical`): `toHT` and `ofHT` are inverse, and `toHT`
+sends ⊕, ⊗, 𝟘 and 𝟙 to tropical-types' `tAdd`, `tMul`, `.bot` and `.val 0`,
+which are the fields of the instance. tropical-types is pinned at
+`f2e465c966d14d4986dfc492875cc54653d9751e`; see "M-2 bridge" below for the
+legs. The Agda and Rocq legs are `unavailable`: the statement names a Lean
+object.
+| ungraded: no Agda witness, so PWG-3 cannot be reached
 
 | H-1
 | `HWM` (peak, drift, with drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`
