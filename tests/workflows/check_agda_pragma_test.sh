@@ -146,5 +146,26 @@ else
     note bad "tests/unit: a module the scan cannot read (dangling symlink) fails the gate (rc=$RC)"; sed 's/^/        /' <<<"$OUT" | tail -8
 fi
 
+# A file that opens but whose read fails (EIO) must fail the gate, never pass as
+# an empty file. /proc/self/mem is a readable regular file whose reads at
+# offset 0 fail on Linux. Elsewhere the control is reported as not run, loudly.
+if [ -r /proc/self/mem ]; then
+    d="$(fixture unit-read-error)"
+    ln -s /proc/self/mem "$d/tests/unit/Mem.agda"
+    gate "$d"
+    if [ "$RC" -ne 0 ] && grep -qF 'error reading tests/unit/Mem.agda' <<<"$OUT" \
+        && grep -qF 'could not scan the modules for OPTIONS pragmas' <<<"$OUT" && [ ! -s "$WORK/stub.log" ]; then
+        note ok "tests/unit: a module whose read fails part-way fails the gate, not read as empty"
+    else
+        note bad "tests/unit: a module whose read fails part-way fails the gate (rc=$RC)"; sed 's/^/        /' <<<"$OUT" | tail -8
+    fi
+else
+    echo "  NOT RUN  read-error control: /proc/self/mem is not readable on this platform"
+fi
+
+d="$(fixture unit-empty)"
+: >"$d/tests/unit/Empty.agda"
+passes_scan "an empty module is read as empty and passes the scan" "$d"
+
 echo "$CHECKS controls, $FAILED failed"
 [ "$FAILED" -eq 0 ]

@@ -18,7 +18,8 @@
 # closed). A pragma-looking text inside a comment is also refused.
 #
 # Each file is opened and read explicitly; a file that cannot be read (missing,
-# a dangling symlink, not a regular file) is an error, never a silent skip.
+# a dangling symlink, not a regular file, or a read that fails part-way) is an
+# error, never a silent skip and never taken for an empty file.
 #
 # Output: one "FILE:LINE: pragma" line per refused pragma, LINE being where it starts.
 # Exit:   0 no refused pragma; 3 at least one; 2 a file could not be read or no file given.
@@ -39,13 +40,21 @@ for my $file (@ARGV) {
         $unreadable = 1;
         next;
     }
-    my $src = do { local $/; <$fh> };
-    if (!close($fh)) {
-        print STDERR "scan-agda-pragmas: error reading $file: $!\n";
+    # sysread reports each read error itself (undef), so a failed read is never
+    # mistaken for an empty file, whatever close later returns.
+    my ($src, $read_error) = ('', '');
+    while (1) {
+        my $n = sysread($fh, my $buf, 65536);
+        if (!defined $n) { $read_error = "$!"; last }
+        last if $n == 0;
+        $src .= $buf;
+    }
+    if (!close($fh) && $read_error eq '') { $read_error = "$!" }
+    if ($read_error ne '') {
+        print STDERR "scan-agda-pragmas: error reading $file: $read_error\n";
         $unreadable = 1;
         next;
     }
-    $src = '' unless defined $src;
     while ($src =~ /\{-#\s*OPTIONS(?<opts>.*?)(?:(?<=\s)#-\}|\z)/sg) {
         my ($start, $pragma, $opts) = ($-[0], $&, $+{opts});
         next unless $opts =~ /(?:^|\s)(?:-W|--wa)/;
