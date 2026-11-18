@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-17
+:revdate: 2026-11-18
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -16,14 +16,14 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 32 theory rows: PWG-1: 0 · PWG-2ii: 28 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 4. The grades hold at source commit
-`2b9bf3fb0b0435705b0ad92b929edfe80a9be000` only, the merge of
-resource-algebra#48 and the commit the proof receipt describes
+Out of 32 theory rows: PWG-1: 0 · PWG-2ii: 31 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 1 (M-2). The grades hold at source commit
+`15fa113c7427e2de009eade9148295d08c046b33` only, the merge of
+resource-algebra#45 and the commit the proof receipt describes
 (`verification/receipts/resource-algebra-proofs_praxis.deed`). The
-standards reader (`deed_lint.js --proof-receipt-json`, at standards
-`940a27af`) derives every grade there from the legs and receipts, and
-refuses a recorded grade that differs (§8.4).
+standards reader (`deed_lint.js --proof-receipt-json`), as pinned by
+`scripts/proof-receipt.sh` (standards `f4e83044`), derives every grade there
+from the legs and receipts, and refuses a recorded grade that differs (§8.4).
 
 No row is PWG-1. Since standards#1625 (2026-11-17, owner ruling
 2026-11-16), PWG-1 needs every counted witness to name the image its checker
@@ -34,12 +34,10 @@ the bare runner, so neither is isolated in that sense. The 27 rows that were
 PWG-1 at `47de4a8` were graded by an earlier reader, before that rule; the
 same evidence now gives PWG-2ii. The proofs did not change.
 
-Four rows are ungraded. E-1, E-2 and E-3 (resource-algebra#45) postdate
-the receipt's commit: they are `PROVEN` in Agda and both recheck legs are
-re-proved for them with the statements reconciled, but no receipt records a
-run of those legs yet. M-2 is `PROVEN` by a Lean bridge only. Its
+One row is ungraded. M-2 is `PROVEN` by a Lean bridge only. Its
 statement names a Lean-only object, so it has no Agda witness and cannot
-reach PWG-3 (§8.1). C-4b has a receipt now and is PWG-2ii. No row rests
+reach PWG-3 (§8.1). C-4b, E-1, E-2 and E-3 are PWG-2ii: the receipt covers
+them. No row rests
 on an axiom: the Agda leg is `--safe` with the trusted base below, the Rocq
 leg prints every theorem closed under the global context, and the Lean leg
 prints no axiom for any theorem.
@@ -97,12 +95,11 @@ These are controls for the PROVEN rows. They are not themselves theorems.
 
 == Recheck legs (every row)
 
-Every theorem row carries this record, except that the receipts below
-predate E-1, E-2 and E-3. Their Rocq and Lean legs are re-proved by hand,
-in the same files and by the same routes as every other row, and their
-statements are reconciled (see Statement correspondence). No receipt yet
-records a run of those legs, so the three rows stay `ungraded` until one
-does.
+Every theorem row carries this record, except M-2 (see below). E-1, E-2 and
+E-3 are covered: their Rocq and Lean legs are re-proved by hand, in the same
+files and by the same routes as every other row, their statements are
+reconciled (see Statement correspondence), and the receipt below records a
+run of all three legs on a commit that contains them.
 
 [cols="1,1,1,1,2",options="header"]
 |===
@@ -112,7 +109,7 @@ does.
 | source
 | `PROVEN`
 | `AGDA-VERIFIED`
-| CI run `44202493421`, job `134459891661`
+| CI run `44209774341`, job `134484857967`
 
 | Rocq
 | `re-proved` (transport `unavailable`; see below)
@@ -120,22 +117,22 @@ does.
 under the global context), and `rocqchk` rechecks the compiled file
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `44202493421`, job `134459891334`
+| CI run `44209774341`, job `134484858135`
 
 | Lean
 | `re-proved`, Lean core only, no Mathlib
 | `PROVEN`: no axiom (`#print axioms` reports none for every theorem)
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `44202493421`, job `134459891668`
+| CI run `44209774341`, job `134484858201`
 |===
 
 === Receipts
 
 All three legs passed in one `proofs.yml` run,
-https://github.com/hyperpolymath/resource-algebra/actions/runs/44202493421[`44202493421`],
-on source commit `2b9bf3fb0b0435705b0ad92b929edfe80a9be000` (2026-11-17), the
-merge of resource-algebra#48. The same run passed the `Proofs verdict` job
+https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341[`44209774341`],
+on source commit `15fa113c7427e2de009eade9148295d08c046b33` (2026-11-18), the
+merge of resource-algebra#45. The same run passed the `Proofs verdict` job
 and the coverage-exemption check. The machine-readable record is
 `verification/receipts/resource-algebra-proofs_praxis.deed` (§8.5.1).
 Each job's run summary holds its receipt: the checker and its asserted
@@ -147,20 +144,20 @@ version, the invocation, the input digest, the result and the axioms.
 
 | Agda
 | Agda 2.6.4.3 (Debian `agda-bin 2.6.4.3-1+b2`)
-| `616f143d7a438256…d2d6e3ac7` over `src/`; `--safe`, the postulate scan of
+| `6d3250447bd3271d…b74ae9d` over the import cone of `src/ResourceAlgebra/All.agda` (13 files, listed in the deed's `(inputs-manifest …)`); `--safe`, the postulate scan of
 `src/`, and the trusted base: `Level`, `lzero`, `lsuc` and `_⊔_` in
 `Agda.Primitive`, each bound by its `BUILTIN` pragma
 
 | Rocq
 | Rocq 9.3.0, stdlib 9.2.0, then `rocqchk`
-| `608d32f3bd3ce5ce…c6eb296a5` over `ResourceAlgebra.v` (file SHA256
-`92a1676339d8ea7b…2b838c6f8`); every printed theorem closed under the
+| `b52b1348c6cace05…93c8b1b7` over `ResourceAlgebra.v` (file SHA256
+`4989d461674d9f3d…d760582e`); every printed theorem closed under the
 global context. Image `rocq/rocq-prover:9.3.0@sha256:97a68f23…`
 
 | Lean
 | Lean 4.35.0, core only
-| `0917a5672c8d20de…15b2ebd39` over `ResourceAlgebra.lean`, `lean-toolchain` and the
-M-2 bridge, with the import of tropical-types at `f2e465c`; no printed
+| `015e62121942646e…68d9cb6` over `ResourceAlgebra.lean` (file SHA256 `d1f0ee39d9a8af12…521cc9b`), `lean-toolchain`, `scripts/check-lean-bridge.sh` (file SHA256 `2bb154f8c4c197a7…9f60548`, which holds the tropical-types pin) and the
+M-2 bridge, with the import of tropical-types at `f2e465c` (import digest `c176b35aaec8d21b…3095e01`); no printed
 theorem depends on an axiom, in the leg or in the bridge
 |===
 
@@ -170,11 +167,26 @@ same commands the receipt steps of `proofs.yml` run.
 The grades do not carry forward (§8.4). A later commit that changes `src/`,
 a recheck leg, the gate or the checker pins needs a new receipt for the
 new commit, and until then its rows fall back to the grade its receipts
-support. The receipt deed is written by hand from the run; no gate writes
-or recomputes it yet. The run summaries that hold the per-leg digests are
+support. The receipt deed is no longer written by hand. `scripts/proof-receipt.sh
+--write` generates it with the estate's shared generator (standards
+`scripts/proof-receipt.sh`, pinned at `f4e83044` on the standards branch
+`claude/receipt-open-claims`, not yet on standards main; repin once it
+lands). `scripts/proof-receipt.sh --check` regenerates it, refuses any
+difference, runs the §8.5.3 git checks, checks that each current receipt
+still describes the tree, and runs the pinned reader with a negative
+control. The `receipt` job of `proofs.yml` runs `--check` on every commit.
+Recording a new run is still a manual step (`--run-row`, then `--write`).
+The Lean input set includes `scripts/check-lean-bridge.sh`, which holds the
+tropical-types pin. The run summaries that hold the per-leg digests are
 kept by GitHub for a limited time.
 
 Earlier receipts, all `superseded`:
+
+* Run `44202493421` on source commit
+`2b9bf3fb0b0435705b0ad92b929edfe80a9be000` (2026-11-17), the merge of
+resource-algebra#48. A hand-written receipt that derived PWG-2ii for 28 rows
+and `ungraded` for M-2. It predates E-1, E-2 and E-3, and its Lean input
+set did not list `scripts/check-lean-bridge.sh`.
 
 * Run `44015282682` on source commit
 `47de4a8ee49df37b9bc5f7fede2f54e83e243160` (2026-11-17). It predates C-4b and
@@ -376,7 +388,7 @@ Mathlib
 | `PROVEN`: no axiom (`#print axioms` reports none for any of the six
 printed theorems)
 | `LEAN-CHECKED`, not `RECONCILED`: there is no Agda statement to reconcile with
-| CI run `44202493421`, job `134459891668`, with
+| CI run `44209774341`, job `134484858201`, with
 `(import :repository "hyperpolymath/tropical-types" :commit "f2e465c…")`
 (§8.5.1)
 |===
@@ -533,7 +545,7 @@ operations are ⊕ = the stronger (join) and ⊗ = the weaker (meet), with
 the meet of `≼` (`⊓e-lowerˡ`, `⊓e-lowerʳ`, `⊓e-greatest`).
 | `PROVEN` (Instances/Evidence.agda); control
 `tests/reject/EvidenceArguedBelowTested.agda`
-| ungraded (no receipt yet)
+| 2ii
 |===
 
 == Evidence ledger (Ledger.agda)
@@ -565,7 +577,7 @@ through dependencies.
 | `PROVEN` (`eff-≼-own`, `eff-≼-dep`, `eff-≼-reach`); controls
 `tests/reject/EvidenceProvenOverTested.agda`,
 `tests/reject/EvidenceArguedLinkIgnored.agda`
-| ungraded (no receipt yet)
+| 2ii
 
 | E-3
 | Maximality: `eff` respects the ledger, and every assignment of statuses
@@ -573,7 +585,7 @@ that respects it is below `eff` row by row. So `eff` is the strongest
 status the ledger supports, and a recorded status above it is an
 overstatement.
 | `PROVEN` (`eff-respects`, `eff-greatest`)
-| ungraded (no receipt yet)
+| 2ii
 |===
 
 The worked ledger in `tests/unit/EvidenceTest.agda` closes the loop on
@@ -745,9 +757,10 @@ not classified. Its ⊕ reads a grade as
 chooses the branch (Q-4). A grade for alternatives that another party
 chooses, and a grade over merged pairs (which do not compose by union),
 are not stated.
-* A gate that writes the proof receipt for each commit and checks it with
-the standards reader. Today the receipt is written by hand, for one commit
-(see Receipts).
+* CI that emits the receipt of each main run by itself. The check half
+exists (`scripts/proof-receipt.sh --check` in the `receipt` job of
+`proofs.yml`). Recording a new run is still manual: `--run-row`, then
+`--write` (see Receipts).
 
 == Discipline
 
