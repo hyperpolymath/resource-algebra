@@ -1,5 +1,21 @@
 == Changelog
 
+== 2026-11-18 — Agda, Lean and the M-2 bridge run isolated
+
+* The Agda job runs in `debian:trixie-slim` pinned by digest. The Lean leg
+  and the M-2 bridge run in `ubuntu:24.04` pinned by digest, under `lake
+  build` (PROOF-POLICY §8.2). Their receipt summaries name the image and the
+  invocation. The Rocq job was already pinned by digest.
+* `verification/proofs/lean4/lakefile.toml` and `lake-manifest.json`, and
+  `verification/bridges/tropical-types/lakefile.toml` and
+  `lake-manifest.json`, are dependency-free Lake packages whose manifests
+  are committed in I-JSON/JCS form. `scripts/check-lean-leg.sh` builds the
+  leg under lake and counts its axiom reports; `scripts/check-lean-bridge.sh`
+  now builds the bridge under lake, with the tropical-types pin unchanged.
+  `tests/check_lean_leg_test.sh` and the updated
+  `tests/check_lean_bridge_test.sh` plant each failure through a stub lake.
+* No grade changes: a grade moves only with a new receipt.
+
 == 2026-11-17 — C-4b and M-2 proved
 
 * C-4b: `src/ResourceAlgebra/Instances/Diamond.agda` adds the diamond

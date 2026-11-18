@@ -69,8 +69,10 @@ to show that it does. The receipt lists the four names and bindings.
 and checks the proofs. It then writes a receipt to the run summary with the
 source commit, `agda --version`, the package version and its SHA256 from
 Debian's signed index, the digest of the installed binary, the flags read
-from the script, and the import cone. Installing Agda from Debian rather
-than Guix is a §6 deviation, recorded in `proofs.yml`; its state is `open`.
+from the script, and the import cone. The job runs in `debian:trixie-slim`
+pinned by digest, and the receipt names that image. Installing Agda from
+Debian rather than Guix is a §6 deviation, recorded in `proofs.yml`; its
+state is `open`.
 * *History.* Until 2026-11-09 the gate ran `--safe --without-K
 --no-libraries --double-check`. That profile passed in CI from 2026-10-14
 (resource-algebra#4). Under §2.1 those runs are historical evidence, not
@@ -180,9 +182,12 @@ the strict flag set and `⊕-least` all changed after it.
 === The legs: where, how checked, toolchains
 
 * *Lean.* `verification/proofs/lean4/ResourceAlgebra.lean`, checked by
-`lean` 4.35.0 (pinned by `lean-toolchain`). CI installs the upstream
-release archive against a SHA256 and asserts the version: a §6 deviation,
-recorded in `proofs.yml`, state `open`. The arithmetic is proved by
+`lake build` (Lean 4.35.0, pinned by `lean-toolchain`) on a copy of the
+Lake package `verification/proofs/lean4/lakefile.toml`, which has no
+dependencies; `lake-manifest.json` is committed. CI runs it through
+`scripts/check-lean-leg.sh` in `ubuntu:24.04` pinned by digest, installs
+the upstream release archive against a SHA256 and asserts the Lean and Lake
+versions: a §6 deviation, recorded in `proofs.yml`, state `open`. The arithmetic is proved by
 structural recursion, as in Agda's Prelude, so no theorem depends on
 `propext` or `Quot.sound`. CI fails if any printed theorem depends on an
 axiom.
@@ -370,8 +375,10 @@ these are the `+`, `*`, `0` and `1` of the instance.
 * *Pin.* `scripts/check-lean-bridge.sh` fetches
 `hyperpolymath/tropical-types` at
 `f2e465c966d14d4986dfc492875cc54653d9751e`, checks the fetched commit,
-compiles both modules with the pinned `lean` 4.35.0 and checks the bridge.
-It fails on any error, on any printed theorem that depends on an axiom, and
+builds both modules and the bridge as a Lake package
+(`verification/bridges/tropical-types/lakefile.toml`, no dependencies, the
+pin stays in the script) with `lake build` under the pinned Lean 4.35.0, in
+the same digest-pinned image as the Lean leg. It fails on any error, on any printed theorem that depends on an axiom, and
 when no theorem is printed (`tests/check_lean_bridge_test.sh`). It prints
 the SHA256 of the imported file and of the bridge, for a receipt's
 `(import …)` clause (§8.5.1).
