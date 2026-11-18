@@ -1,0 +1,54 @@
+# DRAFT, UNBUILT, UNTESTED. Handoff from resource-algebra PN-7 (2026-11-18).
+# SPDX-License-Identifier: MPL-2.0
+#
+# Agda 2.6.4.3 for PROOF-POLICY §8.2 receipts. Same binary resource-algebra's
+# proofs.yml installs today: Debian trixie agda-bin 2.6.4.3-1+b2.
+#
+# Base digest verified against the Docker Hub API on 2026-11-18 (the manifest
+# list digest of library/debian:trixie-slim, last_updated 2026-11-05).
+FROM debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
+
+# UNVERIFIED: snapshot.debian.org was unreachable from the authoring sandbox
+# (proxy 403), so this timestamp is a guess that the package exists at or after
+# trixie's current state. The build FAILS LOUDLY if it does not: apt cannot
+# find agda-bin=2.6.4.3-1+b2. Verify before first build:
+#   https://snapshot.debian.org/archive/debian/<TS>/pool/main/a/agda/
+ARG SNAPSHOT_TS=20261105T000000Z
+ARG AGDA_VERSION=2.6.4.3
+ARG AGDA_PKG_VERSION=2.6.4.3-1+b2
+
+# Replace the live mirror with the fixed snapshot. Packages are still checked
+# against Debian's signed Release files (Check-Valid-Until is off only because
+# snapshot Release files age out of their Valid-Until window by design).
+RUN set -eu; \
+    rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*; \
+    printf '%s\n' \
+      'Types: deb' \
+      "URIs: http://snapshot.debian.org/archive/debian/${SNAPSHOT_TS}/" \
+      'Suites: trixie' \
+      'Components: main' \
+      'Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg' \
+      'Check-Valid-Until: no' \
+      > /etc/apt/sources.list.d/snapshot.sources; \
+    apt-get update; \
+    apt-get install --no-install-recommends -y \
+      "agda-bin=${AGDA_PKG_VERSION}" \
+      ca-certificates git bash grep sed gawk findutils coreutils perl diffutils; \
+    apt-get clean; rm -rf /var/lib/apt/lists/*; \
+    test "$(agda --version)" = "Agda version ${AGDA_VERSION}"
+
+# Tools used by resource-algebra's Agda job: bash scripts, find/sort/xargs/
+# sha256sum (findutils, coreutils), sed/paste/cut, perl (scan-postulates.pl),
+# git (checkout), dpkg-query/apt-cache (receipt step; dpkg and apt are in base).
+
+LABEL org.opencontainers.image.title="prover-images/agda" \
+      org.opencontainers.image.description="Agda ${AGDA_VERSION} (Debian agda-bin ${AGDA_PKG_VERSION}) for digest-pinned proof receipts" \
+      org.opencontainers.image.source="https://github.com/hyperpolymath/prover-images" \
+      org.opencontainers.image.licenses="MPL-2.0" \
+      org.opencontainers.image.version="${AGDA_VERSION}" \
+      org.opencontainers.image.base.name="docker.io/library/debian:trixie-slim" \
+      org.opencontainers.image.base.digest="sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2" \
+      io.hyperpolymath.checker="agda" \
+      io.hyperpolymath.checker.version="${AGDA_VERSION}" \
+      io.hyperpolymath.checker.package="agda-bin ${AGDA_PKG_VERSION}" \
+      io.hyperpolymath.debian.snapshot="${SNAPSHOT_TS}"

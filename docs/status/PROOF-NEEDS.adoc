@@ -96,6 +96,13 @@ bare `ubuntu-latest` and installs the Lean 4.35.0 archive against a SHA256.
 Until this closes, the receipt at `2b9bf3f` is PWG-2ii for 28 rows (`:image`
 is what PWG-1 lacks). *OPEN, blocked* on the `prover-images` repository,
 which does not exist yet. See "PN-7 ruling and route" below.
+
+Note: `PROOF-STATUS.adoc` (Census) and the receipt deed still record the receipt
+at source commit 47de4a8 as PWG-1 for 27 rows; that receipt was graded before
+standards#1625 (2026-11-16) made `:image` necessary for PWG-1. Under the current
+reader, a receipt for a run at 2b9bf3f grades the 28 rows PWG-2ii, because their
+Agda and Lean witnesses have no `:image`. The Census is refreshed by the next
+receipt.
 | `.github/workflows/proofs.yml` (`proofs`, `lean-leg`);
 `verification/receipts/`
 |===
@@ -108,6 +115,8 @@ published on GHCR and pinned by digest, with the checker baked in. The images
 live in a shared estate repository, provisionally named `prover-images` (the
 name is not yet checked against `gv-clade-index`), not in this repository.
 Record now, build later.
+
+Draft handoff (untested, not built): `docs/handoff/prover-images/README.adoc`.
 
 *Blocker.* The `prover-images` repository does not exist; the owner will
 create it. Nothing has been built or published. The 28 rows stay PWG-2ii.

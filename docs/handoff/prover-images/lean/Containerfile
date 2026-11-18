@@ -1,0 +1,44 @@
+# DRAFT, UNBUILT, UNTESTED. Handoff from resource-algebra PN-7 (2026-11-18).
+# SPDX-License-Identifier: MPL-2.0
+#
+# Lean 4.35.0 (core only, no Mathlib). URL and SHA256 copied from
+# resource-algebra .github/workflows/proofs.yml (lean-leg env + install step).
+FROM debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
+
+ARG LEAN_VERSION=4.35.0
+ARG LEAN_SHA256=7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d
+
+# The Lean steps and scripts/check-lean-bridge.sh need: bash, git over https
+# (ca-certificates), coreutils (sha256sum), grep, sed, findutils, mktemp.
+# curl and zstd are for this install; kept so a consumer can reuse them.
+# libgmp10 is a precaution: whether the archive needs it on trixie-slim is
+# UNTESTED (the smoke test below fails the build if lean cannot run).
+# The apt layer is unpinned (live trixie). Pin it by snapshot as in agda/ if
+# the owner wants byte-for-byte rebuilds of the tool layer.
+RUN set -eu; \
+    apt-get update; \
+    apt-get install --no-install-recommends -y \
+      ca-certificates curl zstd git bash grep sed findutils coreutils libgmp10; \
+    curl --proto '=https' --tlsv1.2 --fail --silent --show-error --location \
+      --output /tmp/lean.tar.zst \
+      "https://github.com/leanprover/lean4/releases/download/v${LEAN_VERSION}/lean-${LEAN_VERSION}-linux.tar.zst"; \
+    echo "${LEAN_SHA256}  /tmp/lean.tar.zst" | sha256sum --check --strict; \
+    mkdir -p /opt; \
+    tar --zstd -xf /tmp/lean.tar.zst -C /opt; \
+    rm /tmp/lean.tar.zst; \
+    apt-get clean; rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/opt/lean-${LEAN_VERSION}-linux/bin:${PATH}"
+
+RUN lean --version | grep -F "version ${LEAN_VERSION},"
+
+LABEL org.opencontainers.image.title="prover-images/lean" \
+      org.opencontainers.image.description="Lean ${LEAN_VERSION} (upstream archive, SHA256-checked) for digest-pinned proof receipts" \
+      org.opencontainers.image.source="https://github.com/hyperpolymath/prover-images" \
+      org.opencontainers.image.licenses="MPL-2.0" \
+      org.opencontainers.image.version="${LEAN_VERSION}" \
+      org.opencontainers.image.base.name="docker.io/library/debian:trixie-slim" \
+      org.opencontainers.image.base.digest="sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2" \
+      io.hyperpolymath.checker="lean" \
+      io.hyperpolymath.checker.version="${LEAN_VERSION}" \
+      io.hyperpolymath.checker.archive.sha256="${LEAN_SHA256}"

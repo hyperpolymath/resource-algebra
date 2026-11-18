@@ -1,0 +1,123 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= prover-images (DRAFT handoff)
+:revdate: 2026-11-18
+
+[WARNING]
+====
+*DRAFT and UNTESTED.*
+
+* The images have never been built: the authoring container could not reach the Debian mirrors.
+* The `snapshot.debian.org` timestamp (`SNAPSHOT_TS` in `agda/Containerfile`) is unverified.
+* The `actions/attest` version is unconfirmed.
+* The name `prover-images` has not been checked against `gv-clade-index`.
+* The licence (SPDX lines) is a placeholder for the owner to decide.
+* This directory moves to `hyperpolymath/prover-images` once that repository exists, and is then deleted here (PN-7 in `docs/status/PROOF-NEEDS.adoc`).
+* `github/` below is deliberately not `.github/`, so nothing in resource-algebra treats it as live CI config. In the target repository, move `github/` back to `.github/`.
+====
+
+*Status: draft, untested.* Written by an agent from resource-algebra PN-7 for
+the owner to adopt when this repository is created. Nothing here has been built
+or published (see "Validation so far"). The name `prover-images` is provisional
+and has not been checked against `gv-clade-index`.
+
+== Purpose
+
+Digest-pinned container images for proof checkers, so that a proof receipt can
+name the image its checker ran in (`NAME[:TAG]@sha256:<64 hex>`), as
+PROOF-POLICY §8.2 (standards#1625) requires for PWG-1. First consumer:
+resource-algebra (Agda 2.6.4.3, Lean 4.35.0).
+
+== IS / IS-NOT (draft)
+
+IS:: digest-pinned prover images for PWG-1 receipts, with the checker baked in,
+a smoke test per image, and published provenance.
+IS-NOT:: a place for proofs, theorems or policy. Policy stays in `standards`;
+proofs stay in the repositories that own them.
+
+== Layout
+
+* `agda/Containerfile`: `debian:trixie-slim@sha256:a72b4433…` (digest checked
+against the Docker Hub API on 2026-11-18 and pulled by digest locally), Debian
+`agda-bin 2.6.4.3-1+b2` from a snapshot.debian.org timestamp.
+* `lean/Containerfile`: same base, the upstream Lean 4.35.0 archive checked
+against the SHA256 in resource-algebra's `proofs.yml`.
+* `github/workflows/build.yml` (becomes `.github/workflows/build.yml` in the target repo): build, smoke test, push to
+`ghcr.io/hyperpolymath/prover-images/{agda,lean}`, print the digest in the job
+summary, attest provenance. Pushes only off `pull_request`.
+* `github/dependabot.yml` (becomes `.github/dependabot.yml` in the target repo): weekly base-digest and action bumps.
+
+== How a consumer pins a digest
+
+Read the `image:` line in the build job's summary (or
+`docker buildx imagetools inspect ghcr.io/hyperpolymath/prover-images/agda:sha-<commit>`)
+and paste `ghcr.io/hyperpolymath/prover-images/agda@sha256:<digest>`. Never pin
+a tag alone. Confirm with `gh attestation verify oci://…@sha256:<digest>
+--repo hyperpolymath/prover-images`.
+
+== The resource-algebra diff this will need
+
+In `.github/workflows/proofs.yml`, keep every gate step and change only:
+
+[source,diff]
+----
+ proofs:
+-    container: debian:trixie-slim
++    container:
++      image: ghcr.io/hyperpolymath/prover-images/agda@sha256:<filled-in-after-publish>
+     steps:
+-      - name: Install the pinned prover
+-        run: |
+-          apt-get update
+-          apt-get install --no-install-recommends -y ca-certificates git agda-bin=2.6.4.3-1+b2
+       - uses: actions/checkout@…
+ lean-leg:
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-latest
++    container:
++      image: ghcr.io/hyperpolymath/prover-images/lean@sha256:<filled-in-after-publish>
+     steps:
+-      - name: Install the pinned Lean
+-        …                      # curl + sha256sum + tar + GITHUB_PATH
+----
+
+Also: add `- image: \`ghcr.io/…@sha256:…\`` to the Agda, Lean and M-2 receipt
+summaries; keep the version assertions (`agda --version`, `lean --version`,
+`lean-toolchain`); the Agda receipt's `apt-cache show` index-SHA line no longer
+fits (the package is baked in), so replace it with the image digest and the
+image label `io.hyperpolymath.checker.package`; update the `DEVIATION (§6)`
+comments (they already point at PN-7) and the actions lock if `container:`
+changes it; then record a new receipt from a run on the merge commit. The job
+containers may need `options: --user root` as the Rocq leg does; untested.
+
+== Open questions
+
+. *Rocq consolidation.* Rocq already runs in the upstream
+`rocq/rocq-prover:9.3.0@sha256:97a68f23…`. Should it be rebuilt here too, for
+one provenance story, or stay upstream?
+. *Reproducibility.* The Agda image installs from a fixed Debian snapshot, but
+the Lean image's apt layer follows live trixie, and neither build is bit-for-bit
+reproducible. Is a digest of a published image enough, or does the estate want
+rebuild-and-compare?
+. *Guix alternative.* The owner noted a Guix pack and did not choose it. Revisit
+if reproducible builds become a requirement.
+. *Snapshot timestamp.* `SNAPSHOT_TS` in `agda/Containerfile` is unverified.
+. *Name.* Check `prover-images` against `gv-clade-index`; settle clade, IS/IS-NOT
+and licence (MPL-2.0 used as a placeholder; a licence is the owner's call).
+. *Action pins.* `build.yml` uses only refs found in resource-algebra's
+`actions.lock` and plain `docker` commands; the `actions/attest` version is
+unconfirmed. Re-pin with estate tooling.
+. *Image user and extra libraries.* Whether Lean needs `libgmp10` (included as a
+precaution) is untested.
+
+== Validation so far
+
+[cols="2,3",options="header"]
+|===
+| Check | Result
+| `actionlint` v1.7.7 on `build.yml` | exit 0
+| `yq` parse of `build.yml` and `dependabot.yml` | ok
+| `hadolint` | not run (no trusted binary obtainable in the authoring sandbox)
+| `docker pull` of the base by digest | succeeded, digest matched
+| `docker build` agda, lean | *failed* at `apt-get update` (exit 100): the sandbox's build network cannot reach Debian mirrors; snapshot.debian.org and the Lean release download are unverified
+| smoke tests (`agda --version`, `lean --version`) | not run: images unbuilt
+|===
