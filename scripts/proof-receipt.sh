@@ -98,17 +98,23 @@ receipt_claims() {
 # Every gate fails on any axiom (check-agda.sh: --safe and the postulate
 # scan; the Rocq job: every Print Assumptions closed; the Lean job and the
 # bridge check: every #print axioms empty), so no row lists one.
-# Only the Rocq job runs in an image pinned by digest, so only its row names
-# one: no row can reach PWG-1 until the Agda and Lean jobs do too (§8.2,
-# docs/status/PROOF-NEEDS.adoc PN-7).  Earlier runs are listed, superseded,
-# in docs/status/PROOF-STATUS.adoc.
+# Only the Rocq job runs in an image that ships its checker, pinned by
+# digest, so only its row names one.  The Agda and Lean jobs run in base
+# images pinned by digest and install the checker at run time, which the
+# owner ruled on 2026-11-18 is not isolation (docs/status/PROOF-NEEDS.adoc
+# PN-7): their rows name no image, and no row can reach PWG-1 until they
+# run in prover images.  The Lean row is superseded: the leg and the bridge
+# moved under lake, and the first run on main under lake replaces it.
+# Earlier runs are listed, superseded, in docs/status/PROOF-STATUS.adoc.
 receipt_runs() {
   local u=https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job
   local c=15fa113c7427e2de009eade9148295d08c046b33
+  # The Lean invocation of that run, before the legs moved under lake.
+  local lean_direct='lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)'
   cat <<ROWS
 agda|$u/134484857967|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
 rocq|$u/134484858135|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
-lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)|$(receipt_invocation lean)|015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6|RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|current|||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01
+lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)|$lean_direct|015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6|RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|superseded|its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake|
 ROWS
 }
 
@@ -127,8 +133,9 @@ receipt_header() {
 ;; receipts do not support.  The rows and their statement correspondence are
 ;; in docs/status/PROOF-STATUS.adoc.
 ;; Only the Rocq receipts name an :image (pinned by digest), so no row is
-;; PWG-1 (§8.2).  The Lean job checks the leg and the M-2 bridge in one run,
-;; so every Lean leg shares one receipt and its (import …) of tropical-types.
+;; PWG-1 (§8.2).  The Lean leg and the M-2 bridge moved under lake, so the
+;; Lean run recorded here is superseded and the Lean legs have no current
+;; receipt until the first run on main under lake is recorded.
 EOF
 }
 # The prover's four universe-level primitives, each bound by its BUILTIN
@@ -149,7 +156,7 @@ receipt_invocation() {
       [ -n "$flags" ] || receipt_die 'no flags=(…) line in scripts/check-agda.sh'
       printf 'agda %s src/ResourceAlgebra/All.agda\n' "$flags" ;;
     rocq) printf '%s\n' 'rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk' ;;
-    lean) printf '%s\n' 'lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)' ;;
+    lean) printf '%s\n' 'lake build in a copy of verification/proofs/lean4 made by bash scripts/check-lean-leg.sh (core only, no dependencies); then lake build of ResourceAlgebra, TropicalSessionTypes and TropicalBridge in the work directory made by bash scripts/check-lean-bridge.sh' ;;
     *) receipt_die "unknown prover: $1" ;;
   esac
 }
@@ -157,15 +164,24 @@ receipt_invocation() {
 #  agda: the import cone of src/ResourceAlgebra/All.agda under src/ (the
 #        run is --no-libraries, so no library file is read).
 #  rocq: the one file the job compiles.
-#  lean: the leg, its lean-toolchain, the M-2 bridge, and
+#  lean: the leg and the M-2 bridge, each with its Lake package files
+#        (lakefile.toml and the committed lake-manifest.json, a pinned
+#        input under §8.5.1), the shared lean-toolchain, and the two
+#        checker scripts: scripts/check-lean-leg.sh, and
 #        scripts/check-lean-bridge.sh, which holds the pin of the imported
 #        repository, so a repin changes this digest.
 receipt_inputs() {
   case "$1" in
     agda) receipt_agda_cone src/ResourceAlgebra/All.agda src ;;
     rocq) printf '%s\n' verification/proofs/coq/ResourceAlgebra.v ;;
-    lean) printf '%s\n' scripts/check-lean-bridge.sh verification/bridges/tropical-types/TropicalBridge.lean \
-            verification/proofs/lean4/ResourceAlgebra.lean verification/proofs/lean4/lean-toolchain ;;
+    lean) printf '%s\n' scripts/check-lean-bridge.sh scripts/check-lean-leg.sh \
+            verification/bridges/tropical-types/TropicalBridge.lean \
+            verification/bridges/tropical-types/lake-manifest.json \
+            verification/bridges/tropical-types/lakefile.toml \
+            verification/proofs/lean4/ResourceAlgebra.lean \
+            verification/proofs/lean4/lake-manifest.json \
+            verification/proofs/lean4/lakefile.toml \
+            verification/proofs/lean4/lean-toolchain ;;
     *) receipt_die "unknown prover: $1" ;;
   esac
 }
