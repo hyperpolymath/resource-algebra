@@ -163,6 +163,32 @@ else
     echo "  NOT RUN  read-error control: /proc/self/mem is not readable on this platform"
 fi
 
+# Deterministic: every read fails (EIO) while close reports success. A scanner
+# that trusted close would take the module for empty and pass its -W noerror.
+# The fault is injected into every perl the gate runs, through PERL5OPT.
+mkdir -p "$WORK/inject"
+cat >"$WORK/inject/FaultInjectRead.pm" <<'PM'
+package FaultInjectRead;
+use strict; use warnings; use Errno ();
+BEGIN {
+    no warnings 'once';
+    *CORE::GLOBAL::sysread  = sub { $! = Errno::EIO(); return undef };
+    *CORE::GLOBAL::readline = sub { $! = Errno::EIO(); return undef };
+    *CORE::GLOBAL::close    = sub { return 1 };
+}
+1;
+PM
+d="$(fixture read-fails-close-succeeds)"
+plant "$d" src/ResourceAlgebra/All.agda $'{-# OPTIONS -W noerror #-}\nmodule All where\n'
+: >"$WORK/stub.log"
+OUT="$(cd "$d" && PERL5LIB="$WORK/inject" PERL5OPT=-MFaultInjectRead FAKE_LOG="$WORK/stub.log" AGDA="$FAKE_AGDA" bash scripts/check-agda.sh 2>&1)"; RC=$?
+if [ "$RC" -ne 0 ] && grep -qF 'error reading' <<<"$OUT" \
+    && ! grep -qF 'PASS: no OPTIONS pragma' <<<"$OUT" && [ ! -s "$WORK/stub.log" ]; then
+    note ok "a read that fails while close succeeds fails the gate (injected EIO)"
+else
+    note bad "a read that fails while close succeeds fails the gate (rc=$RC)"; sed 's/^/        /' <<<"$OUT" | tail -8
+fi
+
 d="$(fixture unit-empty)"
 : >"$d/tests/unit/Empty.agda"
 passes_scan "an empty module is read as empty and passes the scan" "$d"
