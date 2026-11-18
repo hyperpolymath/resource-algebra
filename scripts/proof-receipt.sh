@@ -34,7 +34,7 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 export LC_ALL=C.UTF-8
 
 # ── The pinned standard ───────────────────────────────────────────────────────
-RECEIPT_STANDARDS_COMMIT=f4e8304465ea39433dc926687251d5aa91787600
+RECEIPT_STANDARDS_COMMIT=146fb8f8ccdf5cf9e697b9f488486e1fd2822330
 RECEIPT_STD=_build/standards
 standards_raw="https://raw.githubusercontent.com/metadatastician/standards/$RECEIPT_STANDARDS_COMMIT"
 pinned_files=(
@@ -103,18 +103,15 @@ receipt_claims() {
 # images pinned by digest and install the checker at run time, which the
 # owner ruled on 2026-11-18 is not isolation (docs/status/PROOF-NEEDS.adoc
 # PN-7): their rows name no image, and no row can reach PWG-1 until they
-# run in prover images.  The Lean row is superseded: the leg and the bridge
-# moved under lake, and the first run on main under lake replaces it.
+# run in prover images.  The Lean leg and the M-2 bridge build under lake.
 # Earlier runs are listed, superseded, in docs/status/PROOF-STATUS.adoc.
 receipt_runs() {
-  local u=https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job
-  local c=15fa113c7427e2de009eade9148295d08c046b33
-  # The Lean invocation of that run, before the legs moved under lake.
-  local lean_direct='lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)'
+  local u=https://github.com/hyperpolymath/resource-algebra/actions/runs/44324353274/job
+  local c=c31bf1a9ae9d186674c7ed79c6c9b018a1d59c2b
   cat <<ROWS
-agda|$u/134484857967|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
-rocq|$u/134484858135|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
-lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)|$lean_direct|015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6|RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|superseded|its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01
+agda|$u/134871496782|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, installed at run time in debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f, a base image, so no image is named)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
+rocq|$u/134871496777|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
+lean|$u/134871496113|$c|Lean 4.35.0 with Lake 5.0.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, installed at run time in ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8, a base image, so no image is named)|$(receipt_invocation lean)|23504e806cdd96db0b4c4381ab278b7b7eeda6ed02d29490d0a5078cf14be06a|PASS: Lean leg under lake; 84 of 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|current|||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01
 ROWS
 }
 
