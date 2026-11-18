@@ -84,26 +84,28 @@ derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
 their statement correspondence. *Done* in resource-algebra#45: both legs
 re-prove the three rows by hand, axiom-free, and the statement
 correspondence is recorded in `PROOF-STATUS.adoc`. The receipt at
-`15fa113` records that run, and the three rows are PWG-2ii.
+`15fa113` records that run; the rows' current grades are in the Census of
+`PROOF-STATUS.adoc`, derived from the receipt.
 | `verification/proofs/coq/`, `verification/proofs/lean4/`
 
 | PN-7
 | Give the Agda and Lean legs a receipt that names the container image
 the checker ran in, pinned by digest (policy §8.2 as changed by
 standards#1625, 2026-11-16: `NAME[:TAG]@sha256:<64 hex>`). Rocq already does
-(`rocq/rocq-prover:9.3.0@sha256:…`). Agda runs in `debian:trixie-slim` with
-no digest and apt-installs `agda-bin 2.6.4.3-1+b2` at run time; Lean runs on
-bare `ubuntu-latest` and installs the Lean 4.35.0 archive against a SHA256.
-Until this closes, the receipt at `2b9bf3f` is PWG-2ii for 28 rows (`:image`
-is what PWG-1 lacks). *OPEN, blocked* on the `prover-images` repository,
+(`rocq/rocq-prover:9.3.0@sha256:…`). Since resource-algebra#53 the Agda
+and Lean jobs run in base images pinned by digest (`debian:trixie-slim`,
+`ubuntu:24.04`) and the Lean leg builds under `lake`, but both still
+install their checker at run time (`agda-bin 2.6.4.3-1+b2` by apt, the
+Lean 4.35.0 archive against a SHA256), which the ruling below does not
+count as isolated. Until this closes no row can be PWG-1: the receipt at
+`15fa113` names an image for the Rocq leg only. *OPEN, blocked* on the
+`prover-images` repository,
 which does not exist yet. See "PN-7 ruling and route" below.
 
-Note: `PROOF-STATUS.adoc` (Census) and the receipt deed still record the receipt
-at source commit 47de4a8 as PWG-1 for 27 rows; that receipt was graded before
-standards#1625 (2026-11-16) made `:image` necessary for PWG-1. Under the current
-reader, a receipt for a run at 2b9bf3f grades the 28 rows PWG-2ii, because their
-Agda and Lean witnesses have no `:image`. The Census is refreshed by the next
-receipt.
+Note: the receipt at `47de4a8` recorded PWG-1 for 27 rows; it was graded
+before standards#1625 (2026-11-16) made `:image` necessary for PWG-1. The
+current receipt, at `15fa113`, and the Census in `PROOF-STATUS.adoc` are
+derived by the current reader.
 | `.github/workflows/proofs.yml` (`proofs`, `lean-leg`);
 `verification/receipts/`
 |===
@@ -120,7 +122,8 @@ Record now, build later.
 Draft handoff (untested, not built): `docs/handoff/prover-images/README.adoc`.
 
 *Blocker.* The `prover-images` repository does not exist; the owner will
-create it. Nothing has been built or published. The 28 rows stay PWG-2ii.
+create it. Nothing has been built or published. No row can reach PWG-1
+until it is.
 
 *Why not an upstream image.*
 

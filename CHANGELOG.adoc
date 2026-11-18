@@ -1,5 +1,31 @@
 == Changelog
 
+== 2026-11-18 — Lean leg and M-2 bridge under lake; the Lean receipt is superseded (31 rows PWG-2i for now)
+
+* The Lean leg builds as a Lake package (`verification/proofs/lean4/lakefile.toml`,
+  no dependencies; `lake-manifest.json` committed as a pinned input) through
+  the new `scripts/check-lean-leg.sh`. PROOF-POLICY §8.2 names `lean` under
+  `lake` as the qualifying run (owner ruling 2026-11-17).
+* The M-2 bridge builds under `lake` too
+  (`verification/bridges/tropical-types/lakefile.toml`). The tropical-types
+  pin and its fetch stay in `scripts/check-lean-bridge.sh`.
+* Both checks count the `#print axioms` lines of the copy `lake` built,
+  compare the manifest with what `lake` was given, and print the difference
+  when it was rewritten. The bridge check also hashes the bridge file it
+  built; the leg's input hashes are taken by `proofs.yml` from the checkout.
+  Both builds run with Lake's artifact cache off, because a cache hit prints
+  no axiom report and the count would fail. `tests/check_lean_leg_test.sh` (new) and
+  `tests/check_lean_bridge_test.sh` plant 11 failures between them and each checks the cache is off.
+* The Agda and Lean jobs run in base images pinned by digest. They still
+  install the checker at run time, which the owner ruled on 2026-11-18 is
+  not isolation: their receipts name no image and PN-7 stays open.
+* The Lean leg's inputs changed, so the Lean run at `15fa113`
+  is `superseded` in the ledger of `scripts/proof-receipt.sh` and the
+  receipt is regenerated. Of 32 theory rows, 31 are PWG-2i (Agda and Rocq
+  receipts stand) and 1 (M-2) is ungraded, until the first `proofs.yml` run
+  on main under `lake` is recorded. The Lean input set now lists both
+  lakefiles, both manifests and `scripts/check-lean-leg.sh`.
+
 == 2026-11-18 — Proof receipt at 15fa113, from the shared generator; 31 rows are PWG-2ii
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
