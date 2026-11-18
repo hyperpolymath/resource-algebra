@@ -34,27 +34,18 @@ mapfile -d '' cone < "$cone_list"
 # 2.6.3), and no other Agda option starts with --wa, so every --wa... spelling
 # is refused; --w alone is ambiguous with --with-K/--without-K and Agda rejects it. Refuse it before Agda runs, in every module
 # the gate checks: the import cone (src/), the unit tests and the expected-
-# rejection fixtures. The scan reads each file whole, so a pragma split over
-# several lines is read as one; a pragma-looking text inside a comment is also
-# refused (fail closed). The listing runs to a file so a find failure stops the
-# gate, as for the cone above.
+# rejection fixtures, literate modules (*.lagda, *.lagda.*) included, since Agda
+# loads those too. scripts/scan-agda-pragmas.pl reads each file whole, so a
+# pragma split over lines is read as one; it ends a pragma only where Agda does
+# (a #-} after whitespace), and a file it cannot read fails the gate. The listing
+# runs to a file so a find failure stops the gate, as for the cone above.
 pragma_list="$work/pragma-files"
-find src tests/unit tests/reject -name '*.agda' -print0 > "$pragma_list" \
+find src tests/unit tests/reject \( -name '*.agda' -o -name '*.lagda' -o -name '*.lagda.*' \) -print0 > "$pragma_list" \
   || { echo "ERROR: could not list the modules the gate checks (src/, tests/unit, tests/reject)" >&2; exit 1; }
 mapfile -d '' pragma_files < "$pragma_list"
 (( ${#pragma_files[@]} > 0 )) || { echo "ERROR: no Agda modules to scan for OPTIONS pragmas" >&2; exit 1; }
 pragma_status=0
-perl -0777 -ne '
-  while (/\{-#\s*OPTIONS(?<opts>.*?)#-\}/sg) {
-    my ($start, $pragma, $opts) = ($-[0], $&, $+{opts});
-    next unless $opts =~ /(?:^|\s)(?:-W|--wa)/;
-    my $line = (substr($_, 0, $start) =~ tr/\n//) + 1;
-    (my $hit = $pragma) =~ s/\s+/ /g;
-    print "$ARGV:$line: $hit\n";
-    $found = 1;
-  }
-  END { $? = 3 if $found }
-' "${pragma_files[@]}" > "$work/pragma.hits" || pragma_status=$?
+perl scripts/scan-agda-pragmas.pl "${pragma_files[@]}" > "$work/pragma.hits" || pragma_status=$?
 if (( pragma_status == 3 )); then
   while IFS= read -r hit; do
     echo "Error: OPTIONS pragma sets a warning flag, overriding the gate's -W error: $hit" >&2

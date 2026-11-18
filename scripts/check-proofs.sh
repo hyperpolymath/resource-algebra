@@ -79,7 +79,9 @@ esac
 check_one() {
   # $1 source-root (rel to ROOT), $2 module (rel to source-root).
   # Sets LAST_OUT to the tool output on failure; returns 0 iff the module compiles.
+  # Sets SCAN_ERROR=1 when a pre-check could not run: a gate error, not a verdict.
   local root="$1" rel="$2" out rc
+  SCAN_ERROR=0
   set +e
   case "$PROVER" in
     idris2) out="$(cd "$ROOT/$root" && idris2 --check "$rel" 2>&1)"; rc=$? ;;
@@ -88,14 +90,15 @@ check_one() {
     # --cubical-compatible, with -W error so any warning fails. Suppress NO warning
     # (no -W noX). Do not weaken. A module's own OPTIONS pragma could override the
     # command line (e.g. {-# OPTIONS -W noerror #-}), so a gated module that sets
-    # any warning flag in a pragma fails before Agda runs. The whole file is read,
-    # so a pragma split over lines is caught; -W and every unambiguous prefix of
-    # --warning that Agda accepts (--wa, --warn, ...) are refused. A scan that
-    # cannot run fails closed.
-    agda)   pragma="$(perl -0777 -ne 'while (/\{-#\s*OPTIONS(.*?)#-\}/sg) { my ($s, $p, $o) = ($-[0], $&, $1); next unless $o =~ /(?:^|\s)(?:-W|--wa)/; my $l = (substr($_, 0, $s) =~ tr/\n//) + 1; $p =~ s/\s+/ /g; print "$l: $p\n" }' "$ROOT/$root/$rel")"; prc=$?
-            if [ "$prc" -ne 0 ]; then
-              out="Error: could not scan $rel for OPTIONS pragmas (perl exit $prc)"; rc=1
-            elif [ -n "$pragma" ]; then
+    # any warning flag in a pragma fails before Agda runs. scripts/scan-agda-pragmas.pl
+    # reads the whole file, ends a pragma only where Agda does and refuses -W and
+    # every --wa... prefix of --warning. A scan that cannot run is SCAN_ERROR: it
+    # fails the gate for a quarantined module too, never counting as its expected
+    # failure.
+    agda)   pragma="$(perl "$ROOT/scripts/scan-agda-pragmas.pl" "$ROOT/$root/$rel")"; prc=$?
+            if [ "$prc" -ne 0 ] && [ "$prc" -ne 3 ]; then
+              out="Error: could not scan $rel for OPTIONS pragmas (scanner exit $prc)"; rc=1; SCAN_ERROR=1
+            elif [ "$prc" -eq 3 ]; then
               out="Error: OPTIONS pragma sets a warning flag, overriding the gate's -W error: $pragma"; rc=1
             else
               out="$(cd "$ROOT/$root" && agda --safe --without-K --cubical-compatible -W error "$rel" 2>&1)"; rc=$?
@@ -160,6 +163,10 @@ while IFS='|' read -r root rel status note; do
     if [ "$status" = gated ]; then
       echo "FAIL"
       printf '%s\n' "${LAST_OUT//$'\n'/$'\n        '}" | sed '1s/^/        /'
+      fails=$((fails + 1))
+    elif [ "$SCAN_ERROR" -eq 1 ]; then
+      echo "FAIL (quarantined, but the pre-check could not run: no verdict)"
+      printf '%s\n' "$LAST_OUT" | sed '1s/^/        /'
       fails=$((fails + 1))
     else
       echo "fail (quarantined, expected)"

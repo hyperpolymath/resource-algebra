@@ -31,7 +31,8 @@ FAKEBIN="$WORK/fakebin"; mkdir -p "$FAKEBIN"
 cat >"$FAKEBIN/agda" <<'FAKE'
 #!/usr/bin/env bash
 if [ "${1:-}" = "--version" ]; then echo "fake 0"; exit 0; fi
-printf '%s\n' "$*" >>"${FAKE_AGDA_LOG:-/dev/null}"
+# One argument per line, so the gate cannot pass by handing "-W error" as one word.
+printf '%s\n' "$@" >>"${FAKE_AGDA_LOG:-/dev/null}"
 exit 0
 FAKE
 chmod +x "$FAKEBIN/agda"
@@ -40,7 +41,7 @@ FAILED=0; CHECKS=0
 # fixture NAME — a throwaway repo root holding only the gate and its scanner.
 fixture() {
     local d="$WORK/$1"; mkdir -p "$d/scripts" "$d/verification/proofs/agda"
-    cp "$REPO_DIR/scripts/check-proofs.sh" "$REPO_DIR/scripts/scan-dangerous.sh" "$d/scripts/"
+    cp "$REPO_DIR/scripts/check-proofs.sh" "$REPO_DIR/scripts/scan-dangerous.sh" "$REPO_DIR/scripts/scan-agda-pragmas.pl" "$d/scripts/"
     echo "$d"
 }
 # module DIR CONTENT — one gated Agda module A.agda and its MANIFEST.
@@ -75,7 +76,7 @@ prover_ran() {
 d="$(fixture agdaok)"
 module "$d" $'{-# OPTIONS --safe --without-K #-}\nmodule A where\n'
 run "agda: a pragma without a warning flag passes" 0 "$d" "RESULT: PASS"
-if grep -qE -- '(^| )-W error( |$)' "$WORK/agda.args"; then
+if awk 'prev == "-W" && $0 == "error" { ok = 1 } { prev = $0 } END { exit !ok }' "$WORK/agda.args"; then
     CHECKS=$((CHECKS + 1)); echo "  PASS  agda: the gate runs the prover with -W error"
 else
     CHECKS=$((CHECKS + 1)); FAILED=$((FAILED + 1)); echo "  FAIL  agda: -W error did not reach the prover: $(cat "$WORK/agda.args")"
@@ -111,6 +112,20 @@ run "agda: the --warn abbreviation fails" 1 "$d" "OPTIONS pragma sets a warning 
 d="$(fixture agdawashort)"
 module "$d" $'{-# OPTIONS --wa=noerror #-}\nmodule A where\n'
 run "agda: the shortest --wa abbreviation fails" 1 "$d" "OPTIONS pragma sets a warning flag"
+
+d="$(fixture agdahashinopt)"
+module "$d" $'{-# OPTIONS --verbose=check#-}:0 -W noerror #-}\nmodule A where\n'
+run "agda: a #-} inside an option does not end the scan" 1 "$d" "OPTIONS pragma sets a warning flag"
+prover_ran "agda: that module never reaches the prover" no
+
+d="$(fixture agdaquarmissing)"
+printf '%s\n' 'verification/proofs/agda|Gone.agda|quarantine|removed' >"$d/verification/proofs/agda/MANIFEST"
+run "agda: a quarantined module the scan cannot read fails the gate" 1 "$d" "pre-check could not run"
+
+d="$(fixture agdagatedmissing)"
+printf '%s\n' 'verification/proofs/agda|Gone.agda|gated|' >"$d/verification/proofs/agda/MANIFEST"
+run "agda: a gated module the scan cannot read fails" 1 "$d" "could not scan Gone.agda"
+prover_ran "agda: an unreadable module never reaches the prover" no
 
 echo "$CHECKS controls, $FAILED failed"
 [ "$FAILED" -eq 0 ]

@@ -41,7 +41,7 @@ note() { CHECKS=$((CHECKS + 1)); if [ "$1" = ok ]; then echo "  PASS  $2"; else 
 fixture() {
     local d="$WORK/$1" m
     mkdir -p "$d/scripts" "$d/src/ResourceAlgebra" "$d/tests/unit" "$d/tests/reject"
-    cp "$REPO_DIR/scripts/check-agda.sh" "$REPO_DIR/scripts/scan-postulates.pl" "$d/scripts/"
+    cp "$REPO_DIR/scripts/check-agda.sh" "$REPO_DIR/scripts/scan-postulates.pl" "$REPO_DIR/scripts/scan-agda-pragmas.pl" "$d/scripts/"
     for m in src/ResourceAlgebra/All tests/unit/AllTests tests/reject/Bad; do
         printf '{-# OPTIONS --safe --without-K #-}\nmodule %s where\n' "$(basename "$m")" >"$d/$m.agda"
     done
@@ -127,6 +127,24 @@ refused "src: the --warn abbreviation is refused" "$d" src/ResourceAlgebra/All.a
 d="$(fixture src-wa-short)"
 plant "$d" src/ResourceAlgebra/All.agda $'{-# OPTIONS --wa=noerror #-}\nmodule All where\n'
 refused "src: the shortest --wa abbreviation is refused" "$d" src/ResourceAlgebra/All.agda:1
+
+d="$(fixture src-hash-in-option)"
+plant "$d" src/ResourceAlgebra/All.agda $'{-# OPTIONS --verbose=check#-}:0 -W noerror #-}\nmodule All where\n'
+refused "src: a #-} inside an option does not end the scan" "$d" src/ResourceAlgebra/All.agda:1
+
+d="$(fixture unit-literate)"
+plant "$d" tests/unit/Helper.lagda.md $'# Helper\n\n```agda\n{-# OPTIONS -W noerror #-}\nmodule Helper where\n```\n'
+refused "tests/unit: a literate module (.lagda.md) is scanned too" "$d" tests/unit/Helper.lagda.md:4
+
+d="$(fixture unit-dangling)"
+ln -s Nowhere.agda "$d/tests/unit/Dangling.agda"
+gate "$d"
+if [ "$RC" -ne 0 ] && grep -qF 'could not scan the modules for OPTIONS pragmas' <<<"$OUT" \
+    && ! grep -qF 'PASS: no OPTIONS pragma' <<<"$OUT" && [ ! -s "$WORK/stub.log" ]; then
+    note ok "tests/unit: a module the scan cannot read (dangling symlink) fails the gate"
+else
+    note bad "tests/unit: a module the scan cannot read (dangling symlink) fails the gate (rc=$RC)"; sed 's/^/        /' <<<"$OUT" | tail -8
+fi
 
 echo "$CHECKS controls, $FAILED failed"
 [ "$FAILED" -eq 0 ]
