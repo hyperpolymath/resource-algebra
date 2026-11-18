@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Proof Requirements — resource-algebra
-:revdate: 2026-11-17
+:revdate: 2026-11-18
 
 What this repository owes, classified by the estate proof policy
 (`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
@@ -85,13 +85,57 @@ correspondence is recorded in `PROOF-STATUS.adoc`. The receipt at
 | `verification/proofs/coq/`, `verification/proofs/lean4/`
 
 | PN-7
-| Run the Agda and Lean checkers in container images pinned by digest, and
-name the images on their receipts, so that the rows can reach PWG-1 again
-(policy §8.2, standards#1625). The Rocq leg already does. The Lean leg
-must also run under `lake` to qualify (§8.2 names "`lean` under `lake`"); the
-job runs `lean` directly today.
-| CI `proofs.yml`; the receipt
+| Give the Agda and Lean legs a receipt that names the container image
+the checker ran in, pinned by digest (policy §8.2 as changed by
+standards#1625, 2026-11-16: `NAME[:TAG]@sha256:<64 hex>`). Rocq already does
+(`rocq/rocq-prover:9.3.0@sha256:…`). Agda runs in `debian:trixie-slim` with
+no digest and apt-installs `agda-bin 2.6.4.3-1+b2` at run time; Lean runs on
+bare `ubuntu-latest` and installs the Lean 4.35.0 archive against a SHA256.
+Until this closes, the receipt at `2b9bf3f` is PWG-2ii for 28 rows (`:image`
+is what PWG-1 lacks). *OPEN, blocked* on the `prover-images` repository,
+which does not exist yet. See "PN-7 ruling and route" below.
+
+Note: `PROOF-STATUS.adoc` (Census) and the receipt deed still record the receipt
+at source commit 47de4a8 as PWG-1 for 27 rows; that receipt was graded before
+standards#1625 (2026-11-16) made `:image` necessary for PWG-1. Under the current
+reader, a receipt for a run at 2b9bf3f grades the 28 rows PWG-2ii, because their
+Agda and Lean witnesses have no `:image`. The Census is refreshed by the next
+receipt.
+| `.github/workflows/proofs.yml` (`proofs`, `lean-leg`);
+`verification/receipts/`
 |===
+
+[[pn-7]]
+=== PN-7 ruling and route (owner, 2026-11-18)
+
+*Ruling.* The Agda and Lean legs earn `:image` through our own prover images,
+published on GHCR and pinned by digest, with the checker baked in. The images
+live in a shared estate repository, provisionally named `prover-images` (the
+name is not yet checked against `gv-clade-index`), not in this repository.
+Record now, build later.
+
+Draft handoff (untested, not built): `docs/handoff/prover-images/README.adoc`.
+
+*Blocker.* The `prover-images` repository does not exist; the owner will
+create it. Nothing has been built or published. The 28 rows stay PWG-2ii.
+
+*Why not an upstream image.*
+
+* Agda: no official or trusted image ships Agda 2.6.4.3. The candidates
+(`ltchentw/agda:2.6.4.3`, `zyasserd/agda:2.6.4.3`) are individuals' images and
+build a different binary from the Debian `agda-bin` this repository pins.
+* Lean: no image carries 4.35.0. The `leanprovercommunity` images stop at
+2024-08 and GHCR has no `leanprover` images.
+* Also rejected by the owner: a digest-pinned base with the install at run time
+(not counted as isolated), and a Guix pack (an alternative path, noted, not
+chosen).
+
+*What closes it.* All four:
+
+. the Agda and Lean images are published to GHCR;
+. their digests are pinned in `proofs.yml` as `container: image: …@sha256:…`;
+. each job summary prints the image digest the checker ran in;
+. a new receipt is recorded from a run on the merge commit.
 
 == Out of scope here
 
