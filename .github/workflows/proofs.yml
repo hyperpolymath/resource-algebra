@@ -231,6 +231,40 @@ jobs:
       - name: Declared exemption is still true
         run: bash scripts/check-coverage-exemption.sh
 
+  # Receipt gate (PROOF-POLICY §8.5.1 and §8.5.3). `scripts/proof-receipt.sh
+  # --check` fetches the pinned shared generator, regenerates the proof receipt
+  # (verification/receipts/), refuses any difference from the committed file,
+  # runs the §8.5.3 git checks, checks that each current receipt still describes
+  # the tree, and runs the pinned reader with a negative control. It needs
+  # network access to raw.githubusercontent.com (the pinned standards files)
+  # and github.com (the pinned tropical-types commit). Recording a new run is a
+  # manual step (--run-row, then --write); this job only checks.
+  receipt:
+    name: Proof receipt, derived grades, git checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BUN_VERSION: 1.4.4
+      BUN_SHA256: bf8ccbfb2b0b80159e0f9a6d15c55317add8077534dbc6130a3edb52fccb395c
+    steps:
+      - name: Install the pinned Bun
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSfL -o bun.zip \
+            "https://github.com/oven-sh/bun/releases/download/bun-v${BUN_VERSION}/bun-linux-x64.zip"
+          echo "${BUN_SHA256}  bun.zip" | sha256sum -c -
+          unzip -q bun.zip -d "$RUNNER_TEMP"
+          rm bun.zip
+          echo "$RUNNER_TEMP/bun-linux-x64" >> "$GITHUB_PATH"
+      - name: Checkout (full history; the git checks refuse a shallow clone)
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify the checked Bun version
+        run: test "$(bun --version)" = "${BUN_VERSION}"
+      - name: Receipt, reader, git checks, freshness
+        run: bash scripts/proof-receipt.sh --check
+
   # The in-workflow verdict `Proofs verdict` (NOT the required context: `CI/gate`
   # of the live Branch-Floor ruleset 25434034 is a commit status published by
   # ci-gate.yml, the only producer of it). It aggregates every other job in this workflow
@@ -243,7 +277,7 @@ jobs:
   # Read-only permissions; the one `uses:` is the checkout already pinned in actions.lock.
   gate:
     name: Proofs verdict
-    needs: [proofs, lean-leg, rocq-leg, coverage-exemption]
+    needs: [proofs, lean-leg, rocq-leg, coverage-exemption, receipt]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
