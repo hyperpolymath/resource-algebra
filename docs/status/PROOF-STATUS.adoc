@@ -143,7 +143,8 @@ version, the invocation, the input digest, the result and the axioms.
 
 | Rocq
 | Rocq 9.3.0, stdlib 9.2.0, then `rocqchk`
-| `92a1676339d8ea7b…2b838c6f8`; every printed theorem closed under the
+| `608d32f3bd3ce5ce…c6eb296a5` over `ResourceAlgebra.v` (file SHA256
+`92a1676339d8ea7b…2b838c6f8`); every printed theorem closed under the
 global context. Image `rocq/rocq-prover:9.3.0@sha256:97a68f23…`
 
 | Lean
