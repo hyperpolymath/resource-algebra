@@ -1,5 +1,23 @@
 == Changelog
 
+== 2026-11-18 — Proof receipt at c31bf1a, with the Lean legs under lake; 31 rows are PWG-2ii again
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `c31bf1a` (the merge of #53), from `proofs.yml` run
+  `44324353274`: Agda job `134871496782`, Rocq `134871496777`, Lean
+  `134871496113`. All three legs have a current receipt. Of 32 theory rows,
+  31 are PWG-2ii and 1 (M-2) is ungraded, derived by the pinned reader.
+* The Lean receipt is the first from a build under `lake`: the leg and the
+  M-2 bridge, with the tropical-types import at `f2e465c`. The run at
+  `15fa113` moves to the earlier receipts in `PROOF-STATUS.adoc`.
+* No row is PWG-1 and PN-7 stays open: only the Rocq receipt names an
+  image. The Agda and Lean checkers are installed at run time in base
+  images pinned by digest, which the owner ruled is not isolation.
+* `scripts/proof-receipt.sh` pins the shared generator at standards
+  `146fb8f8`, the merge of metadatastician/standards#1671 on standards main.
+  The four pinned files are unchanged from the branch commit `f4e83044`
+  (same SHA256), so the receipt format is the same.
+
 == 2026-11-18 — Lean leg and M-2 bridge under lake; the Lean receipt is superseded (31 rows PWG-2i for now)
 
 * The Lean leg builds as a Lake package (`verification/proofs/lean4/lakefile.toml`,
