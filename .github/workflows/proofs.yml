@@ -9,13 +9,15 @@ name: Agda proofs
 #
 # DEVIATION (PROOF-POLICY §6), state: open.
 #   Leg:     the Agda leg of every theorem in docs/status/PROOF-STATUS.adoc.
+#   Image:   the job runs in debian:trixie-slim pinned by digest (§8.2: isolated,
+#            the receipt names the image).
 #   Tool:    Debian trixie agda-bin 2.6.4.3-1+b2, asserted below; apt checks
 #            the .deb against Debian's signed Packages index, and the receipt
 #            step prints that index's SHA256 for the package and the digest of
 #            the installed binary.
-#   Why:     this repository has no Guix manifest and no proof container yet;
-#            the hosted runner has no Guix. The Debian package is an exact,
-#            signature-checked pin.
+#   Why:     this repository has no Guix manifest and no proof container of its
+#            own yet; the hosted runner has no Guix. The digest-pinned Debian
+#            image and the exact, signature-checked package are the pin.
 #   Closes:  when a Guix manifest (or the repo's container) provides Agda and
 #            this job installs from it.
 on:
@@ -29,7 +31,8 @@ jobs:
     name: Core proofs and expected rejections
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    container: debian:trixie-slim
+    # Pinned by digest (PROOF-POLICY §8.2); re-pin deliberately.
+    container: debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
     steps:
       - name: Install the pinned prover
         run: |
@@ -60,6 +63,7 @@ jobs:
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
             echo "- checker: \`$(agda --version)\`"
+            echo "- image: \`debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f\` (isolated, pinned by digest)"
             echo "- package: \`agda-bin $(dpkg-query -W -f='${Version}' agda-bin)\`, index SHA256 \`$(apt-cache show agda-bin=2.6.4.3-1+b2 | sed -n 's/^SHA256: //p' | head -1)\`"
             echo "- binary SHA256: \`$(sha256sum "$(command -v agda)" | cut -d' ' -f1)\`"
             echo "- invocation: \`$(sed -n 's/^flags=(\(.*\))$/\1/p' scripts/check-agda.sh)\`"
