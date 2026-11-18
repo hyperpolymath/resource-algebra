@@ -281,3 +281,30 @@ max-distribʳ-min a b c =
   trans (max-comm (min a b) c)
   (trans (max-distribˡ-min c a b)
          (cong₂ min (max-comm c a) (max-comm c b)))
+
+----------------------------------------------------------------------
+-- min as the meet of the usual order, for the evidence instance
+min-≤-left : ∀ m n → min m n ≤ m
+min-≤-left zero    n       = z≤n
+min-≤-left (suc m) zero    = z≤n
+min-≤-left (suc m) (suc n) = s≤s (min-≤-left m n)
+
+min-≤-right : ∀ m n → min m n ≤ n
+min-≤-right m n = subst (λ x → x ≤ n) (min-comm n m) (min-≤-left n m)
+
+min-glb : ∀ {k m n} → k ≤ m → k ≤ n → k ≤ min m n
+min-glb {zero}                    _      _      = z≤n
+min-glb {suc _} {zero}            (le ()) _
+min-glb {suc _} {suc _} {zero}    _      (le ())
+min-glb {suc _} {suc _} {suc _}   p      q      = s≤s (min-glb (≤-pred p) (≤-pred q))
+
+-- min distributes over max: the evidence instance is a dioid.
+min-distribˡ-max : ∀ a b c → min a (max b c) ≡ max (min a b) (min a c)
+min-distribˡ-max zero    b       c       = refl
+min-distribˡ-max (suc a) zero    c       = refl
+min-distribˡ-max (suc a) (suc b) zero    = sym (max-zeroʳ (suc (min a b)))
+min-distribˡ-max (suc a) (suc b) (suc c) = cong suc (min-distribˡ-max a b c)
+
+-- From the join back to the order: max m n ≡ n means m ≤ n.
+max-≡→≤ : ∀ {m n} → max m n ≡ n → m ≤ n
+max-≡→≤ {m} {n} p = subst (λ x → m ≤ x) p (≤-max-left m n)

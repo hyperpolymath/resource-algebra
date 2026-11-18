@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 = resource-algebra — Proof Status
-:revdate: 2026-11-17
+:revdate: 2026-11-18
 
 Every row is a theory theorem (`PROOF-NEEDS.adoc`). Records follow
 `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`, which keeps
@@ -16,13 +16,28 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 29 theory rows: PWG-1: 27 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 2. The grades hold at source commit
-`47de4a8ee49df37b9bc5f7fede2f54e83e243160` only, the commit the proof
-receipt describes (`verification/receipts/resource-algebra-proofs_praxis.deed`).
-The standards reader (`deed_lint.js --proof-receipt-json`) derives every
-grade there from the legs and receipts, and refuses a recorded grade that
-differs (§8.4). The two ungraded rows are `OPEN` (C-4b, M-2). No row rests
+Out of 32 theory rows: PWG-1: 0 · PWG-2ii: 31 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 1 (M-2). The grades hold at source commit
+`15fa113c7427e2de009eade9148295d08c046b33` only, the merge of
+resource-algebra#45 and the commit the proof receipt describes
+(`verification/receipts/resource-algebra-proofs_praxis.deed`). The
+standards reader (`deed_lint.js --proof-receipt-json`), as pinned by
+`scripts/proof-receipt.sh` (standards `f4e83044`), derives every grade there
+from the legs and receipts, and refuses a recorded grade that differs (§8.4).
+
+No row is PWG-1. Since standards#1625 (2026-11-17, owner ruling
+2026-11-16), PWG-1 needs every counted witness to name the image its checker
+ran in, pinned by digest (§8.2). The Rocq leg runs in
+`rocq/rocq-prover:9.3.0` pinned by digest, and its receipt names it. The
+Agda leg runs in `debian:trixie-slim` without a digest, and the Lean leg on
+the bare runner, so neither is isolated in that sense. The 27 rows that were
+PWG-1 at `47de4a8` were graded by an earlier reader, before that rule; the
+same evidence now gives PWG-2ii. The proofs did not change.
+
+One row is ungraded. M-2 is `PROVEN` by a Lean bridge only. Its
+statement names a Lean-only object, so it has no Agda witness and cannot
+reach PWG-3 (§8.1). C-4b, E-1, E-2 and E-3 are PWG-2ii: the receipt covers
+them. No row rests
 on an axiom: the Agda leg is `--safe` with the trusted base below, the Rocq
 leg prints every theorem closed under the global context, and the Lean leg
 prints no axiom for any theorem.
@@ -36,7 +51,7 @@ dependent type theories (§8.3).
 -W error -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
-(`tests/unit/AllTests.agda`) and the nine expected rejections. A rejection
+(`tests/unit/AllTests.agda`) and the thirteen expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
 warning, `UnsupportedIndexedMatch` included. Until 2026-11-16 the gate
@@ -47,8 +62,9 @@ an indexed match.
 other library. There is no `postulate` (refused by `--safe`), no hole and no
 `TERMINATING` or similar pragma.
 * *Trusted base (§8.4.7).* The cone Agda reports for `All.agda` also holds
-six modules supplied with the prover: `Agda.Primitive` and
-`Agda.Builtin.Bool`, `Equality`, `Nat`, `Sigma` and `Unit`. The gate scans
+seven modules supplied with the prover: `Agda.Primitive` and
+`Agda.Builtin.Bool`, `Equality`, `List`, `Nat`, `Sigma` and `Unit`
+(`List` joined with `Ledger.agda`). The gate scans
 them and allows exactly four postulates, all in `Agda.Primitive`: `Level`
 (`BUILTIN LEVEL`), `lzero` (`BUILTIN LEVELZERO`), `lsuc` (`BUILTIN
 LEVELSUC`) and `_⊔_` (`BUILTIN LEVELMAX`). It checks the declared names and
@@ -68,16 +84,22 @@ receipts for the canonical profile. On 2026-11-09, `_≤_` and the
 constructor-injectivity lemmas were restated so that the core checks under
 `--cubical-compatible` with no `UnsupportedIndexedMatch` warning. The
 statements of the theorems below did not change.
-* *Expected rejections.* Nine claims must be refused, each with the message
-its `-- EXPECT:` line names. In order, those messages are:
+* *Expected rejections.* Thirteen claims must be refused, each with the
+message its `-- EXPECT:` line names. Those messages are:
 `min m n != max m n`, `p != zero`, `suc _ != zero`, `max m n != m + n`,
-`max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3`, `… != bot` and
-`false != true`.
+`max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3`, `… != bot`,
+`false != true`, `a != bot of type Grade` (C-4b's control,
+`tests/reject/DiamondDistributes.agda`), and for the evidence ledger
+`tested-only != argued`, `argued != proven` and `tested-only != proven`.
 These are controls for the PROVEN rows. They are not themselves theorems.
 
 == Recheck legs (every row)
 
-Unless a row says otherwise, every theorem row carries this record:
+Every theorem row carries this record, except M-2 (see below). E-1, E-2 and
+E-3 are covered: their Rocq and Lean legs are re-proved by hand, in the same
+files and by the same routes as every other row, their statements are
+reconciled (see Statement correspondence), and the receipt below records a
+run of all three legs on a commit that contains them.
 
 [cols="1,1,1,1,2",options="header"]
 |===
@@ -87,7 +109,7 @@ Unless a row says otherwise, every theorem row carries this record:
 | source
 | `PROVEN`
 | `AGDA-VERIFIED`
-| CI run `44015282682`, job `133811607634`
+| CI run `44209774341`, job `134484857967`
 
 | Rocq
 | `re-proved` (transport `unavailable`; see below)
@@ -95,23 +117,23 @@ Unless a row says otherwise, every theorem row carries this record:
 under the global context), and `rocqchk` rechecks the compiled file
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `44015282682`, job `133811607685`
+| CI run `44209774341`, job `134484858135`
 
 | Lean
 | `re-proved`, Lean core only, no Mathlib
 | `PROVEN`: no axiom (`#print axioms` reports none for every theorem)
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `44015282682`, job `133811607731`
+| CI run `44209774341`, job `134484858201`
 |===
 
 === Receipts
 
 All three legs passed in one `proofs.yml` run,
-https://github.com/hyperpolymath/resource-algebra/actions/runs/44015282682[`44015282682`],
-on source commit `47de4a8ee49df37b9bc5f7fede2f54e83e243160` (2026-11-17), the
-merge of resource-algebra#36. The same run passed the `CI/gate` job and the
-coverage-exemption check. The machine-readable record is
+https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341[`44209774341`],
+on source commit `15fa113c7427e2de009eade9148295d08c046b33` (2026-11-18), the
+merge of resource-algebra#45. The same run passed the `Proofs verdict` job
+and the coverage-exemption check. The machine-readable record is
 `verification/receipts/resource-algebra-proofs_praxis.deed` (§8.5.1).
 Each job's run summary holds its receipt: the checker and its asserted
 version, the invocation, the input digest, the result and the axioms.
@@ -122,31 +144,66 @@ version, the invocation, the input digest, the result and the axioms.
 
 | Agda
 | Agda 2.6.4.3 (Debian `agda-bin 2.6.4.3-1+b2`)
-| `2a8edcaf4f58379a…0e2f4f8c4` over `src/`; `--safe`, the postulate scan of
+| `6d3250447bd3271d…b74ae9d` over the import cone of `src/ResourceAlgebra/All.agda` (13 files, listed in the deed's `(inputs-manifest …)`); `--safe`, the postulate scan of
 `src/`, and the trusted base: `Level`, `lzero`, `lsuc` and `_⊔_` in
 `Agda.Primitive`, each bound by its `BUILTIN` pragma
 
 | Rocq
 | Rocq 9.3.0, stdlib 9.2.0, then `rocqchk`
-| `b98ca436c810a4fb…24228f00`; every printed theorem closed under the
-global context
+| `b52b1348c6cace05…93c8b1b7` over `ResourceAlgebra.v` (file SHA256
+`4989d461674d9f3d…d760582e`); every printed theorem closed under the
+global context. Image `rocq/rocq-prover:9.3.0@sha256:97a68f23…`
 
 | Lean
 | Lean 4.35.0, core only
-| `7b4242279bcb645f…39a02053`; no printed theorem depends on an axiom
+| `015e62121942646e…68d9cb6` over `ResourceAlgebra.lean` (file SHA256 `d1f0ee39d9a8af12…521cc9b`), `lean-toolchain`, `scripts/check-lean-bridge.sh` (file SHA256 `2bb154f8c4c197a7…9f60548`, which holds the tropical-types pin) and the
+M-2 bridge, with the import of tropical-types at `f2e465c` (import digest `c176b35aaec8d21b…3095e01`); no printed
+theorem depends on an axiom, in the leg or in the bridge
 |===
 
-The input digests above were computed from the tree at that commit, by the
-same commands the receipt steps of `proofs.yml` run.
+The input digests above are the `:inputs-sha256` values of the receipt: the
+generator computes each from the git objects at that commit with the
+reference script (standards `scripts/proof-inputs-sha256.sh`, §8.5.1).
 
 The grades do not carry forward (§8.4). A later commit that changes `src/`,
 a recheck leg, the gate or the checker pins needs a new receipt for the
 new commit, and until then its rows fall back to the grade its receipts
-support. The receipt deed is written by hand from the run; no gate writes
-or recomputes it yet. The run summaries that hold the per-leg digests are
+support. The receipt deed is no longer written by hand. `scripts/proof-receipt.sh
+--write` generates it with the estate's shared generator (standards
+`scripts/proof-receipt.sh`, pinned at `f4e83044` on the standards branch
+`claude/receipt-open-claims`, not yet on standards main; repin once it
+lands). `scripts/proof-receipt.sh --check` regenerates it, refuses any
+difference, runs the §8.5.3 git checks, checks that each current receipt
+still describes the tree, and runs the pinned reader with a negative
+control. The `receipt` job of `proofs.yml` runs `--check` on every commit.
+Recording a new run is still a manual step (`--run-row`, then `--write`).
+
+What this asks of a change. A pull request that changes a leg's inputs
+(`src/`, a recheck file, the bridge or the tropical-types pin) makes the
+`receipt` job fail, because the current receipt of that leg no longer
+describes the tree. The change then marks that leg's row `superseded` in
+the ledger of `scripts/proof-receipt.sh`, with its reason, and regenerates
+the receipt: the rows fall to the grade the remaining receipts support,
+which is what §8.4 says. After the merge, a follow-up records the main run
+of the new commit and the grades return.
+
+The Lean input set includes `scripts/check-lean-bridge.sh`, which holds the
+tropical-types pin. The run summaries that hold the per-leg digests are
 kept by GitHub for a limited time.
 
 Earlier receipts, all `superseded`:
+
+* Run `44202493421` on source commit
+`2b9bf3fb0b0435705b0ad92b929edfe80a9be000` (2026-11-17), the merge of
+resource-algebra#48. A hand-written receipt that derived PWG-2ii for 28 rows
+and `ungraded` for M-2. It predates E-1, E-2 and E-3, and its Lean input
+set did not list `scripts/check-lean-bridge.sh`.
+
+* Run `44015282682` on source commit
+`47de4a8ee49df37b9bc5f7fede2f54e83e243160` (2026-11-17). It predates C-4b and
+the M-2 bridge. It recorded PWG-1 for 27 rows, under the reader that
+mathesis pinned (standards `e5a39d7`), which predates the image rule of
+standards#1625; the reader at `940a27af` refuses those grades.
 
 * Run `43056527841` on source commit
 `f211fc1406d345fa6e972bcfc960c0acd57df1cd` (2026-11-11). After it, the gate
@@ -237,6 +294,7 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | C-2 | `≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ`, `⊕-upperʳ`, `⊕-least` | `ResourceAlgebra.le_refl`, `le_trans`, `le_antisym`, `zero_least`, `add_upperl`, `add_upperr`, `add_least` | `le_refl`, `le_trans`, `le_antisym`, `zero_least`, `add_upperl`, `add_upperr`, `add_least`
 | C-3 | `IsDioid.ordered` | `IsDioid.ordered` | `dioid_ordered`
 | C-4a | `HWM-dioid`, `HWM-not-annihilating` | `dioid_not_annihilating` (their conjunction) | `dioid_not_annihilating` (their conjunction)
+| C-4b | `Grade`, `Diamond`, `Diamond-ordered`, `Diamond-annihilating`, `Diamond-not-dioid` | `DGrade`, `Diamond`, `Diamond_ordered`, `Diamond_annihilating`, `Diamond_not_dioid`, and `ordered_annihilating_not_dioid` (their conjunction) | the same names
 | L-1 | `Loss`, `Loss-dioid`, `Loss-ordered`, `Loss-annihilating` | `Loss`, `Loss_dioid`, `Loss_ordered`, `Loss_annihilating` | the same names
 | M-1 | `MaxPlus`, `MaxPlus-dioid`, `MaxPlus-ordered`, `MaxPlus-annihilating` | `MaxPlus`, `MaxPlus_dioid`, `MaxPlus_ordered`, `MaxPlus_annihilating` | the same names
 | H-1 | `HWM`, `HWM-dioid`, `HWM-ordered` | `HWM`, `HWM_dioid`, `HWM_ordered`, `HWM_zero_eq_one` | the same names
@@ -260,7 +318,16 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | S-2 | `alternatives-differ` | `alternatives_differ` | `alternatives_differ`
 | S-3 | `maxplus-order`, `loss-order-reversed` | `maxplus_order`, `loss_order_reversed` | `maxplus_order`, `loss_order_reversed`
 | S-4 | `bottleneck-is-not-sum` | `bottleneck_is_not_sum` | `bottleneck_is_not_sum`
+| E-1 | `Evidence`, `Evidence-dioid`, `Evidence-ordered`, `Evidence-annihilating`, `≼→≤`, `≤→≼`, `≼-proven`, `⊓e-lowerˡ`, `⊓e-lowerʳ`, `⊓e-greatest` | `Evidence`, `Evidence_dioid`, `Evidence_ordered`, `Evidence_annihilating`, `le_to_rank`, `rank_to_le`, `le_proven`, `eMeet_lowerl`, `eMeet_lowerr`, `eMeet_greatest` | `Evidence`, `Evidence_dioid`, `Evidence_ordered`, `Evidence_annihilating`, `le_to_rank`, `rank_to_le`, `le_proven`, `emeet_lowerl`, `emeet_lowerr`, `emeet_greatest`
+| E-2 | `eff-≼-own`, `eff-≼-dep`, `eff-≼-reach` | `eff_le_own`, `eff_le_dep`, `eff_le_reach` | the same names
+| E-3 | `Respects`, `eff-respects`, `restrict`, `eff-greatest` | `Respects`, `eff_respects`, `restrict`, `eff_greatest` | the same names
 |===
+
+C-4b's carrier is `Grade` in Agda and `DGrade` in Lean and Rocq; the join
+and meet have the same tables in all three. Agda proves each law by
+evaluating one Boolean check over every choice of grades and reading it back
+through soundness lemmas; Lean and Rocq prove the same equations by case
+analysis on the grades. The statements do not change.
 
 F-5's classifier `Loss→MaxPlus` returns Agda's `_⊎_`, a sum in `Set` that
 says *which* of the two maps a morphism is. Both legs now return a sum too
@@ -269,6 +336,94 @@ Until this change the legs returned the propositional `Or`, which says
 only that a morphism is one of the two: a weaker statement, so the receipts
 at `9f175cc` do not recheck F-5's classifier either (see Receipts). No leg rests
 on an assumption beyond its prover's kernel.
+
+E-1, E-2 and E-3 have these residual differences:
+
+* Names follow each prover's convention. The statuses are `openRow`,
+`testedOnly`, `argued`, `provenWithPostulates` and `proven` in both legs.
+Rocq uses the Lean spelling, not snake case, because
+`scripts/scan-dangerous.sh` refuses any lowercase `postulate` in leg code,
+even inside a longer name. For the same reason the test Agda calls
+`postulates-below-proven` is `provenWithPostulates_below_proven` in both
+legs. `_⊔e_` and `_⊓e_` are `eJoin` and `eMeet` in Lean and `ejoin` and
+`emeet` in Rocq; `from-rank`, `own-of` and `⨅` are `fromRank`, `ownOf` and
+`meetAll` in Lean and `from_rank`, `own_of` and `meet_all` in Rocq. Each is
+defined by the same equations as in Agda, `rank` and `from-rank` included.
+Ledger.agda's own `map` is `mapList` in Lean and `map_list` in Rocq, by the
+same two equations.
+* Membership (`_∈_`) and `Dep` are defined by the same recursion in all
+three provers, but they are `Prop`-valued in the legs: Agda's `_⊎_` and `⊥`
+in `Set` become `∨` and `False`. `Reach` is an inductive `Prop` in the legs
+and `Respects` a `Prop` record. A proof-relevant membership witness in Agda
+can be one of several when an index is repeated, and a propositional one
+cannot. These types occur only as hypotheses, or, for `Respects`, as a
+record whose fields conclude in equations, so no statement changes
+strength.
+* Agda's `Reach` takes the starting row as a parameter that `step` varies;
+both legs take it as an index. The constructors and their types are the
+same.
+* The worked ledger and the expected values of
+`tests/unit/EvidenceTest.agda` are restated in both legs
+(`sequence_keeps_the_weaker`, `alternative_keeps_the_stronger`,
+`provenWithPostulates_below_proven`, `open_annihilates`, `row2_is_argued`,
+`row4_is_tested_only`, `row0_keeps_its_evidence`). They are tests, not
+rows. They pin the chain order, which the laws of E-1..E-3 cannot see: a
+relabelling of the chain satisfies every law.
+=== M-2 bridge (Lean only)
+
+M-2 does not carry the record above. Its statement names tropical-types'
+`instance : CommSemiring Tropical`, a Lean 4 object, so it is proved in
+Lean against that object and in no other prover.
+
+[cols="1,1,1,1,2",options="header"]
+|===
+| Leg | Route | §5 | §2.2 | Receipts
+
+| Agda
+| source, `open` (`AGDA-PENDING`): the receipt profile gives every claim an
+Agda leg with route `source`, so this leg cannot be `unavailable`. No
+Agda statement of M-2 exists.
+| —
+| —
+| —
+
+| Rocq
+| `unavailable`: the statement names a Lean object
+| —
+| —
+| —
+
+| Lean
+| `re-proved` (the profile reserves `source` for Agda), Lean core only, no
+Mathlib
+| `PROVEN`: no axiom (`#print axioms` reports none for any of the six
+printed theorems)
+| `LEAN-CHECKED`, not `RECONCILED`: there is no Agda statement to reconcile with
+| CI run `44209774341`, job `134484858201`, with
+`(import :repository "hyperpolymath/tropical-types" :commit "f2e465c…")`
+(§8.5.1)
+|===
+
+* *Bridge.* `verification/bridges/tropical-types/TropicalBridge.lean`
+imports this repository's Lean leg (`ResourceAlgebra.lean`) and
+tropical-types' `TropicalSessionTypes.lean`. It proves `rmax_eq_max`
+(this leg's `rmax` is Lean's `Nat.max`), that `toHT` and `ofHT` are
+inverse, and that `toHT` sends ⊕, ⊗, 𝟘 and 𝟙 to `tAdd`, `tMul`, `.bot` and
+`.val 0` (`maxplus_agrees_tropical`). Four `example`s check by `rfl` that
+these are the `+`, `*`, `0` and `1` of the instance.
+* *Pin.* `scripts/check-lean-bridge.sh` fetches
+`hyperpolymath/tropical-types` at
+`f2e465c966d14d4986dfc492875cc54653d9751e`, checks the fetched commit,
+compiles both modules with the pinned `lean` 4.35.0 and checks the bridge.
+It fails on any error, on any printed theorem that depends on an axiom, and
+when no theorem is printed (`tests/check_lean_bridge_test.sh`). It prints
+the SHA256 of the imported file and of the bridge, for a receipt's
+`(import …)` clause (§8.5.1).
+* *Trusted boundary.* tropical-types' own instance laws depend on `propext`
+and `Quot.sound` at that commit. The bridge theorems do not use those laws
+and depend on no axiom. The `example`s mention the instance and so are not
+counted.
+* *Grade.* None. PWG-3 needs an Agda witness (§8.1), and there is none.
 
 == Core (Core.agda)
 
@@ -280,30 +435,34 @@ on an assumption beyond its prover's kernel.
 | `ResourceAlgebra`: alternatives form an idempotent commutative monoid and
 sequencing a monoid.
 | `PROVEN` (the definition, plus the derived `unitʳ`)
-| 1
+| 2ii
 
 | C-2
 | The relation `≼` induced by ⊕ is a partial order. `𝟘` is least and `⊕` is
 its join.
 | `PROVEN` (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`;
 the least-upper-bound half is `⊕-least`, from main #21)
-| 1
+| 2ii
 
 | C-3
 | Every dioid is ordered: distributivity makes `⊗` monotone on both sides.
 | `PROVEN` (`IsDioid.ordered`)
-| 1
+| 2ii
 
 | C-4a
 | A dioid need not be annihilating. HWM is a dioid and is not annihilating.
 | `PROVEN` (`HWM-dioid`, `HWM-not-annihilating`); control
 `tests/reject/HWMAnnihilates.agda`
-| 1
+| 2ii
 
 | C-4b
-| An annihilating ordered algebra need not be a dioid.
-| `OPEN`: no instance witnesses it yet
-| ungraded
+| An annihilating ordered algebra need not be a dioid. The diamond lattice
+M3 (`Instances/Diamond.agda`: ⊕ = join, ⊗ = meet, 𝟘 = bottom, 𝟙 = top) is
+ordered and annihilating, and is not a dioid: a ⊗ (b ⊕ c) = a, while
+(a ⊗ b) ⊕ (a ⊗ c) = 𝟘.
+| `PROVEN` (`Diamond`, `Diamond-ordered`, `Diamond-annihilating`,
+`Diamond-not-dioid`); control `tests/reject/DiamondDistributes.agda`
+| 2ii
 |===
 
 == Instances
@@ -316,32 +475,38 @@ the least-upper-bound half is `⊕-least`, from main #21)
 | `Loss` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
 `IsAnnihilating`, with ⊕ = min, ⊗ = +, 𝟘 = inf and 𝟙 = fin 0.
 | `PROVEN` (Instances/Loss.agda)
-| 1
+| 2ii
 
 | M-1
 | `MaxPlus` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
 `IsAnnihilating`, with ⊕ = max, ⊗ = +, 𝟘 = bot and 𝟙 = val 0.
 | `PROVEN` (Instances/MaxPlus.agda)
-| 1
+| 2ii
 
 | M-2
 | `MaxPlus` agrees with tropical-types' `instance : CommSemiring Tropical`
 (Lean 4).
-| `OPEN`: a cross-prover bridge obligation. No mechanical link exists, and
-none is claimed.
-| ungraded
+| `PROVEN` in Lean only, by the bridge
+`verification/bridges/tropical-types/TropicalBridge.lean`
+(`maxplus_agrees_tropical`): `toHT` and `ofHT` are inverse, and `toHT`
+sends ⊕, ⊗, 𝟘 and 𝟙 to tropical-types' `tAdd`, `tMul`, `.bot` and `.val 0`,
+which are the fields of the instance. tropical-types is pinned at
+`f2e465c966d14d4986dfc492875cc54653d9751e`; see "M-2 bridge" below for the
+legs. The Rocq leg is `unavailable` and the Agda leg `open`: the statement
+names a Lean object.
+| ungraded: no Agda witness, so PWG-3 cannot be reached
 
 | H-1
 | `HWM` (peak, drift, with drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`
 and `IsOrdered`, and 𝟘 ≡ 𝟙.
 | `PROVEN` (Instances/HWM.agda)
-| 1
+| 2ii
 
 | H-3
 | `HWM` has no annihilating zero.
 | `PROVEN` (`HWM-not-annihilating`); control
 `tests/reject/HWMAnnihilates.agda`
-| 1
+| 2ii
 
 | N-1
 | `MinMax` (the bottleneck algebra) is a `ResourceAlgebra`, `IsDioid`,
@@ -349,7 +514,7 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = min and ⊗ = max (`_⊔g_`, with `inf` absorbing), with 𝟘 = inf and
 𝟙 = fin 0.
 | `PROVEN` (Instances/MinMax.agda)
-| 1
+| 2ii
 
 | Q-1
 | `Questions n` (a "which" grade over `n` downstream questions) is a
@@ -358,19 +523,19 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = intersection and ⊗ = union, bit by bit, with 𝟘 = every question lost
 and 𝟙 = none lost.
 | `PROVEN` (Instances/Questions.agda)
-| 1
+| 2ii
 
 | Q-2
 | With two questions, `collapse` (loses question 1) and `shuffle` (loses
 question 0) each lose one question and are different grades: a count of
 lost questions cannot tell them apart.
 | `PROVEN` (`same-amount-different-loss`)
-| 1
+| 2ii
 
 | Q-3
 | In sequence, `collapse` then `shuffle` loses both questions.
 | `PROVEN` (`both-lost`)
-| 1
+| 2ii
 
 | Q-4
 | As alternatives, `collapse ⊕ shuffle` is 𝟙 (no question lost), while
@@ -378,8 +543,66 @@ neither branch is 𝟙. So ⊕ answers "is question i kept on some branch?"
 and not "does one branch keep every question?".
 | `PROVEN` (`no-branch-achieves-meet`, with Q-2); control
 `tests/reject/QuestionsMeetIsABranch.agda`
-| 1
+| 2ii
+
+| E-1
+| `Evidence` (how strongly a proof-ledger row is supported) is a
+`ResourceAlgebra`, `IsDioid`, `IsOrdered` and `IsAnnihilating`. The
+carrier is the closed status vocabulary of standards PROOF-POLICY §5 as a
+chain, weakest first: `open-row` < `tested-only` < `argued` <
+`proven-with-postulates` < `proven` (owner ruling 2026-11-17). Its
+operations are ⊕ = the stronger (join) and ⊗ = the weaker (meet), with
+𝟘 = `open-row` and 𝟙 = `proven`. So `≼` reads "no stronger than", and ⊗ is
+the meet of `≼` (`⊓e-lowerˡ`, `⊓e-lowerʳ`, `⊓e-greatest`).
+| `PROVEN` (Instances/Evidence.agda); control
+`tests/reject/EvidenceArguedBelowTested.agda`
+| 2ii
 |===
+
+== Evidence ledger (Ledger.agda)
+
+A proof ledger is a list of rows. Each row has its own evidence, the §5
+token of its artefact, and the earlier rows it depends on, so no dependency
+cycle can be written. The derived status of a row, `eff`, is its own
+evidence in sequence (⊗ of `Evidence`) with the derived statuses of the rows
+it depends on. This is README-EXPLAINME's rule that a row is only as strong
+as the weakest step it depends on, as a theorem rather than a convention.
+A dependency index counts into the rows after its own row. An index at or
+past the number of those rows names no row, even when it is below the
+ledger's length, and `eff` reads it as
+`proven`. So any reader of a ledger must check each dependency against the
+length of that row's tail and refuse one that fails, as an
+unregistered row ID, before it derives a status. That is a precondition
+every reader must enforce, not a guarantee this repository gives: no
+reader exists yet (the standards ledger reader is planned), and the
+theorems below hold for every ledger, dangling references included.
+
+[cols="1,4,2,1",options="header"]
+|===
+| ID | Claim | Agda (§5) | pwg
+
+| E-2
+| Soundness: a row's derived status is no stronger than its own evidence,
+than any row it depends on, or than the evidence of any row it reaches
+through dependencies.
+| `PROVEN` (`eff-≼-own`, `eff-≼-dep`, `eff-≼-reach`); controls
+`tests/reject/EvidenceProvenOverTested.agda`,
+`tests/reject/EvidenceArguedLinkIgnored.agda`
+| 2ii
+
+| E-3
+| Maximality: `eff` respects the ledger, and every assignment of statuses
+that respects it is below `eff` row by row. So `eff` is the strongest
+status the ledger supports, and a recorded status above it is an
+overstatement.
+| `PROVEN` (`eff-respects`, `eff-greatest`)
+| 2ii
+|===
+
+The worked ledger in `tests/unit/EvidenceTest.agda` closes the loop on
+concrete rows. A theorem about a model, applied to the code through an
+argued link, derives `argued`. A claim proved on top of a tested-only row
+derives `tested-only`. A row with no dependencies keeps its own evidence.
 
 == Morphisms (Morphism.agda)
 
@@ -395,26 +618,26 @@ it maps ⊗ to at most ⊗: that is what transporting a bound needs.
 | Both notions have identities and compose, and every strict morphism is
 lax.
 | `PROVEN` (`id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax`)
-| 1
+| 2ii
 
 | F-2
 | `peak : HWM → MaxPlus` is lax: the peak of a sequence never exceeds the
 sum of the peaks.
 | `PROVEN` (`peak-lax`)
-| 1
+| 2ii
 
 | F-3
 | `peak` is not strict: it does not preserve ⊗, whatever it does to the
 units.
 | `PROVEN` (`peak-not-strict`); control `tests/reject/PeakIsStrict.agda`
-| 1
+| 2ii
 
 | F-4
 | No strict morphism leaves HWM for an algebra with 𝟘 ≢ 𝟙. In particular,
 none goes to MaxPlus or to Loss.
 | `PROVEN` (`no-strict-from-HWM`, `no-strict-HWM→MaxPlus`,
 `no-strict-HWM→Loss`)
-| 1
+| 2ii
 
 | F-5
 | Exactly two strict morphisms Loss → MaxPlus exist, `zero-test` and
@@ -424,7 +647,7 @@ morphism is one of them (`Loss→MaxPlus`). They are distinct
 (`maps-disagree-at-positive`), and every
 morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
 `no-injective-Loss→MaxPlus`).
-| 1
+| 2ii
 
 | F-6
 | Exactly one strict morphism MaxPlus → Loss exists, `support′`.
@@ -432,13 +655,13 @@ resource-algebra#3 sketched this direction as "symmetric" to
 Loss → MaxPlus, but it is not: there is one map, not two. The issue's other
 claim, that every positive grade goes to a single point, holds.
 | `PROVEN` (`support′-hom`, `MaxPlus→Loss`)
-| 1
+| 2ii
 
 | F-7
 | The identity on the carrier is a lax morphism Loss → MinMax: a bottleneck
 never exceeds the sum.
 | `PROVEN` (`loss-bottleneck`)
-| 1
+| 2ii
 
 | F-8
 | Out of one question there is exactly one strict morphism into an algebra
@@ -446,20 +669,20 @@ never exceeds the sum.
 𝟘 ⊗ 𝟘 ≡ 𝟘, which every annihilating algebra has, and HWM too.
 | `PROVEN` (`one-question-hom`, `one-question-needs`,
 `one-question-unique`)
-| 1
+| 2ii
 
 | F-9
 | Taking the first question of `Questions (suc n)`, and dropping it, are
 strict morphisms. Composed, they read any single question alone.
 | `PROVEN` (`first-question`, `later-questions`)
-| 1
+| 2ii
 
 | F-10
 | The number of lost questions does not preserve ⊕: `collapse` and
 `shuffle` each count 1 and their ⊕ counts 0. So no map into Loss or MinMax
 that factors through the count is strict or lax.
 | `PROVEN` (`count-not-⊕`)
-| 1
+| 2ii
 |===
 
 == Separation (Separation.agda)
@@ -477,26 +700,26 @@ for checks over a bounded or sampled domain.
 | Sequencing peaks 2 and 3 gives 3 under HWM and 5 under MaxPlus: an
 occupancy bound is not a cost bound.
 | `PROVEN` (`occupancy-is-not-cost`)
-| 1
+| 2ii
 
 | S-2
 | On the same numbers, alternatives give `fin 2` under Loss and `val 3`
 under MaxPlus: echo's join is min, while tropical's is max.
 | `PROVEN` (`alternatives-differ`)
-| 1
+| 2ii
 
 | S-3
 | `val 1 ≼ val 2` in MaxPlus but `fin 2 ≼ fin 1` in Loss: the induced
 orders run in opposite directions.
 | `PROVEN` (`maxplus-order`, `loss-order-reversed`)
-| 1
+| 2ii
 
 | S-4
 | Sequencing 2 then 3 gives `fin 5` under Loss but `fin 3` under MinMax: a
 bottleneck bound is not a loss bound.
 | `PROVEN` (`bottleneck-is-not-sum`); `tests/reject/MinMaxIsLoss.agda`
 refuses the general identification
-| 1
+| 2ii
 |===
 
 == Correspondences with other repositories (not graded)
@@ -545,9 +768,10 @@ not classified. Its ⊕ reads a grade as
 chooses the branch (Q-4). A grade for alternatives that another party
 chooses, and a grade over merged pairs (which do not compose by union),
 are not stated.
-* A gate that writes the proof receipt for each commit and checks it with
-the standards reader. Today the receipt is written by hand, for one commit
-(see Receipts).
+* CI that emits the receipt of each main run by itself. The check half
+exists (`scripts/proof-receipt.sh --check` in the `receipt` job of
+`proofs.yml`). Recording a new run is still manual: `--run-row`, then
+`--write` (see Receipts).
 
 == Rust verifiers (not run)
 
