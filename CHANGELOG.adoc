@@ -1,5 +1,19 @@
 == Changelog
 
+== 2026-11-18 — Re-pin the `CI/gate` reusable to 09878f2
+
+* `.github/workflows/ci-gate.yml` and
+  `.github/workflows/ci-gate-tamper-guard-caller.yml` now pin
+  hyperpolymath/proven-cicd-and-workflows at
+  `09878f2a2c0a8907cc69fe48973ea604753ecab1`, up from `d2140a5`, to stop a
+  false `CI/gate` failure when a workflow name contains an emoji (GitHub
+  rejects 4-byte UTF-8 in a status description; seen on
+  hyperpolymath/resource-algebra#48; fixed in
+  hyperpolymath/proven-cicd-and-workflows#144). `actions.lock` and the two
+  tests that assert the pin are updated to match. The new pin is still a
+  commit on an unmerged suite branch, so a second re-pin follows the squash
+  merge of hyperpolymath/proven-cicd-and-workflows#139.
+
 == 2026-11-17 — C-4b and M-2 proved
 
 * C-4b: `src/ResourceAlgebra/Instances/Diamond.agda` adds the diamond
