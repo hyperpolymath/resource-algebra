@@ -70,9 +70,7 @@ expected rejection fails with its stated message.
 | `tests/reject/`, `scripts/check-agda.sh`
 
 | PN-5
-| Grade the ungraded theory rows C-4b and M-2, or keep stating why they are
-not. C-4b (an annihilating ordered algebra that is not a dioid) is PROVEN in
-all three legs and needs a receipt for a commit that contains it. M-2
+| Keep stating why M-2, the one ungraded theory row, has no grade. M-2
 (agreement with tropical-types' Lean semiring) is PROVEN by a Lean bridge
 only; it has no Agda witness, so it cannot reach PWG-3.
 | `PROOF-STATUS.adoc`, `verification/bridges/tropical-types/`
@@ -82,9 +80,17 @@ only; it has no Agda witness, so it cannot reach PWG-3.
 derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
 their statement correspondence. *Done* in resource-algebra#45: both legs
 re-prove the three rows by hand, axiom-free, and the statement
-correspondence is recorded in `PROOF-STATUS.adoc`. The rows stay
-`ungraded` until a receipt records a run of all three legs.
+correspondence is recorded in `PROOF-STATUS.adoc`. The receipt at
+`15fa113` records that run, and the three rows are PWG-2ii.
 | `verification/proofs/coq/`, `verification/proofs/lean4/`
+
+| PN-7
+| Run the Agda and Lean checkers in container images pinned by digest, and
+name the images on their receipts, so that the rows can reach PWG-1 again
+(policy §8.2, standards#1625). The Rocq leg already does. The Lean leg
+must also run under `lake` to qualify (§8.2 names "`lean` under `lake`"); the
+job runs `lean` directly today.
+| CI `proofs.yml`; the receipt
 |===
 
 == Out of scope here
