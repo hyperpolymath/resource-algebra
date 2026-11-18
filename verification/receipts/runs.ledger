@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# The run ledger of resource-algebra's proof receipt (PROOF-POLICY §8.5.1).
+# One run of one leg a line, as scripts/proof-receipt.sh --run-row prints it:
+#   prover | run | commit | checker | invocation | inputs sha256 | what the
+#   run reported | state | reason | axioms | imports | trusted base | image
+#
+# This file is data and it is append-only: a row is never edited, moved or
+# removed, and scripts/proof-receipt.sh --check refuses a ledger that differs
+# from the default branch's in any row that branch holds.  A run is added
+# with --record.  The states of a receipt that is no longer current (stale,
+# superseded) are derived by the generator from these rows and the tree, so
+# no row needs an edit when a leg's inputs change or a newer run is recorded.
+#
+# One proofs.yml run on main checks all three legs; each row names its job.
+# Every gate fails on any axiom, so no row lists one.  Only the Rocq job runs
+# in an image that ships its checker, pinned by digest, so only its row names
+# an image (docs/status/PROOF-NEEDS.adoc, PN-7).  Runs before this file
+# existed are listed in docs/status/PROOF-STATUS.adoc, Earlier receipts.
+agda|https://github.com/hyperpolymath/resource-algebra/actions/runs/44324353274/job/134871496782|c31bf1a9ae9d186674c7ed79c6c9b018a1d59c2b|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, installed at run time in debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f, a base image, so no image is named)|agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
+rocq|https://github.com/hyperpolymath/resource-algebra/actions/runs/44324353274/job/134871496777|c31bf1a9ae9d186674c7ed79c6c9b018a1d59c2b|Rocq 9.3.0, then rocqchk|rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
+lean|https://github.com/hyperpolymath/resource-algebra/actions/runs/44324353274/job/134871496113|c31bf1a9ae9d186674c7ed79c6c9b018a1d59c2b|Lean 4.35.0 with Lake 5.0.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, installed at run time in ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8, a base image, so no image is named)|lake build in a copy of verification/proofs/lean4 made by bash scripts/check-lean-leg.sh (core only, no dependencies); then lake build of ResourceAlgebra, TropicalSessionTypes and TropicalBridge in the work directory made by bash scripts/check-lean-bridge.sh|23504e806cdd96db0b4c4381ab278b7b7eeda6ed02d29490d0a5078cf14be06a|PASS: Lean leg under lake; 84 of 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|current|||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01

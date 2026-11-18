@@ -22,7 +22,7 @@ ungraded: 1 (M-2). The grades hold at source commit
 resource-algebra#53 and the commit the proof receipt describes
 (`verification/receipts/resource-algebra-proofs_praxis.deed`). The
 standards reader (`deed_lint.js --proof-receipt-json`), as pinned by
-`scripts/proof-receipt.sh` (standards `146fb8f8`), derives every grade there
+`scripts/proof-receipt.sh` (standards `745fc744`), derives every grade there
 from the legs and receipts, and refuses a recorded grade that differs (§8.4).
 
 The 31 rows are PWG-2ii again. resource-algebra#53 moved the Lean leg and
@@ -182,20 +182,27 @@ a recheck leg, the gate or the checker pins needs a new receipt for the
 new commit, and until then its rows fall back to the grade its receipts
 support. The receipt deed is no longer written by hand. `scripts/proof-receipt.sh
 --write` generates it with the estate's shared generator (standards
-`scripts/proof-receipt.sh`, pinned at `146fb8f8` on standards main). `scripts/proof-receipt.sh --check` regenerates it, refuses any
+`scripts/proof-receipt.sh`, pinned at `745fc744` on standards main). `scripts/proof-receipt.sh --check` regenerates it, refuses any
 difference, runs the §8.5.3 git checks, checks that each current receipt
 still describes the tree, and runs the pinned reader with a negative
 control. The `receipt` job of `proofs.yml` runs `--check` on every commit.
-Recording a new run is still a manual step (`--run-row`, then `--write`).
+
+The run ledger is the data file `verification/receipts/runs.ledger`, one
+run of one leg a line. It is append-only: `--check` refuses a ledger that
+changed, moved or dropped a row the default branch holds. Recording a new
+run is still started by hand: `--run-row` prints each leg's row from the
+run, and `--record` checks the rows, writes the receipt and appends them.
 
 What this asks of a change. A pull request that changes a leg's inputs
 (`src/`, a recheck file, the bridge or the tropical-types pin) makes the
 `receipt` job fail, because the current receipt of that leg no longer
-describes the tree. The change then marks that leg's row `superseded` in
-the ledger of `scripts/proof-receipt.sh`, with its reason, and regenerates
-the receipt: the rows fall to the grade the remaining receipts support,
-which is what §8.4 says. After the merge, a follow-up records the main run
-of the new commit and the grades return.
+describes the tree. The change then runs `scripts/proof-receipt.sh --write`
+and commits the result. No ledger row is edited: the generator derives that
+the leg's receipt is `stale` (its inputs changed and no run of the new ones
+is recorded yet), and the rows fall to the grade the remaining receipts
+support, which is what §8.4 says. After the merge, a follow-up records the
+main run of the new commit with `--record`; the stale receipt becomes
+`superseded` and the grades return.
 
 The Lean input set includes `scripts/check-lean-bridge.sh`, which holds the
 tropical-types pin. The run summaries that hold the per-leg digests are
@@ -793,8 +800,8 @@ chooses, and a grade over merged pairs (which do not compose by union),
 are not stated.
 * CI that emits the receipt of each main run by itself. The check half
 exists (`scripts/proof-receipt.sh --check` in the `receipt` job of
-`proofs.yml`). Recording a new run is still manual: `--run-row`, then
-`--write` (see Receipts).
+`proofs.yml`). Recording a new run is still started by hand: `--run-row`,
+then `--record` (see Receipts).
 
 == Discipline
 

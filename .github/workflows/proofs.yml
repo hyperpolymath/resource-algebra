@@ -276,8 +276,9 @@ jobs:
   # runs the §8.5.3 git checks, checks that each current receipt still describes
   # the tree, and runs the pinned reader with a negative control. It needs
   # network access to raw.githubusercontent.com (the pinned standards files)
-  # and github.com (the pinned tropical-types commit). Recording a new run is a
-  # manual step (--run-row, then --write); this job only checks.
+  # and github.com (the pinned tropical-types commit). Recording a new run is
+  # started by hand (--run-row, then --record into the ledger file
+  # verification/receipts/runs.ledger); this job only checks.
   receipt:
     name: Proof receipt, derived grades, git checks
     runs-on: ubuntu-latest

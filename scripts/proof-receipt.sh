@@ -6,8 +6,9 @@
 # verification/receipts/resource-algebra-proofs_praxis.deed (PROOF-POLICY
 # §8.5.1, profile proof-receipt), written and checked by the estate's shared
 # generator (standards scripts/proof-receipt.sh).  This file holds only what
-# is resource-algebra's own: the claim list, the run ledger, and the hooks
-# that name each leg's invocation and input set.  The generator, the reader,
+# is resource-algebra's own: the claim list and the hooks that name each
+# leg's invocation and input set.  The run ledger is the data file
+# verification/receipts/runs.ledger.  The generator, the reader,
 # the reference digest and the §8.5.3 git checker are fetched below at one
 # standards commit, each checked against its sha256.
 #
@@ -18,11 +19,16 @@
 #   --run-row PROVER --run URL --commit SHA --checker TEXT --reported TEXT
 #             --axioms none [--image NAME@sha256:…]
 #             print the ledger row of a run that just passed
+#   --record ROWS
+#             check those rows with the ledger, write the receipt they give,
+#             and append them to the ledger file
 #
-# What is typed and what is derived.  The claim list and the run ledger are
-# typed here; each ledger row is printed by --run-row from the proofs.yml run
-# it names, and its checker and reported text are copied from that run's
-# log.  Every digest is a git fact that the generator rechecks against the
+# What is typed and what is derived.  The claim list is typed here.  Each
+# ledger row is printed by --run-row from the proofs.yml run it names, with
+# its checker and reported text copied from that run's log, and --record
+# appends it.  A receipt's state is derived: current while its run describes
+# the tree, stale once the leg's inputs change, superseded once a newer run
+# of the leg is recorded.  Every digest is a git fact that the generator rechecks against the
 # tree.  The grade is never typed: the generator derives it and the pinned
 # reader derives it again, refusing a receipt that overstates it.
 #
@@ -34,12 +40,12 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 export LC_ALL=C.UTF-8
 
 # ── The pinned standard ───────────────────────────────────────────────────────
-RECEIPT_STANDARDS_COMMIT=146fb8f8ccdf5cf9e697b9f488486e1fd2822330
+RECEIPT_STANDARDS_COMMIT=745fc744158047a675eeb92464167c9961d66c4b
 RECEIPT_STD=_build/standards
 standards_raw="https://raw.githubusercontent.com/metadatastician/standards/$RECEIPT_STANDARDS_COMMIT"
 pinned_files=(
-  "scripts/proof-receipt.sh:b7e294e031fa3b17511746537f3dbde1d40f08f2188e7b5f8cd9f0265e5573d7"
-  "1-formats/deed/tools/deed_lint.js:de5b38d7752625ec665329e45b6d6bb244589b4e098dc2e63371088cd660678c"
+  "scripts/proof-receipt.sh:e54a8ccc5399d1c81a4f60a01c354ddb6df3cfae31f87d0c6c3d91e3e4623a4d"
+  "1-formats/deed/tools/deed_lint.js:aece22bf20d6e112e633efd288ed5d145012e85822d6b3ebea916c91c513acb9"
   "scripts/proof-inputs-sha256.sh:dfc6dde01a3a79df638eebe4cad0eae584d8f17280077e149174c0667e9508f4"
   "scripts/check-proof-receipt.sh:f2375747238464535d1b4a61f658f07cb2f8504c69bfb1812311c79429a4e23e"
 )
@@ -62,6 +68,8 @@ RECEIPT_REPOSITORY=hyperpolymath/resource-algebra
 RECEIPT_DEFAULT_BRANCH=main
 RECEIPT_CANONICAL_NAME=resource-algebra-proof-receipt
 RECEIPT_SCRIPT=scripts/proof-receipt.sh
+# The run ledger is a data file, append-only (see its header).
+RECEIPT_LEDGER=verification/receipts/runs.ledger
 # The estate chora's id, as resource-algebra_chora.deed has it (owner ruling Q2).
 RECEIPT_BEHOLDING_CHORA='#u8"chora:estate/github.com/hyperpolymath"'
 status=docs/status/PROOF-STATUS.adoc
@@ -89,30 +97,6 @@ receipt_claims() {
   for id in H-1 H-3 N-1 Q-1 Q-2 Q-3 Q-4 E-1 E-2 E-3 F-1 F-2 F-3 F-4 F-5 F-6 F-7 F-8 F-9 F-10 S-1 S-2 S-3 S-4; do
     printf '%s|proven|theorem|re-proved|RECONCILED|re-proved|RECONCILED||\n' "$id"
   done
-}
-
-# ── The run ledger ────────────────────────────────────────────────────────────
-# prover | run | commit | checker | invocation | inputs sha256 | what the run
-# reported | state | reason | axioms | imports | trusted base | image.
-# One proofs.yml run on main checks all three legs; each row names its job.
-# Every gate fails on any axiom (check-agda.sh: --safe and the postulate
-# scan; the Rocq job: every Print Assumptions closed; the Lean job and the
-# bridge check: every #print axioms empty), so no row lists one.
-# Only the Rocq job runs in an image that ships its checker, pinned by
-# digest, so only its row names one.  The Agda and Lean jobs run in base
-# images pinned by digest and install the checker at run time, which the
-# owner ruled on 2026-11-18 is not isolation (docs/status/PROOF-NEEDS.adoc
-# PN-7): their rows name no image, and no row can reach PWG-1 until they
-# run in prover images.  The Lean leg and the M-2 bridge build under lake.
-# Earlier runs are listed, superseded, in docs/status/PROOF-STATUS.adoc.
-receipt_runs() {
-  local u=https://github.com/hyperpolymath/resource-algebra/actions/runs/44324353274/job
-  local c=c31bf1a9ae9d186674c7ed79c6c9b018a1d59c2b
-  cat <<ROWS
-agda|$u/134871496782|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, installed at run time in debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f, a base image, so no image is named)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
-rocq|$u/134871496777|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
-lean|$u/134871496113|$c|Lean 4.35.0 with Lake 5.0.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, installed at run time in ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8, a base image, so no image is named)|$(receipt_invocation lean)|23504e806cdd96db0b4c4381ab278b7b7eeda6ed02d29490d0a5078cf14be06a|PASS: Lean leg under lake; 84 of 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|current|||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01
-ROWS
 }
 
 receipt_echoes() { :; }

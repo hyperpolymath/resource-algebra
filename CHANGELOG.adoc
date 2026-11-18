@@ -1,5 +1,23 @@
 == Changelog
 
+== 2026-11-18 — The run ledger is a data file; receipt states are derived
+
+* The run ledger moved out of `scripts/proof-receipt.sh` into
+  `verification/receipts/runs.ledger`, one run of one leg a line. It is
+  append-only: `--check` refuses a ledger that changed, moved or dropped a
+  row the default branch holds. A row is data, so a later change to a hook
+  cannot re-describe a past run.
+* `scripts/proof-receipt.sh --record` adds a run: it checks the rows, writes
+  the receipt they give and appends them, or does none of it.
+* A receipt's state is derived by the shared generator (owner ruling
+  2026-11-18): `stale` once a leg's inputs change, `superseded` once a newer
+  run of the leg is recorded. A pull request that changes a leg's inputs now
+  runs `--write` and edits no ledger row.
+* The shared generator is pinned at standards `745fc744`, the merge of
+  metadatastician/standards#1675.
+* The receipt itself is unchanged, byte for byte: 31 theory rows are PWG-2ii
+  and 1 (M-2) is ungraded, at source commit `c31bf1a`.
+
 == 2026-11-18 — Proof receipt at c31bf1a, with the Lean legs under lake; 31 rows are PWG-2ii again
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
