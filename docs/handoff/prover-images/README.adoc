@@ -12,7 +12,7 @@
 * The name `prover-images` has not been checked against `gv-clade-index`.
 * The licence (SPDX lines) is a placeholder for the owner to decide.
 * This directory moves to `hyperpolymath/prover-images` once that repository exists, and is then deleted here (PN-7 in `docs/status/PROOF-NEEDS.adoc`).
-* `github/` below is deliberately not `.github/`, so nothing in resource-algebra treats it as live CI config. In the target repository, move `github/` back to `.github/`.
+* The draft CI files are carried as listings at the end of this file, not as YAML files, so nothing in resource-algebra treats them as live config. In the target repository they become `.github/workflows/build.yml` and `.github/dependabot.yml`.
 ====
 
 *Status: draft, untested.* Written by an agent from resource-algebra PN-7 for
@@ -41,10 +41,10 @@ against the Docker Hub API on 2026-11-18 and pulled by digest locally), Debian
 `agda-bin 2.6.4.3-1+b2` from a snapshot.debian.org timestamp.
 * `lean/Containerfile`: same base, the upstream Lean 4.35.0 archive checked
 against the SHA256 in resource-algebra's `proofs.yml`.
-* `github/workflows/build.yml` (becomes `.github/workflows/build.yml` in the target repo): build, smoke test, push to
+* `.github/workflows/build.yml` (listing below): build, smoke test, push to
 `ghcr.io/hyperpolymath/prover-images/{agda,lean}`, print the digest in the job
 summary, attest provenance. Pushes only off `pull_request`.
-* `github/dependabot.yml` (becomes `.github/dependabot.yml` in the target repo): weekly base-digest and action bumps.
+* `.github/dependabot.yml` (listing below): weekly base-digest and action bumps.
 
 == How a consumer pins a digest
 
@@ -115,9 +115,144 @@ precaution) is untested.
 |===
 | Check | Result
 | `actionlint` v1.7.7 on `build.yml` | exit 0
-| `yq` parse of `build.yml` and `dependabot.yml` | ok
+| `yq` parse of `build.yml` and `dependabot.yml` | ok (before they were carried as listings)
 | `hadolint` | not run (no trusted binary obtainable in the authoring sandbox)
 | `docker pull` of the base by digest | succeeded, digest matched
 | `docker build` agda, lean | *failed* at `apt-get update` (exit 100): the sandbox's build network cannot reach Debian mirrors; snapshot.debian.org and the Lean release download are unverified
 | smoke tests (`agda --version`, `lean --version`) | not run: images unbuilt
 |===
+
+== Draft CI files (listings)
+
+These two files are carried as listings, not as standalone YAML files, so no
+scanner in resource-algebra (SonarCloud, workflow linters, Dependabot,
+lock-sync, KYAML checks) treats them as live configuration. In the target
+repository save the first as `.github/workflows/build.yml` and the second as
+`.github/dependabot.yml` (the estate KYAML rule allows `.yml` there because
+GitHub demands the name). Both are DRAFT and UNTESTED apart from `actionlint`
+v1.7.7 on `build.yml` (exit 0) in the authoring sandbox, run before the
+listing was carried here and before `${{ }}` expressions were moved out of
+`run:` blocks, so it is stale for this exact text.
+
+=== `.github/workflows/build.yml`
+
+[source,yaml]
+----
+# DRAFT, UNTESTED (actionlint only). Handoff from resource-algebra PN-7.
+# SPDX-License-Identifier: MPL-2.0
+name: Build prover images
+on:
+  push:
+    branches: [main]
+    paths: ['agda/**', 'lean/**', '.github/workflows/build.yml']
+  pull_request:
+    paths: ['agda/**', 'lean/**', '.github/workflows/build.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Build ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: agda
+            checker_cmd: agda --version
+            checker_expect: 'Agda version 2.6.4.3'
+          - image: lean
+            checker_cmd: lean --version
+            checker_expect: 'version 4.35.0,'
+    permissions:
+      contents: read
+      packages: write      # push to GHCR (not granted on pull_request runs, see push gate)
+      id-token: write      # sign the provenance attestation
+      attestations: write
+    env:
+      IMAGE: ${{ matrix.image }}
+      REGISTRY_IMAGE: ghcr.io/hyperpolymath/prover-images/${{ matrix.image }}
+    steps:
+      # Only action refs with evidence: SHA from resource-algebra's actions.lock
+      # (checkout v7.0.1; attest ref present there, its version NOT confirmed).
+      # Docker is driven by plain `docker` commands so no unverified action SHA
+      # is invented. Re-pin with the estate's tooling when the repo exists.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build
+        run: |
+          set -euo pipefail
+          docker build --pull=false --file "$IMAGE/Containerfile" \
+            --tag "$REGISTRY_IMAGE:candidate" "$IMAGE"
+      - name: Smoke test the checker inside the image
+        env:
+          CHECKER_CMD: ${{ matrix.checker_cmd }}
+          CHECKER_EXPECT: ${{ matrix.checker_expect }}
+        run: |
+          set -euo pipefail
+          out="$(docker run --rm "$REGISTRY_IMAGE:candidate" bash -c "$CHECKER_CMD")"
+          echo "$out"
+          grep -F "$CHECKER_EXPECT" <<<"$out"
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_ACTOR: ${{ github.actor }}
+        run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
+      - name: Push and record the digest
+        id: push
+        if: github.event_name != 'pull_request'
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+          CHECKER_CMD: ${{ matrix.checker_cmd }}
+          CHECKER_EXPECT: ${{ matrix.checker_expect }}
+        run: |
+          set -euo pipefail
+          docker tag "$REGISTRY_IMAGE:candidate" "$REGISTRY_IMAGE:sha-$SOURCE_SHA"
+          docker push "$REGISTRY_IMAGE:sha-$SOURCE_SHA"
+          digest="$(docker inspect --format '{{index .RepoDigests 0}}' "$REGISTRY_IMAGE:sha-$SOURCE_SHA" | sed 's/.*@//')"
+          case "$digest" in sha256:[0-9a-f]*) ;; *) echo "::error::no digest: $digest"; exit 1;; esac
+          [ "${#digest}" -eq 71 ] || { echo "::error::bad digest length: $digest"; exit 1; }
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Prover image: $IMAGE"
+            echo ""
+            echo "- image: \`$REGISTRY_IMAGE@$digest\`"
+            echo "- source commit: \`$SOURCE_SHA\`"
+            echo "- smoke test: \`$CHECKER_CMD\` matched \`$CHECKER_EXPECT\`"
+            echo "- consumer pin: \`container: image: $REGISTRY_IMAGE@$digest\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Attest build provenance
+        if: github.event_name != 'pull_request'
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # version unconfirmed
+        with:
+          subject-name: ${{ env.REGISTRY_IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+----
+
+=== `.github/dependabot.yml`
+
+[source,yaml]
+----
+# DRAFT, UNTESTED. Bumps the digest-pinned base images. Each bump is a PR that
+# must rebuild, pass the smoke test and publish a new digest; consumers then
+# take that digest by their own PR. Note: the estate's KYAML rule allows .yml
+# here because Dependabot demands the name.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: /agda
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /lean
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+----
