@@ -9,10 +9,10 @@
 ;; Every :pwg is derived, and the pinned reader refuses one its legs and
 ;; receipts do not support.  The rows and their statement correspondence are
 ;; in docs/status/PROOF-STATUS.adoc.
-;; Only the Rocq receipts name an :image (pinned by digest), so no row is
-;; PWG-1 (§8.2).  The Lean leg and the M-2 bridge moved under lake, so the
-;; Lean run recorded here is superseded and the Lean legs have no current
-;; receipt until the first run on main under lake is recorded.
+;; An :image is named only where the run's checker shipped in an image pinned
+;; by digest, and a row is PWG-1 only when every counted receipt names one
+;; (§8.2).  Which runs are current, and why any other is not, is in each
+;; (receipt …) below.
 (praxis-deed
   :schema-version "1.0.0"
   :canonical-name "resource-algebra-proof-receipt"
@@ -68,7 +68,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "C-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -112,7 +112,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "C-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -156,7 +156,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "C-4a" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -200,7 +200,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "C-4b" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -244,7 +244,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "L-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -288,7 +288,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "M-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -332,7 +332,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "M-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token open :state AGDA-PENDING)
     (leg :prover rocq :route unavailable :reason "the statement names tropical-types' Lean instance, which Rocq cannot import")
@@ -343,7 +343,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "H-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -387,7 +387,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "H-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -431,7 +431,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "N-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -475,7 +475,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "Q-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -519,7 +519,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "Q-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -563,7 +563,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "Q-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -607,7 +607,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "Q-4" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -651,7 +651,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "E-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -695,7 +695,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "E-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -739,7 +739,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "E-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -783,7 +783,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -827,7 +827,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -871,7 +871,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -915,7 +915,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-4" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -959,7 +959,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-5" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1003,7 +1003,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-6" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1047,7 +1047,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-7" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1091,7 +1091,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-8" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1135,7 +1135,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-9" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1179,7 +1179,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "F-10" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1223,7 +1223,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "S-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1267,7 +1267,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "S-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1311,7 +1311,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "S-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1355,7 +1355,7 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "S-4" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
@@ -1399,5 +1399,5 @@
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
-               :reason "its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake")))
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
 )

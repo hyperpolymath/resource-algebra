@@ -114,7 +114,7 @@ receipt_runs() {
   cat <<ROWS
 agda|$u/134484857967|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
 rocq|$u/134484858135|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
-lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)|$lean_direct|015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6|RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|superseded|its inputs and its checker changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake (scripts/check-lean-leg.sh, scripts/check-lean-bridge.sh, two Lake packages), and this run called lean directly, which the owner ruled on 2026-11-17 does not qualify (PROOF-POLICY §8.2). To be replaced by the first run on main of the legs under lake|
+lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)|$lean_direct|015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6|RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|superseded|its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01
 ROWS
 }
 
@@ -132,10 +132,10 @@ receipt_header() {
 ;; Every :pwg is derived, and the pinned reader refuses one its legs and
 ;; receipts do not support.  The rows and their statement correspondence are
 ;; in docs/status/PROOF-STATUS.adoc.
-;; Only the Rocq receipts name an :image (pinned by digest), so no row is
-;; PWG-1 (§8.2).  The Lean leg and the M-2 bridge moved under lake, so the
-;; Lean run recorded here is superseded and the Lean legs have no current
-;; receipt until the first run on main under lake is recorded.
+;; An :image is named only where the run's checker shipped in an image pinned
+;; by digest, and a row is PWG-1 only when every counted receipt names one
+;; (§8.2).  Which runs are current, and why any other is not, is in each
+;; (receipt …) below.
 EOF
 }
 # The prover's four universe-level primitives, each bound by its BUILTIN

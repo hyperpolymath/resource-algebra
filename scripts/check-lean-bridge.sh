@@ -53,7 +53,9 @@ cp -- "$BRIDGE_DIR/lakefile.toml" "$BRIDGE_DIR/lake-manifest.json" "$BRIDGE" \
 # is then never mistaken for a rewrite by lake, and never counted or hashed.
 cp -- "$work/pkg/lake-manifest.json" "$work/manifest.before"
 
-if ! out="$(cd "$work/pkg" && "$lake" build 2>&1)" || grep -q 'error:' <<<"$out"; then
+# The census needs every module compiled in this run: an artifact cache hit
+# would build nothing and print no report.
+if ! out="$(cd "$work/pkg" && LAKE_ARTIFACT_CACHE=false "$lake" build 2>&1)" || grep -q 'error:' <<<"$out"; then
   printf '%s\n' "$out" >&2
   echo "ERROR: the bridge package does not build under lake" >&2
   exit 1

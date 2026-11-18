@@ -81,7 +81,8 @@ derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
 their statement correspondence. *Done* in resource-algebra#45: both legs
 re-prove the three rows by hand, axiom-free, and the statement
 correspondence is recorded in `PROOF-STATUS.adoc`. The receipt at
-`15fa113` records that run, and the three rows are PWG-2ii.
+`15fa113` records that run; the rows' current grades are in the Census of
+`PROOF-STATUS.adoc`, derived from the receipt.
 | `verification/proofs/coq/`, `verification/proofs/lean4/`
 
 | PN-7

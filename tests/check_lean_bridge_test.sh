@@ -7,7 +7,7 @@
 # reason. The script fetches tropical-types at its pin, so this test needs the
 # network.
 set -uo pipefail
-cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." || exit 1
 stub=$(mktemp -d) || { echo "FAIL: mktemp could not make the stub directory" >&2; exit 1; }
 trap 'rm -rf "$stub"' EXIT
 n=$(grep -c '^#print axioms' verification/bridges/tropical-types/TropicalBridge.lean)
@@ -48,5 +48,16 @@ expect_fail otherfile 'bridge theorems are axiom-free'
 
 make_stub rewrite "$free_reports; echo '{}' > lake-manifest.json; exit 0"
 expect_fail rewrite 'rewrote lake-manifest.json'
+
+# The census needs a full build. A lake that reuses cached artifacts prints no
+# report, so the script must turn the artifact cache off whatever the caller
+# has set: this stub reports only when it is off.
+make_stub cache "if [ \"\${LAKE_ARTIFACT_CACHE:-}\" = false ]; then $free_reports; fi; exit 0"
+out=$(LAKE_ARTIFACT_CACHE=true LAKE="$stub/cache" bash scripts/check-lean-bridge.sh 2>&1); rc=$?
+if [[ $rc -ne 0 ]] || ! grep -q '^PASS:' <<<"$out"; then
+  printf 'FAIL: cache: the script did not turn the artifact cache off (exit %s)\n%s\n' "$rc" "$out" >&2; fails=1
+else
+  echo "PASS: cache: the build runs with the artifact cache off"
+fi
 
 exit $fails

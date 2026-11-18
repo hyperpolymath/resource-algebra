@@ -30,7 +30,9 @@ done
 # is then never mistaken for a rewrite by lake, and never counted.
 cp -- "$work/lake-manifest.json" "$work.manifest.before"
 
-if ! out="$(cd "$work" && "$lake" build 2>&1)"; then
+# The census needs every module compiled in this run: an artifact cache hit
+# would build nothing and print no report.
+if ! out="$(cd "$work" && LAKE_ARTIFACT_CACHE=false "$lake" build 2>&1)"; then
   printf '%s\n' "$out" >&2
   echo "ERROR: the Lean leg does not build under lake" >&2
   exit 1
