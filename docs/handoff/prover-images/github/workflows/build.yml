@@ -31,6 +31,7 @@ jobs:
       id-token: write      # sign the provenance attestation
       attestations: write
     env:
+      IMAGE: ${{ matrix.image }}
       REGISTRY_IMAGE: ghcr.io/hyperpolymath/prover-images/${{ matrix.image }}
     steps:
       # Only action refs with evidence: SHA from resource-algebra's actions.lock
@@ -43,8 +44,8 @@ jobs:
       - name: Build
         run: |
           set -euo pipefail
-          docker build --pull=false --file "${{ matrix.image }}/Containerfile" \
-            --tag "$REGISTRY_IMAGE:candidate" "${{ matrix.image }}"
+          docker build --pull=false --file "$IMAGE/Containerfile" \
+            --tag "$REGISTRY_IMAGE:candidate" "$IMAGE"
       - name: Smoke test the checker inside the image
         env:
           CHECKER_CMD: ${{ matrix.checker_cmd }}
@@ -65,6 +66,8 @@ jobs:
         if: github.event_name != 'pull_request'
         env:
           SOURCE_SHA: ${{ github.sha }}
+          CHECKER_CMD: ${{ matrix.checker_cmd }}
+          CHECKER_EXPECT: ${{ matrix.checker_expect }}
         run: |
           set -euo pipefail
           docker tag "$REGISTRY_IMAGE:candidate" "$REGISTRY_IMAGE:sha-$SOURCE_SHA"
@@ -74,11 +77,11 @@ jobs:
           [ "${#digest}" -eq 71 ] || { echo "::error::bad digest length: $digest"; exit 1; }
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           {
-            echo "## Prover image: ${{ matrix.image }}"
+            echo "## Prover image: $IMAGE"
             echo ""
             echo "- image: \`$REGISTRY_IMAGE@$digest\`"
             echo "- source commit: \`$SOURCE_SHA\`"
-            echo "- smoke test: \`${{ matrix.checker_cmd }}\` matched \`${{ matrix.checker_expect }}\`"
+            echo "- smoke test: \`$CHECKER_CMD\` matched \`$CHECKER_EXPECT\`"
             echo "- consumer pin: \`container: image: $REGISTRY_IMAGE@$digest\`"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Attest build provenance
