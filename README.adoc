@@ -19,7 +19,7 @@ Five instances are checked against it:
 |===
 | Instance | Source of the definition | Alternatives / sequence | Status
 | `Instances.Loss` | echo-types `experimental/echo-additive/Grade.agda`, transcribed | min / + on ℕ ∪ {∞} | transcribed, PROVEN
-| `Instances.MaxPlus` | tropical-types `TropicalSessionTypes.lean`, transcribed | max / + on ℕ ∪ {−∞} | transcribed, PROVEN; Lean bridge OPEN
+| `Instances.MaxPlus` | tropical-types `TropicalSessionTypes.lean`, transcribed | max / + on ℕ ∪ {−∞} | transcribed, PROVEN; agreement with tropical-types' Lean instance PROVEN by a Lean bridge (M-2)
 | `Instances.HWM` | occupancy-types' occupancy algebra, which adopts it (its O-1) | componentwise max / peak-and-drift | PROVEN; signed drift OPEN
 | `Instances.MinMax` | typed-wasm L11 bottleneck (`Tropical.tropMax`), which now transcribes it (`tropMax = minMaxSeq`) | min / max on ℕ ∪ {∞} | PROVEN; typed-wasm transcription TESTED there
 | `Instances.Questions` | ours: the powerset lattice of `n` downstream questions, a "which" grade | intersection / union on `n` booleans | PROVEN; sound per question, not jointly (Q-4)
@@ -86,7 +86,8 @@ only from its first green run.
 ----
 src/ResourceAlgebra/Prelude.agda      ℕ lemmas (+, max, min, ≤), proved here
 src/ResourceAlgebra/Core.agda         the record and its layers
-src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions
+src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions, Evidence
+src/ResourceAlgebra/Ledger.agda       a proof-ledger row's status, derived from its dependencies
 src/ResourceAlgebra/Separation.agda   checked separation witnesses
 src/ResourceAlgebra/Morphism.agda     strict and lax morphisms, classifications
 tests/reject/*.agda                   expected rejections (must fail)

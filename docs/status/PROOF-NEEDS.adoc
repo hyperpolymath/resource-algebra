@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Proof Requirements — resource-algebra
-:revdate: 2026-11-09
+:revdate: 2026-11-17
 
 What this repository owes, classified by the estate proof policy
 (`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
@@ -46,8 +46,8 @@ they were removed with those files on 2026-11-09.
 | PN-1
 | Every theorem in `PROOF-STATUS.adoc` checks in Agda under the canonical
 invocation `--safe --without-K --cubical-compatible` (policy §2.1), with no
-postulates, holes or libraries, under `-W error` (only
-`UnsupportedIndexedMatch` is suppressed) and the estate strict flag set.
+postulates, holes or libraries, under `-W error` (no warning suppressed)
+and the estate strict flag set.
 | `scripts/check-agda.sh`; CI `proofs.yml`
 
 | PN-2
@@ -70,10 +70,27 @@ expected rejection fails with its stated message.
 | `tests/reject/`, `scripts/check-agda.sh`
 
 | PN-5
-| Close or keep stating the open theory rows: C-4b (an annihilating ordered
-algebra that is not a dioid) and M-2 (agreement with tropical-types' Lean
-semiring).
-| `PROOF-STATUS.adoc`
+| Keep stating why M-2, the one ungraded theory row, has no grade. M-2
+(agreement with tropical-types' Lean semiring) is PROVEN by a Lean bridge
+only; it has no Agda witness, so it cannot reach PWG-3.
+| `PROOF-STATUS.adoc`, `verification/bridges/tropical-types/`
+
+| PN-6
+| Recheck E-1, E-2 and E-3 (the `Evidence` algebra and the ledger status
+derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
+their statement correspondence. *Done* in resource-algebra#45: both legs
+re-prove the three rows by hand, axiom-free, and the statement
+correspondence is recorded in `PROOF-STATUS.adoc`. The receipt at
+`15fa113` records that run, and the three rows are PWG-2ii.
+| `verification/proofs/coq/`, `verification/proofs/lean4/`
+
+| PN-7
+| Run the Agda and Lean checkers in container images pinned by digest, and
+name the images on their receipts, so that the rows can reach PWG-1 again
+(policy §8.2, standards#1625). The Rocq leg already does. The Lean leg
+must also run under `lake` to qualify (§8.2 names "`lean` under `lake`"); the
+job runs `lean` directly today.
+| CI `proofs.yml`; the receipt
 |===
 
 == Out of scope here
