@@ -9,9 +9,10 @@
 ;; Every :pwg is derived, and the pinned reader refuses one its legs and
 ;; receipts do not support.  The rows and their statement correspondence are
 ;; in docs/status/PROOF-STATUS.adoc.
-;; Only the Rocq receipts name an :image (pinned by digest), so no row is
-;; PWG-1 (§8.2).  The Lean job checks the leg and the M-2 bridge in one run,
-;; so every Lean leg shares one receipt and its (import …) of tropical-types.
+;; An :image is named only where the run's checker shipped in an image pinned
+;; by digest, and a row is PWG-1 only when every counted receipt names one
+;; (§8.2).  Which runs are current, and why any other is not, is in each
+;; (receipt …) below.
 (praxis-deed
   :schema-version "1.0.0"
   :canonical-name "resource-algebra-proof-receipt"
@@ -24,7 +25,7 @@
     (primitive :prover agda :module "Agda.Primitive" :name "lzero" :binding "BUILTIN LEVELZERO")
     (primitive :prover agda :module "Agda.Primitive" :name "lsuc" :binding "BUILTIN LEVELSUC")
     (primitive :prover agda :module "Agda.Primitive" :name "_⊔_" :binding "BUILTIN LEVELMAX"))
-  (claim :id "C-1" :pwg PWG-2ii :foundation-diverse #f
+  (claim :id "C-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -66,17 +67,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "C-2" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "C-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -118,17 +111,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "C-3" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "C-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -170,17 +155,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "C-4a" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "C-4a" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -222,17 +199,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "C-4b" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "C-4b" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -274,17 +243,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "L-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "L-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -326,17 +287,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "M-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "M-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -378,16 +331,8 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
   (claim :id "M-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token open :state AGDA-PENDING)
     (leg :prover rocq :route unavailable :reason "the statement names tropical-types' Lean instance, which Rocq cannot import")
@@ -397,17 +342,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "H-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "H-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -449,17 +386,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "H-3" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "H-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -501,17 +430,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "N-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "N-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -553,17 +474,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "Q-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "Q-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -605,17 +518,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "Q-2" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "Q-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -657,17 +562,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "Q-3" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "Q-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -709,17 +606,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "Q-4" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "Q-4" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -761,17 +650,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "E-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "E-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -813,17 +694,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "E-2" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "E-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -865,17 +738,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "E-3" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "E-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -917,17 +782,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -969,17 +826,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-2" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1021,17 +870,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-3" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1073,17 +914,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-4" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-4" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1125,17 +958,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-5" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-5" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1177,17 +1002,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-6" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-6" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1229,17 +1046,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-7" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-7" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1281,17 +1090,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-8" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-8" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1333,17 +1134,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-9" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-9" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1385,17 +1178,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "F-10" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "F-10" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1437,17 +1222,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "S-1" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "S-1" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1489,17 +1266,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "S-2" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "S-2" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1541,17 +1310,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "S-3" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "S-3" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1593,17 +1354,9 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
-  (claim :id "S-4" :pwg PWG-2ii :foundation-diverse #f
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "S-4" :pwg PWG-2i :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
@@ -1645,14 +1398,6 @@
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)"
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
-               :inputs-sha256 "015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6"
-               :state current
-               (inputs-manifest
-                 (file :path "scripts/check-lean-bridge.sh" :sha256 "2bb154f8c4c197a79e6e536d6d52752166ac9bfb7f2e80b6efd6b7e709f60548")
-                 (file :path "verification/bridges/tropical-types/TropicalBridge.lean" :sha256 "0bf2a24de5390eeb26ad33abc70c769a361d6028532ff4d24f1bbcc26e194a2c")
-                 (file :path "verification/proofs/lean4/ResourceAlgebra.lean" :sha256 "d1f0ee39d9a8af1256ff2c219f3f15e6198acd8bfee5fc889275feacd521cc9b")
-                 (file :path "verification/proofs/lean4/lean-toolchain" :sha256 "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"))
-               (import :repository "hyperpolymath/tropical-types" :commit "f2e465c966d14d4986dfc492875cc54653d9751e" :inputs-sha256 "c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01"
-                 (file :path "TropicalSessionTypes.lean" :sha256 "a7b04eef91cd9896ea292e9d42367695e1843eda4e7a8b67fc13c6f34a74a3c1"))
-               (axioms))))
+               :state superseded
+               :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
 )

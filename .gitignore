@@ -148,3 +148,6 @@ verification/proofs/agda/*.agdai
 
 # Agda interface files are build output (the gate runs --ignore-interfaces).
 *.agdai
+
+# Lake build output (the Lean legs build in a temp copy; never commit it)
+.lake/
