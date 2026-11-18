@@ -1,5 +1,133 @@
 == Changelog
 
+== 2026-11-18 — Proof receipt at 15fa113, from the shared generator; 31 rows are PWG-2ii
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `15fa113` (the merge of #45), from `proofs.yml` run
+  `44209774341`: Agda job `134484857967`, Rocq `134484858135`, Lean
+  `134484858201`. The `Proofs verdict` job and the coverage-exemption job
+  passed in the same run. It supersedes the hand-written receipt at `2b9bf3f`
+  (run `44202493421`), which predates E-1 to E-3.
+* Census: of 32 theory rows, 31 are PWG-2ii and 1 (M-2) is ungraded. C-4b,
+  E-1, E-2 and E-3 are now PWG-2ii. No row is PWG-1: only the Rocq job runs
+  in an image pinned by digest (PN-7). PN-7 also records that the Lean leg
+  must run under `lake`.
+* The Lean input set now includes `scripts/check-lean-bridge.sh`, which holds
+  the tropical-types pin. The Agda manifest lists the import cone of
+  `src/ResourceAlgebra/All.agda`, which includes `Instances/Evidence.agda` and
+  `Ledger.agda`.
+* The receipt is no longer written by hand. `scripts/proof-receipt.sh --write`
+  generates it with the shared standards generator (pinned at `f4e83044`, on
+  the standards branch `claude/receipt-open-claims`; repin once it is on
+  standards main). `--check` regenerates it, refuses any difference, runs the
+  PROOF-POLICY §8.5.3 git checks, checks that each current receipt still
+  describes the tree, and runs the pinned reader with a negative control.
+* `proofs.yml` has a new `receipt` job that runs `--check` with a pinned Bun,
+  on a full-history checkout. The `Proofs verdict` job needs it. Recording a
+  new run is still manual (`--run-row`, then `--write`).
+
+== 2026-11-17 — C-4b and M-2 proved
+
+* C-4b: `src/ResourceAlgebra/Instances/Diamond.agda` adds the diamond
+  lattice M3 (⊕ = join, ⊗ = meet, 𝟘 = bottom, 𝟙 = top), with
+  `Diamond-ordered`, `Diamond-annihilating` and `Diamond-not-dioid`: an
+  annihilating ordered algebra that is not a dioid. The Lean and Rocq legs
+  re-prove it. A tenth expected rejection,
+  `tests/reject/DiamondDistributes.agda`, must fail with `a != bot of type
+  Grade`.
+* M-2: `verification/bridges/tropical-types/TropicalBridge.lean` proves in
+  Lean that `MaxPlus` is isomorphic to tropical-types' `Tropical` and that
+  the isomorphism carries ⊕, ⊗, 𝟘 and 𝟙 to its `CommSemiring` instance's
+  operations, against tropical-types pinned at `f2e465c`, with no axiom.
+  `scripts/check-lean-bridge.sh` runs it in the Lean leg of `proofs.yml`,
+  and `tests/check_lean_bridge_test.sh` shows it fails on an error, an
+  axiom or no printed theorem.
+* Both rows stay ungraded. The receipt still describes `47de4a8`, which
+  predates C-4b. M-2 has no Agda witness, so it cannot reach PWG-3.
+
+== 2026-11-17 — `CI/gate` starts on `pull_request`; tamper guard
+
+* `CI/gate` now also starts on `pull_request`, and a tamper guard is added.
+  `.github/workflows/ci-gate.yml` is rewritten from the suite's
+  `templates/ci-gate-caller.yml`: a same-repository `gate-pr` job on
+  `pull_request` posts `CI/gate` on the pull request that adds or changes the
+  gate, beside the existing `workflow_run`, `schedule` and `workflow_dispatch`
+  job `gate` (which skips `pull_request`). The new
+  `.github/workflows/ci-gate-tamper-guard-caller.yml` calls the suite's guard on
+  `pull_request_target`: a pull request that touches a gate file fails
+  `guard / check` until the owner applies the label `gate-change-approved`. The
+  guard is not a required context yet. Both callers pin
+  hyperpolymath/proven-cicd-and-workflows at `4e9e680b0dfd842a457cf23271f9e005a88f766c`,
+  the squash commit of hyperpolymath/proven-cicd-and-workflows#139 on its `main`;
+  `actions.lock` is edited by hand to match (`gh actions-lock` v0.2.0 cannot lock
+  cross-repository reusable workflows) and `scripts/check-lock-sync.sh` is the
+  authority. `tests/workflows/squabble_gate_test.sh` section 5b asserts the new
+  triggers, the jobs and their pins, and the guard caller's shape.
+
+== 2026-11-17 — `CI/gate` comes from the suite publisher; `Proofs verdict`
+
+* `.github/workflows/ci-gate.yml` calls the reusable `ci-gate.yml` in
+  hyperpolymath/proven-cicd-and-workflows, which posts the commit status
+  `CI/gate` (the context the live Branch-Floor ruleset requires) from the
+  required-check list in that suite's `profiles/ci-gate/`. It runs on
+  `workflow_run` (`completed`, `in_progress`), on a 15-minute schedule and on
+  `workflow_dispatch`. Statuses are last-writer-wins, so a stale status can
+  stand until the next evaluation; the suite's `docs/CI-GATE.adoc` states the
+  limit.
+* The `proofs.yml` job that was named `CI/gate` is renamed `Proofs verdict`
+  (job id, `needs:` and verdict logic unchanged). It is one of the checks the
+  publisher requires.
+* `scripts/check-required-contexts.sh` accepts a typed mapping
+  `<context> => status:<workflow>`, verifying that the publisher triggers on
+  `workflow_run`, calls the suite reusable at a 40-hex pin and passes the
+  exact context. `.machine_readable/required-contexts-allow.txt` maps
+  `CI/gate` that way.
+
+== 2026-11-17 — Proof receipt and grades at 47de4a8
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `47de4a8` (the merge of #36), from `proofs.yml` run
+  `44015282682`: the Agda invocation without `-W noUnsupportedIndexedMatch`
+  (#37), and an Agda inputs manifest that now holds F-5's
+  `maps-disagree-at-positive`. The Rocq and Lean inputs are unchanged.
+* The standards reader derives PWG-1 for 27 rows and `ungraded` for the two
+  `OPEN` rows, and every git check of `check-proof-receipt.sh` (§8.5.3) holds.
+  `docs/status/PROOF-STATUS.adoc` cites the new run, jobs and digest, and
+  lists the receipt at `f211fc1` as superseded.
+
+== 2026-11-17 — F-5's distinctness lemma moves into the graded cone
+
+* F-5's distinctness lemma `maps-disagree-at-positive` moves from
+  `tests/unit/MorphismTest.agda` into `src/ResourceAlgebra/Morphism.agda`.
+  The ledger cites it as part of F-5, but in the unit tests it sat outside the
+  graded import cone (`All.agda`) and so outside the Agda receipt's inputs
+  manifest: a change to it would not have invalidated F-5's receipt.
+
+== 2026-11-17 — `CI/gate` required check and declared coverage exemption
+
+* `proofs.yml` gains a job named exactly `CI/gate` (the context the live
+  Branch-Floor ruleset requires). It aggregates `proofs`, `lean-leg`, `rocq-leg`
+  and `coverage-exemption` with `needs:` and fails if any failed, was cancelled
+  or was skipped, or if none were aggregated (`scripts/ci-gate.sh`).
+* `.machine_readable/coverage-exemption.toml` declares that the repository has no
+  measurable runtime code; `scripts/check-coverage-exemption.sh` checks the
+  claim. `src/interface` is on a declared shrink-only pending list until #40.
+* `tests/workflows/ci_gate_test.sh`: positive control, four negative cases,
+  `needs:` drift and a planted-runtime-code case.
+
+== 2026-11-16 — The Agda gate suppresses no warning
+
+* `scripts/check-agda.sh` drops `-W noUnsupportedIndexedMatch`. Since
+  2026-11-09 the order and the injectivity lemmas are stated so the core
+  raises no `UnsupportedIndexedMatch` under `--cubical-compatible`, so the
+  suppression hid nothing. With it gone, `-W error` covers every warning.
+* `tests/check_agda_warning_gate_test.sh` with the fixture
+  `tests/warning/IndexedMatch.agda`: the fixture checks without `-W error`,
+  and the gate's own flags refuse it. Against the old flags the test fails.
+  `proofs.yml` runs it.
+* `PROOF-STATUS.adoc` and `PROOF-NEEDS.adoc` describe the new invocation.
+  Receipts already recorded keep the invocation they ran with.
+
 == 2026-11-11 — Proof receipt and grades at f211fc1
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed`: the proof

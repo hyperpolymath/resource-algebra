@@ -8,10 +8,12 @@ prover="${AGDA:-agda}"
 "$prover" --version
 # The canonical theory-proof invocation (standards PROOF-POLICY §2.1,
 # 2026-11-01) is --safe --without-K --cubical-compatible. -W error makes any
-# warning a failure, except UnsupportedIndexedMatch, which is suppressed.
+# warning a failure, UnsupportedIndexedMatch included: the order and the
+# injectivity lemmas are stated so the cone raises none, and
+# tests/check_agda_warning_gate_test.sh shows these flags refuse one.
 # --no-libraries keeps the import cone first-party (no standard library);
 # --double-check re-checks every term with the core type checker.
-flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -W noUnsupportedIndexedMatch -i src)
+flags=(--safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src)
 # PROOF-POLICY §8.4.6: a comment-aware postulate scan of the import cone
 # (src/), alongside --safe. scripts/scan-postulates.pl reads each file in
 # source order (nested block comments, line comments, strings) and fails on
