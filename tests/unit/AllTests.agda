@@ -3,6 +3,7 @@
 -- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 module AllTests where
 
+import EvidenceTest
 import MinMaxTest
 import MorphismTest
 import PreludeTest

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Proof Requirements — resource-algebra
-:revdate: 2026-11-09
+:revdate: 2026-11-17
 
 What this repository owes, classified by the estate proof policy
 (`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
@@ -70,12 +70,21 @@ expected rejection fails with its stated message.
 | `tests/reject/`, `scripts/check-agda.sh`
 
 | PN-5
-| Grade the two ungraded theory rows, or keep stating why they are not.
-C-4b (an annihilating ordered algebra that is not a dioid) is PROVEN in all
-three legs and needs a receipt for a commit that contains it. M-2
+| Grade the ungraded theory rows C-4b and M-2, or keep stating why they are
+not. C-4b (an annihilating ordered algebra that is not a dioid) is PROVEN in
+all three legs and needs a receipt for a commit that contains it. M-2
 (agreement with tropical-types' Lean semiring) is PROVEN by a Lean bridge
 only; it has no Agda witness, so it cannot reach PWG-3.
 | `PROOF-STATUS.adoc`, `verification/bridges/tropical-types/`
+
+| PN-6
+| Recheck E-1, E-2 and E-3 (the `Evidence` algebra and the ledger status
+derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
+their statement correspondence. *Done* in resource-algebra#45: both legs
+re-prove the three rows by hand, axiom-free, and the statement
+correspondence is recorded in `PROOF-STATUS.adoc`. The rows stay
+`ungraded` until a receipt records a run of all three legs.
+| `verification/proofs/coq/`, `verification/proofs/lean4/`
 |===
 
 == Out of scope here
