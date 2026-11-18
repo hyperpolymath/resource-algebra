@@ -6,7 +6,21 @@
 #
 # Base digest verified against the Docker Hub API on 2026-11-18 (the manifest
 # list digest of library/debian:trixie-slim, last_updated 2026-11-05).
+#
+# Stage 1: debian:trixie-slim ships no CA bundle, so apt cannot use https yet.
+# Take ca-certificates from the base image's own default sources and hand only
+# the CA files to the final stage.
+FROM debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2 AS certs
+RUN set -eu; \
+    apt-get update; \
+    apt-get install --no-install-recommends -y ca-certificates; \
+    rm -rf /var/lib/apt/lists/*
+
+# Final stage.
 FROM debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
+
+COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=certs /usr/share/ca-certificates /usr/share/ca-certificates
 
 # UNVERIFIED: snapshot.debian.org was unreachable from the authoring sandbox
 # (proxy 403), so this timestamp is a guess that the package exists at or after
@@ -24,7 +38,7 @@ RUN set -eu; \
     rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*; \
     printf '%s\n' \
       'Types: deb' \
-      "URIs: http://snapshot.debian.org/archive/debian/${SNAPSHOT_TS}/" \
+      "URIs: https://snapshot.debian.org/archive/debian/${SNAPSHOT_TS}/" \
       'Suites: trixie' \
       'Components: main' \
       'Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg' \
@@ -40,6 +54,14 @@ RUN set -eu; \
 # Tools used by resource-algebra's Agda job: bash scripts, find/sort/xargs/
 # sha256sum (findutils, coreutils), sed/paste/cut, perl (scan-postulates.pl),
 # git (checkout), dpkg-query/apt-cache (receipt step; dpkg and apt are in base).
+
+# Non-root user. uid 1001 is the uid of GitHub-hosted runners' `runner` user,
+# so workspace ownership lines up. A job `container:` may still need
+# `options: --user root` for actions/checkout; UNTESTED (see README.adoc).
+RUN useradd --create-home --uid 1001 --user-group prover
+USER prover
+WORKDIR /home/prover
+RUN agda --version
 
 LABEL org.opencontainers.image.title="prover-images/agda" \
       org.opencontainers.image.description="Agda ${AGDA_VERSION} (Debian agda-bin ${AGDA_PKG_VERSION}) for digest-pinned proof receipts" \

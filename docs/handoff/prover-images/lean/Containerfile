@@ -30,6 +30,15 @@ RUN set -eu; \
 
 ENV PATH="/opt/lean-${LEAN_VERSION}-linux/bin:${PATH}"
 
+# Non-root user. uid 1001 is the uid of GitHub-hosted runners' `runner` user,
+# so workspace ownership lines up. /opt/lean-* is world-readable, so the user
+# can run it. A job `container:` may still need `options: --user root` for
+# actions/checkout; UNTESTED (see README.adoc).
+RUN useradd --create-home --uid 1001 --user-group prover
+USER prover
+WORKDIR /home/prover
+
+# Smoke test after USER: proves the non-root user can run lean.
 RUN lean --version | grep -F "version ${LEAN_VERSION},"
 
 LABEL org.opencontainers.image.title="prover-images/lean" \

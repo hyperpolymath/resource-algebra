@@ -9,6 +9,7 @@
 * The images have never been built: the authoring container could not reach the Debian mirrors.
 * The `snapshot.debian.org` timestamp (`SNAPSHOT_TS` in `agda/Containerfile`) is unverified.
 * The `actions/attest` version is unconfirmed.
+* Two hardening changes are unverified: the Agda image reaches `snapshot.debian.org` over https using a CA bundle copied from a first build stage (no `http://` URI remains), and both images end as the non-root user `prover` (uid 1001). Neither has been built, and whether a job `container:` still needs `options: --user root` is untested.
 * The name `prover-images` has not been checked against `gv-clade-index`.
 * The licence (SPDX lines) is a placeholder for the owner to decide.
 * This directory moves to `hyperpolymath/prover-images` once that repository exists, and is then deleted here (PN-7 in `docs/status/PROOF-NEEDS.adoc`).
@@ -86,8 +87,7 @@ summaries; keep the version assertions (`agda --version`, `lean --version`,
 fits (the package is baked in), so replace it with the image digest and the
 image label `io.hyperpolymath.checker.package`; update the `DEVIATION (§6)`
 comments (they already point at PN-7) and the actions lock if `container:`
-changes it; then record a new receipt from a run on the merge commit. The job
-containers may need `options: --user root` as the Rocq leg does; untested.
+changes it; then record a new receipt from a run on the merge commit. The images run as the non-root user `prover` (uid 1001, the uid of GitHub-hosted runners' `runner` user). A job `container:` using them may therefore need `options: --user root` for `actions/checkout`, as resource-algebra's Rocq leg sets today (`.github/workflows/proofs.yml`, `rocq-leg` `container:` block, with the comment "The image's user cannot write the runner's workspace"). Whether these images need it is untested.
 
 == Open questions
 
@@ -106,6 +106,7 @@ and licence (MPL-2.0 used as a placeholder; a licence is the owner's call).
 . *Action pins.* `build.yml` uses only refs found in resource-algebra's
 `actions.lock` and plain `docker` commands; the `actions/attest` version is
 unconfirmed. Re-pin with estate tooling.
+. *Hardening (unbuilt).* The two-stage CA copy in `agda/Containerfile` and the `USER prover` in both files were added to satisfy SonarCloud (clear-text URI, root user); neither has been built or run.
 . *Image user and extra libraries.* Whether Lean needs `libgmp10` (included as a
 precaution) is untested.
 
@@ -116,9 +117,9 @@ precaution) is untested.
 | Check | Result
 | `actionlint` v1.7.7 on `build.yml` | exit 0
 | `yq` parse of `build.yml` and `dependabot.yml` | ok (before they were carried as listings)
-| `hadolint` | not run (no trusted binary obtainable in the authoring sandbox)
+| `hadolint` | not run: the release binary downloaded but no published sha256 could be fetched, so it was not executed
 | `docker pull` of the base by digest | succeeded, digest matched
-| `docker build` agda, lean | *failed* at `apt-get update` (exit 100): the sandbox's build network cannot reach Debian mirrors; snapshot.debian.org and the Lean release download are unverified
+| `docker build` agda, lean | *failed* at `apt-get update` (exit 100) (re-tried after the hardening change, same result; the agda failure is in the new `certs` stage): the sandbox's build network cannot reach Debian mirrors; snapshot.debian.org and the Lean release download are unverified
 | smoke tests (`agda --version`, `lean --version`) | not run: images unbuilt
 |===
 
