@@ -18,6 +18,19 @@ Initial development phase.
 * [ ] Comprehensive tests
 * [ ] Production ready
 
+== Blockers and Next Actions
+
+=== PN-7: image-pinned receipts for the Agda and Lean legs (blocked)
+* [ ] Blocked on the owner creating the shared `prover-images` repository
+  (provisional name; check it against `gv-clade-index` first).
+* [ ] Publish digest-pinned Agda and Lean images to GHCR with the checker
+  baked in (owner ruling 2026-11-18; nothing built yet).
+* [ ] Pin the digests in `.github/workflows/proofs.yml`, print each image
+  digest in the job summaries, and record a new receipt from a run on the
+  merge commit.
+* Until then the 28 rows stay PWG-2ii. Detail and rejected alternatives:
+  `docs/status/PROOF-NEEDS.adoc`, PN-7.
+
 == Future Directions
 
 _To be determined based on community feedback._
