@@ -22,10 +22,13 @@ src=verification/proofs/lean4
 file=ResourceAlgebra.lean
 
 work="$(mktemp -d)"
-trap 'rm -rf "$work"' EXIT
+trap 'rm -rf "$work" "$work.manifest.before"' EXIT
 for f in lakefile.toml lake-manifest.json lean-toolchain "$file"; do
   cp -- "$src/$f" "$work/"
 done
+# What lake was given, kept apart from the tree: a later edit of the tree
+# is then never mistaken for a rewrite by lake, and never counted.
+cp -- "$work/lake-manifest.json" "$work.manifest.before"
 
 if ! out="$(cd "$work" && "$lake" build 2>&1)"; then
   printf '%s\n' "$out" >&2
@@ -39,15 +42,16 @@ if grep -q 'depends on axioms' <<<"$out"; then
   exit 1
 fi
 
-n_print="$(grep -cE '^[[:space:]]*#print[[:space:]]+axioms[[:space:]]' "$src/$file" || true)"
+n_print="$(grep -cE '^[[:space:]]*#print[[:space:]]+axioms[[:space:]]' "$work/$file" || true)"
 n_free="$(grep -cE "^info: ${file//./\\.}:[0-9]+:[0-9]+: .* does not depend on any axioms\$" <<<"$out" || true)"
 if [ "$n_print" -eq 0 ] || [ "$n_free" != "$n_print" ]; then
   echo "ERROR: only $n_free of $n_print printed theorems are axiom-free" >&2
   exit 1
 fi
 
-if ! cmp -s "$src/lake-manifest.json" "$work/lake-manifest.json"; then
-  echo "ERROR: the build rewrote lake-manifest.json; commit the manifest lake writes" >&2
+if ! cmp -s "$work.manifest.before" "$work/lake-manifest.json"; then
+  diff -u "$work.manifest.before" "$work/lake-manifest.json" >&2 || true
+  echo "ERROR: the build rewrote lake-manifest.json (diff above). Regenerate it with lake update in a copy of $src, put it in the repository's canonical JSON form (scripts/check-ijson-jcs.sh), and commit it" >&2
   exit 1
 fi
 

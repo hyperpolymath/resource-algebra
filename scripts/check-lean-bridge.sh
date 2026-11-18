@@ -49,6 +49,9 @@ got="$(git -C "$work/tt" rev-parse HEAD)"
 mkdir -p "$work/pkg"
 cp -- "$BRIDGE_DIR/lakefile.toml" "$BRIDGE_DIR/lake-manifest.json" "$BRIDGE" \
   "$RA_FILE" "$TOOLCHAIN" "$work/tt/$TT_FILE" "$work/pkg/"
+# What lake was given, kept apart from the tree: a later edit of the tree
+# is then never mistaken for a rewrite by lake, and never counted or hashed.
+cp -- "$work/pkg/lake-manifest.json" "$work/manifest.before"
 
 if ! out="$(cd "$work/pkg" && "$lake" build 2>&1)" || grep -q 'error:' <<<"$out"; then
   printf '%s\n' "$out" >&2
@@ -60,8 +63,9 @@ if grep -q 'depends on axioms' <<<"$out"; then
   echo "ERROR: a printed theorem depends on axioms" >&2
   exit 1
 fi
-if ! cmp -s "$BRIDGE_DIR/lake-manifest.json" "$work/pkg/lake-manifest.json"; then
-  echo "ERROR: the build rewrote lake-manifest.json; commit the manifest lake writes" >&2
+if ! cmp -s "$work/manifest.before" "$work/pkg/lake-manifest.json"; then
+  diff -u "$work/manifest.before" "$work/pkg/lake-manifest.json" >&2 || true
+  echo "ERROR: the build rewrote lake-manifest.json (diff above). Regenerate it with lake update in a copy of $BRIDGE_DIR beside the three modules, put it in the repository's canonical JSON form (scripts/check-ijson-jcs.sh), and commit it" >&2
   exit 1
 fi
 
@@ -69,7 +73,7 @@ fi
 # must say it depends on none. Lake prints each report as an
 # `info: <file>:<line>:<col>:` line; count those attributed to the bridge.
 bridge_name="$(basename -- "$BRIDGE")"
-n_print="$(grep -cE '^#print axioms' "$BRIDGE" || true)"
+n_print="$(grep -cE '^#print axioms' "$work/pkg/$bridge_name" || true)"
 n_free="$(grep -cE "^info: ${bridge_name//./\\.}:[0-9]+:[0-9]+: .* does not depend on any axioms\$" <<<"$out" || true)"
 if [ "$n_print" -eq 0 ] || [ "$n_free" != "$n_print" ]; then
   printf '%s\n' "$out" >&2
@@ -79,4 +83,6 @@ fi
 
 echo "PASS: M-2 bridge to $TT_REPOSITORY@$TT_COMMIT; $n_free of $n_print printed theorems depend on no axiom"
 echo "import: $TT_REPOSITORY $TT_COMMIT $TT_FILE $(sha256sum "$work/tt/$TT_FILE" | cut -d' ' -f1)"
-echo "bridge: $BRIDGE $(sha256sum "$BRIDGE" | cut -d' ' -f1)"
+# The digest is of the copy lake built; the path is the repository's.
+bridge_sha="$(sha256sum "$work/pkg/$bridge_name" | cut -d' ' -f1)"
+echo "bridge: $BRIDGE $bridge_sha"

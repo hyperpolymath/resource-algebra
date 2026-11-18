@@ -8,7 +8,8 @@
 # network.
 set -uo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
-stub=$(mktemp -d); trap 'rm -rf "$stub"' EXIT
+stub=$(mktemp -d) || { echo "FAIL: mktemp could not make the stub directory" >&2; exit 1; }
+trap 'rm -rf "$stub"' EXIT
 n=$(grep -c '^#print axioms' verification/bridges/tropical-types/TropicalBridge.lean)
 
 # $1 name, $2 shell body of the stub, run in the build directory

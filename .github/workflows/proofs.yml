@@ -9,8 +9,10 @@ name: Agda proofs
 #
 # DEVIATION (PROOF-POLICY §6), state: open.
 #   Leg:     the Agda leg of every theorem in docs/status/PROOF-STATUS.adoc.
-#   Image:   the job runs in debian:trixie-slim pinned by digest (§8.2: isolated,
-#            the receipt names the image).
+#   Image:   the job runs in debian:trixie-slim pinned by digest, and installs
+#            Agda at run time. That is not the isolation §8.2 asks for
+#            (owner ruling 2026-11-18, PN-7): the receipt names no image
+#            for this leg until it runs in a prover image.
 #   Tool:    Debian trixie agda-bin 2.6.4.3-1+b2, asserted below; apt checks
 #            the .deb against Debian's signed Packages index, and the receipt
 #            step prints that index's SHA256 for the package and the digest of
@@ -32,7 +34,8 @@ jobs:
     name: Core proofs and expected rejections
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Pinned by digest (PROOF-POLICY §8.2); re-pin deliberately.
+    # Base image pinned by digest; re-pin deliberately. Not a prover image:
+    # the checker is installed below (PN-7).
     container: debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
     steps:
       - name: Install the pinned prover
@@ -64,7 +67,7 @@ jobs:
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
             echo "- checker: \`$(agda --version)\`"
-            echo "- image: \`debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f\` (isolated, pinned by digest)"
+            echo "- image: \`debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f\` (base image pinned by digest; the checker is installed at run time, so the receipt names no image for this leg: PN-7)"
             echo "- package: \`agda-bin $(dpkg-query -W -f='${Version}' agda-bin)\`, index SHA256 \`$(apt-cache show agda-bin=2.6.4.3-1+b2 | sed -n 's/^SHA256: //p' | head -1)\`"
             echo "- binary SHA256: \`$(sha256sum "$(command -v agda)" | cut -d' ' -f1)\`"
             echo "- invocation: \`$(sed -n 's/^flags=(\(.*\))$/\1/p' scripts/check-agda.sh)\`"
@@ -74,9 +77,11 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   # Lean recheck leg (PROOF-POLICY §2): re-proved by hand, Lean core only.
-  # The qualifying run is `lake build` (§8.2, owner ruling 2026-11-17), in a
-  # container image pinned by digest, which the receipt names (§8.2, owner
-  # ruling 2026-11-16).
+  # The qualifying invocation is `lake build` (§8.2, owner ruling 2026-11-17).
+  # The job runs in a base image pinned by digest and installs Lean at run
+  # time, which is not the isolation §8.2 asks for (owner ruling 2026-11-18,
+  # PN-7): the receipt names no image for this leg until it runs in a prover
+  # image.
   # DEVIATION (§6), state: open.
   #   Leg:     the Lean leg of every theorem in docs/status/PROOF-STATUS.adoc.
   #   Image:   ubuntu:24.04 pinned by digest (the same digest as januskey's
@@ -143,14 +148,17 @@ jobs:
             echo "## Lean leg receipt"
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
-            echo "- image: \`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8\` (isolated, pinned by digest)"
+            echo "- image: \`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8\` (base image pinned by digest; the checker is installed at run time, so the receipt names no image for this leg: PN-7)"
             echo "- checker: \`$(lean --version)\`, \`$(lake --version)\`"
             echo "- archive SHA256: \`$LEAN_SHA256\`"
             echo "- invocation: \`lake build\` in a copy of \`$src\` made by \`bash scripts/check-lean-leg.sh\` (core only, no Mathlib, no dependencies)"
             for f in ResourceAlgebra.lean lakefile.toml lake-manifest.json lean-toolchain; do
-              echo "- input \`$f\` SHA256: \`$(sha256sum "$src/$f" | cut -d' ' -f1)\`"
+              # A digest that cannot be computed stops the step: no blank field.
+              h="$(sha256sum "$src/$f" | cut -d' ' -f1)"
+              echo "- input \`$f\` SHA256: \`$h\`"
             done
-            echo "- script SHA256: \`$(sha256sum scripts/check-lean-leg.sh | cut -d' ' -f1)\`"
+            h="$(sha256sum scripts/check-lean-leg.sh | cut -d' ' -f1)"
+            echo "- script SHA256: \`$h\`"
             echo "- axioms: ${result#PASS: Lean leg under lake; }"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Bridge check fails on a broken or axiom-dependent bridge
@@ -171,13 +179,14 @@ jobs:
             echo "## M-2 bridge receipt"
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
-            echo "- image: \`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8\` (isolated, pinned by digest)"
+            echo "- image: \`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8\` (base image pinned by digest; the checker is installed at run time, so the receipt names no image for this leg: PN-7)"
             echo "- checker: \`$(lean --version)\`, \`$(lake --version)\`"
             echo "- invocation: \`lake build\` in a work directory made by \`bash scripts/check-lean-bridge.sh\`"
             sed -n 's/^import: \(.*\) \(.*\) \(.*\) \(.*\)$/- import: `\1` at `\2`, `\3` SHA256 `\4`/p' <<<"$out"
             sed -n 's/^bridge: \(.*\) \(.*\)$/- bridge: `\1` SHA256 `\2`/p' <<<"$out"
             for f in "$br/lakefile.toml" "$br/lake-manifest.json" verification/proofs/lean4/lean-toolchain verification/proofs/lean4/ResourceAlgebra.lean scripts/check-lean-bridge.sh; do
-              echo "- input \`$f\` SHA256: \`$(sha256sum "$f" | cut -d' ' -f1)\`"
+              h="$(sha256sum "$f" | cut -d' ' -f1)"
+              echo "- input \`$f\` SHA256: \`$h\`"
             done
             sed -n 's/^PASS: .*; \(.*\)$/- axioms: \1/p' <<<"$out"
           } >> "$GITHUB_STEP_SUMMARY"
