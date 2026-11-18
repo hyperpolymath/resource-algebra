@@ -15,11 +15,12 @@ name: Agda proofs
 #            the .deb against Debian's signed Packages index, and the receipt
 #            step prints that index's SHA256 for the package and the digest of
 #            the installed binary.
-#   Why:     this repository has no Guix manifest and no proof container of its
-#            own yet; the hosted runner has no Guix. The digest-pinned Debian
-#            image and the exact, signature-checked package are the pin.
-#   Closes:  when a Guix manifest (or the repo's container) provides Agda and
-#            this job installs from it.
+#   Why:     this repository has no Guix manifest and no proof container yet;
+#            the hosted runner has no Guix. The Debian package is an exact,
+#            signature-checked pin.
+#   Closes:  PN-7 (docs/status/PROOF-NEEDS.adoc): when the planned
+#            digest-pinned Agda image from the shared prover-images repo
+#            (not yet created) replaces this install. Owner ruling 2026-11-18.
 on:
   push:
     branches: [main]
@@ -84,7 +85,9 @@ jobs:
   #            against the SHA256 below; the version is asserted against
   #            lean-toolchain, and Lake's version is asserted too.
   #   Why:     no Guix manifest or proof container provides Lean here yet.
-  #   Closes:  when a Guix manifest (or the repo's container) provides Lean.
+  #   Closes:  PN-7 (docs/status/PROOF-NEEDS.adoc): when the planned
+  #            digest-pinned Lean image from the shared prover-images repo
+  #            (not yet created) replaces this install. Owner ruling 2026-11-18.
   lean-leg:
     name: Lean recheck leg
     runs-on: ubuntu-latest
