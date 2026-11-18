@@ -9,6 +9,10 @@ name: Agda proofs
 #
 # DEVIATION (PROOF-POLICY §6), state: open.
 #   Leg:     the Agda leg of every theorem in docs/status/PROOF-STATUS.adoc.
+#   Image:   the job runs in debian:trixie-slim pinned by digest, and installs
+#            Agda at run time. That is not the isolation §8.2 asks for
+#            (owner ruling 2026-11-18, PN-7): the receipt names no image
+#            for this leg until it runs in a prover image.
 #   Tool:    Debian trixie agda-bin 2.6.4.3-1+b2, asserted below; apt checks
 #            the .deb against Debian's signed Packages index, and the receipt
 #            step prints that index's SHA256 for the package and the digest of
@@ -30,7 +34,9 @@ jobs:
     name: Core proofs and expected rejections
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    container: debian:trixie-slim
+    # Base image pinned by digest; re-pin deliberately. Not a prover image:
+    # the checker is installed below (PN-7).
+    container: debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
     steps:
       - name: Install the pinned prover
         run: |
@@ -61,6 +67,7 @@ jobs:
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
             echo "- checker: \`$(agda --version)\`"
+            echo "- image: \`debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f\` (base image pinned by digest; the checker is installed at run time, so the receipt names no image for this leg: PN-7)"
             echo "- package: \`agda-bin $(dpkg-query -W -f='${Version}' agda-bin)\`, index SHA256 \`$(apt-cache show agda-bin=2.6.4.3-1+b2 | sed -n 's/^SHA256: //p' | head -1)\`"
             echo "- binary SHA256: \`$(sha256sum "$(command -v agda)" | cut -d' ' -f1)\`"
             echo "- invocation: \`$(sed -n 's/^flags=(\(.*\))$/\1/p' scripts/check-agda.sh)\`"
@@ -70,10 +77,18 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   # Lean recheck leg (PROOF-POLICY §2): re-proved by hand, Lean core only.
+  # The qualifying invocation is `lake build` (§8.2, owner ruling 2026-11-17).
+  # The job runs in a base image pinned by digest and installs Lean at run
+  # time, which is not the isolation §8.2 asks for (owner ruling 2026-11-18,
+  # PN-7): the receipt names no image for this leg until it runs in a prover
+  # image.
   # DEVIATION (§6), state: open.
   #   Leg:     the Lean leg of every theorem in docs/status/PROOF-STATUS.adoc.
-  #   Tool:    Lean 4.35.0, the upstream release archive, checked against the
-  #            SHA256 below; the version is asserted against lean-toolchain.
+  #   Image:   ubuntu:24.04 pinned by digest (the same digest as januskey's
+  #            recheck job).
+  #   Tool:    Lean 4.35.0 with Lake, the upstream release archive, checked
+  #            against the SHA256 below; the version is asserted against
+  #            lean-toolchain, and Lake's version is asserted too.
   #   Why:     no Guix manifest or proof container provides Lean here yet.
   #   Closes:  PN-7 (docs/status/PROOF-NEEDS.adoc): when the planned
   #            digest-pinned Lean image from the shared prover-images repo
@@ -82,51 +97,69 @@ jobs:
     name: Lean recheck leg
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # ubuntu:24.04, resolved 2026-11-16; re-pin deliberately. Job containers
+    # run as root, so apt needs no sudo.
+    container: ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8
     env:
       LEAN_VERSION: '4.35.0'
       LEAN_SHA256: '7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d'
+      DEBIAN_FRONTEND: noninteractive
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v7.0.1
-        with:
-          persist-credentials: false
       - name: Install the pinned Lean
         run: |
           set -euo pipefail
+          apt-get update
+          apt-get install --no-install-recommends -y ca-certificates curl git zstd
           curl --proto '=https' --tlsv1.2 --fail --silent --show-error --location \
             --output "$RUNNER_TEMP/lean.tar.zst" \
             "https://github.com/leanprover/lean4/releases/download/v${LEAN_VERSION}/lean-${LEAN_VERSION}-linux.tar.zst"
           echo "${LEAN_SHA256}  $RUNNER_TEMP/lean.tar.zst" | sha256sum --check --strict
-          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP/lean-${LEAN_VERSION}-linux/bin" >> "$GITHUB_PATH"
-      - name: Verify the checked Lean version
+          mkdir -p /opt/lean
+          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C /opt/lean
+          rm "$RUNNER_TEMP/lean.tar.zst"
+          echo "/opt/lean/lean-${LEAN_VERSION}-linux/bin" >> "$GITHUB_PATH"
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify the checked Lean and Lake versions
         run: |
           set -euo pipefail
           test "$(cat verification/proofs/lean4/lean-toolchain)" = "leanprover/lean4:v${LEAN_VERSION}"
           lean --version | grep -F "version ${LEAN_VERSION},"
+          lake --version | grep -F "Lean version ${LEAN_VERSION})"
       - name: Lean leg
         run: bash scripts/check-proofs.sh lean4
-      - name: Axioms and receipt
+      - name: Leg check fails on a failed build, an axiom or a rewritten manifest
+        run: bash tests/check_lean_leg_test.sh
+      - name: Axioms under lake, and receipt
         env:
           SOURCE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          out="$(cd verification/proofs/lean4 && lean ResourceAlgebra.lean 2>&1)"
           # A counted witness lists its axioms (§8.4). The leg is recorded as
-          # axiom-free, so every printed theorem must say so.
-          n_print="$(grep -c '^#print axioms' verification/proofs/lean4/ResourceAlgebra.lean)"
-          n_free="$(grep -c 'does not depend on any axioms' <<<"$out" || true)"
-          if [ "$n_free" != "$n_print" ]; then
-            echo "::error::only $n_free of $n_print theorems are axiom-free"; echo "$out"; exit 1
-          fi
+          # axiom-free, so every printed theorem must say so; the script takes
+          # that census from `lake build`.
+          result="$(bash scripts/check-lean-leg.sh | tee /dev/stderr | tail -1)"
+          src=verification/proofs/lean4
           {
             echo "## Lean leg receipt"
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
-            echo "- checker: \`$(lean --version)\`"
+            echo "- image: \`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8\` (base image pinned by digest; the checker is installed at run time, so the receipt names no image for this leg: PN-7)"
+            echo "- checker: \`$(lean --version)\`, \`$(lake --version)\`"
             echo "- archive SHA256: \`$LEAN_SHA256\`"
-            echo "- invocation: \`lean ResourceAlgebra.lean\` in \`verification/proofs/lean4\` (core only, no Mathlib)"
-            echo "- input SHA256: \`$(sha256sum verification/proofs/lean4/ResourceAlgebra.lean | cut -d' ' -f1)\`"
-            echo "- axioms: $n_free of $n_print printed theorems depend on no axiom"
+            echo "- invocation: \`lake build\` in a copy of \`$src\` made by \`bash scripts/check-lean-leg.sh\` (core only, no Mathlib, no dependencies)"
+            for f in ResourceAlgebra.lean lakefile.toml lake-manifest.json lean-toolchain; do
+              # A digest that cannot be computed stops the step: no blank field.
+              h="$(sha256sum "$src/$f" | cut -d' ' -f1)"
+              echo "- input \`$f\` SHA256: \`$h\`"
+            done
+            h="$(sha256sum scripts/check-lean-leg.sh | cut -d' ' -f1)"
+            echo "- script SHA256: \`$h\`"
+            echo "- axioms: ${result#PASS: Lean leg under lake; }"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Bridge check fails on a broken or axiom-dependent bridge
         run: bash tests/check_lean_bridge_test.sh
@@ -141,14 +174,20 @@ jobs:
           set -euo pipefail
           out="$(bash scripts/check-lean-bridge.sh)"
           echo "$out"
+          br=verification/bridges/tropical-types
           {
             echo "## M-2 bridge receipt"
             echo ""
             echo "- source commit: \`$SOURCE_SHA\`"
-            echo "- checker: \`$(lean --version)\`"
-            echo "- invocation: \`bash scripts/check-lean-bridge.sh\`"
+            echo "- image: \`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8\` (base image pinned by digest; the checker is installed at run time, so the receipt names no image for this leg: PN-7)"
+            echo "- checker: \`$(lean --version)\`, \`$(lake --version)\`"
+            echo "- invocation: \`lake build\` in a work directory made by \`bash scripts/check-lean-bridge.sh\`"
             sed -n 's/^import: \(.*\) \(.*\) \(.*\) \(.*\)$/- import: `\1` at `\2`, `\3` SHA256 `\4`/p' <<<"$out"
             sed -n 's/^bridge: \(.*\) \(.*\)$/- bridge: `\1` SHA256 `\2`/p' <<<"$out"
+            for f in "$br/lakefile.toml" "$br/lake-manifest.json" verification/proofs/lean4/lean-toolchain verification/proofs/lean4/ResourceAlgebra.lean scripts/check-lean-bridge.sh; do
+              h="$(sha256sum "$f" | cut -d' ' -f1)"
+              echo "- input \`$f\` SHA256: \`$h\`"
+            done
             sed -n 's/^PASS: .*; \(.*\)$/- axioms: \1/p' <<<"$out"
           } >> "$GITHUB_STEP_SUMMARY"
 

@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# The Lean recheck leg as a Lake package: scripts/check-lean-leg.sh runs
+# `lake build` on a copy of this directory (PROOF-POLICY §8.2 names `lean`
+# under `lake` as the qualifying kernel run). No dependencies, no Mathlib.
+name = "resourceAlgebraLean"
+defaultTargets = ["ResourceAlgebra"]
+
+[[lean_lib]]
+name = "ResourceAlgebra"
+roots = ["ResourceAlgebra"]
