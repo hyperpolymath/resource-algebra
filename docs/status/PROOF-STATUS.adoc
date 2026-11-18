@@ -161,8 +161,9 @@ M-2 bridge, with the import of tropical-types at `f2e465c` (import digest `c176b
 theorem depends on an axiom, in the leg or in the bridge
 |===
 
-The input digests above were computed from the tree at that commit, by the
-same commands the receipt steps of `proofs.yml` run.
+The input digests above are the `:inputs-sha256` values of the receipt: the
+generator computes each from the git objects at that commit with the
+reference script (standards `scripts/proof-inputs-sha256.sh`, §8.5.1).
 
 The grades do not carry forward (§8.4). A later commit that changes `src/`,
 a recheck leg, the gate or the checker pins needs a new receipt for the
@@ -176,6 +177,16 @@ difference, runs the §8.5.3 git checks, checks that each current receipt
 still describes the tree, and runs the pinned reader with a negative
 control. The `receipt` job of `proofs.yml` runs `--check` on every commit.
 Recording a new run is still a manual step (`--run-row`, then `--write`).
+
+What this asks of a change. A pull request that changes a leg's inputs
+(`src/`, a recheck file, the bridge or the tropical-types pin) makes the
+`receipt` job fail, because the current receipt of that leg no longer
+describes the tree. The change then marks that leg's row `superseded` in
+the ledger of `scripts/proof-receipt.sh`, with its reason, and regenerates
+the receipt: the rows fall to the grade the remaining receipts support,
+which is what §8.4 says. After the merge, a follow-up records the main run
+of the new commit and the grades return.
+
 The Lean input set includes `scripts/check-lean-bridge.sh`, which holds the
 tropical-types pin. The run summaries that hold the per-leg digests are
 kept by GitHub for a limited time.
