@@ -1,5 +1,31 @@
 == Changelog
 
+== 2026-11-18 — Proof receipt at 15fa113, from the shared generator; 31 rows are PWG-2ii
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `15fa113` (the merge of #45), from `proofs.yml` run
+  `44209774341`: Agda job `134484857967`, Rocq `134484858135`, Lean
+  `134484858201`. The `Proofs verdict` job and the coverage-exemption job
+  passed in the same run. It supersedes the hand-written receipt at `2b9bf3f`
+  (run `44202493421`), which predates E-1 to E-3.
+* Census: of 32 theory rows, 31 are PWG-2ii and 1 (M-2) is ungraded. C-4b,
+  E-1, E-2 and E-3 are now PWG-2ii. No row is PWG-1: only the Rocq job runs
+  in an image pinned by digest (PN-7). PN-7 also records that the Lean leg
+  must run under `lake`.
+* The Lean input set now includes `scripts/check-lean-bridge.sh`, which holds
+  the tropical-types pin. The Agda manifest lists the import cone of
+  `src/ResourceAlgebra/All.agda`, which includes `Instances/Evidence.agda` and
+  `Ledger.agda`.
+* The receipt is no longer written by hand. `scripts/proof-receipt.sh --write`
+  generates it with the shared standards generator (pinned at `f4e83044`, on
+  the standards branch `claude/receipt-open-claims`; repin once it is on
+  standards main). `--check` regenerates it, refuses any difference, runs the
+  PROOF-POLICY §8.5.3 git checks, checks that each current receipt still
+  describes the tree, and runs the pinned reader with a negative control.
+* `proofs.yml` has a new `receipt` job that runs `--check` with a pinned Bun,
+  on a full-history checkout. The `Proofs verdict` job needs it. Recording a
+  new run is still manual (`--run-row`, then `--write`).
+
 == 2026-11-17 — C-4b and M-2 proved
 
 * C-4b: `src/ResourceAlgebra/Instances/Diamond.agda` adds the diamond
