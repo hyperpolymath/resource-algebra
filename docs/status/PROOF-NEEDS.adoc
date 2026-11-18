@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Proof Requirements — resource-algebra
-:revdate: 2026-11-09
+:revdate: 2026-11-17
 
 What this repository owes, classified by the estate proof policy
 (`3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`). What has been
@@ -76,6 +76,15 @@ only; it has no Agda witness, so it cannot reach PWG-3.
 | `PROOF-STATUS.adoc`, `verification/bridges/tropical-types/`
 
 | PN-6
+| Recheck E-1, E-2 and E-3 (the `Evidence` algebra and the ledger status
+derivation, 2026-11-17) in Rocq and in Lean as PN-2 and PN-3 do, and record
+their statement correspondence. *Done* in resource-algebra#45: both legs
+re-prove the three rows by hand, axiom-free, and the statement
+correspondence is recorded in `PROOF-STATUS.adoc`. The receipt at
+`15fa113` records a run of all three legs, and the rows are `PWG-2ii`.
+| `verification/proofs/coq/`, `verification/proofs/lean4/`
+
+| PN-7
 | Run the Agda and Lean checkers in container images pinned by digest, and
 name the images on their receipts, so that the rows can reach PWG-1 again
 (policy §8.2, standards#1625). The Rocq leg already does.

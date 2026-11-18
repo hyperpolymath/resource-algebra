@@ -910,6 +910,327 @@ theorem count_not_add :
         = lmin (fin (qcount 2 a)) (fin (qcount 2 b)) := fun f =>
   absurd (fin_injective (f collapse shuffle) : (0 : Nat) = 1) (by decide)
 
+/-! ## Evidence (E-1)
+
+The status of a proof-ledger row, as a chain, weakest first:
+`openRow < testedOnly < argued < provenWithPostulates < proven`. A status
+is coded by its rank (0 to 4); alternatives take the max of the ranks and
+sequence the min, as in Agda's `Instances/Evidence.agda`. -/
+
+/-- `min m n ≤ m` (Agda: `min-≤-left`). -/
+theorem rmin_le_left : ∀ m n, rmin m n ≤ m
+  | 0, _ => Nat.zero_le _
+  | _ + 1, 0 => Nat.zero_le _
+  | m + 1, n + 1 => Nat.succ_le_succ (rmin_le_left m n)
+
+/-- `min m n ≤ n` (Agda: `min-≤-right`). -/
+theorem rmin_le_right (m n : Nat) : rmin m n ≤ n := by
+  rw [rmin_comm]
+  exact rmin_le_left n m
+
+/-- `k ≤ m → k ≤ n → k ≤ min m n` (Agda: `min-glb`). -/
+theorem rmin_glb : ∀ {k m n : Nat}, k ≤ m → k ≤ n → k ≤ rmin m n
+  | 0, _, _, _, _ => Nat.zero_le _
+  | _ + 1, 0, _, p, _ => absurd p (Nat.not_succ_le_zero _)
+  | _ + 1, _ + 1, 0, _, q => absurd q (Nat.not_succ_le_zero _)
+  | _ + 1, _ + 1, _ + 1, p, q =>
+      Nat.succ_le_succ (rmin_glb (Nat.le_of_succ_le_succ p) (Nat.le_of_succ_le_succ q))
+
+/-- `min a (max b c) = max (min a b) (min a c)` (Agda: `min-distribˡ-max`). -/
+theorem rmin_rmax_l : ∀ a b c, rmin a (rmax b c) = rmax (rmin a b) (rmin a c)
+  | 0, _, _ => rfl
+  | _ + 1, 0, _ => rfl
+  | a + 1, b + 1, 0 => (rmax_zero_r (rmin a b + 1)).symm
+  | a + 1, b + 1, c + 1 => congrArg (· + 1) (rmin_rmax_l a b c)
+
+/-- `max m n = n → m ≤ n` (Agda: `max-≡→≤`). -/
+theorem rmax_eq_le {m n : Nat} (p : rmax m n = n) : m ≤ n := by
+  rw [← p]
+  exact le_rmax_left m n
+
+/-- The closed status vocabulary of PROOF-POLICY §5, weakest first. -/
+inductive Status where
+  | openRow
+  | testedOnly
+  | argued
+  | provenWithPostulates
+  | proven
+
+open Status
+
+def rank : Status → Nat
+  | openRow => 0
+  | testedOnly => 1
+  | argued => 2
+  | provenWithPostulates => 3
+  | proven => 4
+
+/-- Every rank from 4 up names `proven`. -/
+def fromRank : Nat → Status
+  | 0 => openRow
+  | 1 => testedOnly
+  | 2 => argued
+  | 3 => provenWithPostulates
+  | _ + 4 => proven
+
+theorem fromRank_rank : ∀ s, fromRank (rank s) = s
+  | openRow => rfl
+  | testedOnly => rfl
+  | argued => rfl
+  | provenWithPostulates => rfl
+  | proven => rfl
+
+theorem rank_le_four : ∀ s, rank s ≤ 4
+  | openRow => Nat.zero_le 4
+  | testedOnly => Nat.succ_le_succ (Nat.zero_le 3)
+  | argued => Nat.succ_le_succ (Nat.succ_le_succ (Nat.zero_le 2))
+  | provenWithPostulates => Nat.succ_le_succ (Nat.succ_le_succ (Nat.succ_le_succ (Nat.zero_le 1)))
+  | proven => Nat.le_refl 4
+
+theorem rank_fromRank : ∀ {n : Nat}, n ≤ 4 → rank (fromRank n) = n
+  | 0, _ => rfl
+  | 1, _ => rfl
+  | 2, _ => rfl
+  | 3, _ => rfl
+  | 4, _ => rfl
+  | _ + 5, p => absurd
+      (Nat.le_of_succ_le_succ (Nat.le_of_succ_le_succ (Nat.le_of_succ_le_succ
+        (Nat.le_of_succ_le_succ p))))
+      (Nat.not_succ_le_zero _)
+
+/-- Two statuses with one rank are one status. -/
+theorem rank_injective {s t : Status} (p : rank s = rank t) : s = t :=
+  (fromRank_rank s).symm.trans ((congrArg fromRank p).trans (fromRank_rank t))
+
+/-- `_⊔e_`: alternatives keep the stronger status. -/
+def eJoin (s t : Status) : Status := fromRank (rmax (rank s) (rank t))
+
+/-- `_⊓e_`: sequence keeps the weaker status. -/
+def eMeet (s t : Status) : Status := fromRank (rmin (rank s) (rank t))
+
+theorem rank_eJoin (s t : Status) : rank (eJoin s t) = rmax (rank s) (rank t) :=
+  rank_fromRank (rmax_lub (rank_le_four s) (rank_le_four t))
+
+theorem rank_eMeet (s t : Status) : rank (eMeet s t) = rmin (rank s) (rank t) :=
+  rank_fromRank (Nat.le_trans (rmin_le_left (rank s) (rank t)) (rank_le_four s))
+
+theorem eJoin_assoc (a b c : Status) : eJoin (eJoin a b) c = eJoin a (eJoin b c) :=
+  rank_injective (by rw [rank_eJoin, rank_eJoin, rank_eJoin, rank_eJoin, rmax_assoc])
+
+theorem eJoin_comm (a b : Status) : eJoin a b = eJoin b a :=
+  congrArg fromRank (rmax_comm (rank a) (rank b))
+
+theorem eJoin_idem (a : Status) : eJoin a a = a :=
+  (congrArg fromRank (rmax_idem (rank a))).trans (fromRank_rank a)
+
+theorem eJoin_unitl (a : Status) : eJoin openRow a = a := fromRank_rank a
+
+theorem eMeet_assoc (a b c : Status) : eMeet (eMeet a b) c = eMeet a (eMeet b c) :=
+  rank_injective (by rw [rank_eMeet, rank_eMeet, rank_eMeet, rank_eMeet, rmin_assoc])
+
+theorem eMeet_comm (a b : Status) : eMeet a b = eMeet b a :=
+  congrArg fromRank (rmin_comm (rank a) (rank b))
+
+theorem eMeet_unitl (a : Status) : eMeet proven a = a :=
+  (congrArg fromRank (rmin_of_ge (rank_le_four a))).trans (fromRank_rank a)
+
+theorem eMeet_unitr (a : Status) : eMeet a proven = a :=
+  (eMeet_comm a proven).trans (eMeet_unitl a)
+
+/-- E-1: ⊕ = the stronger, ⊗ = the weaker, 𝟘 = `openRow`, 𝟙 = `proven`. -/
+abbrev Evidence : ResourceAlgebra where
+  Grade := Status
+  add := eJoin
+  mul := eMeet
+  zero := openRow
+  one := proven
+  alt := { assoc := eJoin_assoc, comm := eJoin_comm, idem := eJoin_idem, unitl := eJoin_unitl }
+  seq := { assoc := eMeet_assoc, unitl := eMeet_unitl, unitr := eMeet_unitr }
+
+theorem eMeet_distribl (a b c : Status) :
+    eMeet a (eJoin b c) = eJoin (eMeet a b) (eMeet a c) :=
+  rank_injective (by
+    rw [rank_eMeet, rank_eJoin, rmin_rmax_l, rank_eJoin, rank_eMeet, rank_eMeet])
+
+theorem eMeet_distribr (a b c : Status) :
+    eMeet (eJoin a b) c = eJoin (eMeet a c) (eMeet b c) := by
+  rw [eMeet_comm, eMeet_distribl, eMeet_comm c a, eMeet_comm c b]
+
+/-- E-1 -/
+theorem Evidence_dioid : IsDioid Evidence where
+  distribl := eMeet_distribl
+  distribr := eMeet_distribr
+
+theorem Evidence_ordered : IsOrdered Evidence := Evidence_dioid.ordered
+
+theorem Evidence_annihilating : IsAnnihilating Evidence where
+  annihill _ := rfl
+  annihilr a := congrArg fromRank (rmin_zero_r (rank a))
+
+/-! E-1: the order is the rank order, and sequence is its meet. -/
+
+/-- Agda `≼→≤`. -/
+theorem le_to_rank {a b : Status} (p : Evidence.Le a b) : rank a ≤ rank b :=
+  rmax_eq_le ((rank_eJoin a b).symm.trans (congrArg rank p))
+
+/-- Agda `≤→≼`. -/
+theorem rank_to_le {a b : Status} (p : rank a ≤ rank b) : Evidence.Le a b :=
+  (congrArg fromRank (rmax_of_le p)).trans (fromRank_rank b)
+
+/-- Agda `≼-proven`. -/
+theorem le_proven (a : Status) : Evidence.Le a proven := rank_to_le (rank_le_four a)
+
+/-- Agda `⊓e-lowerˡ`. -/
+theorem eMeet_lowerl (a b : Status) : Evidence.Le (eMeet a b) a :=
+  rank_to_le (by rw [rank_eMeet]; exact rmin_le_left (rank a) (rank b))
+
+/-- Agda `⊓e-lowerʳ`. -/
+theorem eMeet_lowerr (a b : Status) : Evidence.Le (eMeet a b) b :=
+  rank_to_le (by rw [rank_eMeet]; exact rmin_le_right (rank a) (rank b))
+
+/-- Agda `⊓e-greatest`. -/
+theorem eMeet_greatest {a b c : Status} (p : Evidence.Le c a) (q : Evidence.Le c b) :
+    Evidence.Le c (eMeet a b) :=
+  rank_to_le (by rw [rank_eMeet]; exact rmin_glb (le_to_rank p) (le_to_rank q))
+
+/-! ## Evidence ledger (E-2, E-3)
+
+A ledger is a list of rows, newest first. A row's dependencies index the
+rows after it, so no dependency cycle can be written.
+
+`Mem`, `Dep`, `Reach` and `Respects` are `Prop` here, where Agda's are
+`Set` (`_⊎_` and `⊥` become `∨` and `False`). They occur only as
+hypotheses, or, for `Respects`, as a record whose fields conclude in
+equations, so no statement changes strength. `Reach` takes its starting
+row as an index, not a parameter. -/
+
+/-- Agda's `map`, by the same two equations. -/
+def mapList {A B : Type} (f : A → B) : List A → List B
+  | [] => []
+  | x :: xs => f x :: mapList f xs
+
+/-- `_∈_`, by recursion on the list. -/
+def Mem (j : Nat) : List Nat → Prop
+  | [] => False
+  | k :: ks => j = k ∨ Mem j ks
+
+/-- `⨅`: the meet of a list of statuses; the empty meet is `proven`. -/
+def meetAll : List Status → Status
+  | [] => proven
+  | s :: ss => eMeet s (meetAll ss)
+
+theorem meetAll_lower {f : Nat → Status} :
+    ∀ (js : List Nat) {j : Nat}, Mem j js → Evidence.Le (meetAll (mapList f js)) (f j)
+  | [], _, h => False.elim h
+  | k :: ks, _, Or.inl rfl => eMeet_lowerl (f k) (meetAll (mapList f ks))
+  | k :: ks, _, Or.inr p =>
+      Evidence.le_trans (eMeet_lowerr (f k) (meetAll (mapList f ks))) (meetAll_lower ks p)
+
+theorem meetAll_greatest {f : Nat → Status} {z : Status} :
+    ∀ (js : List Nat), (∀ {j}, Mem j js → Evidence.Le z (f j)) →
+      Evidence.Le z (meetAll (mapList f js))
+  | [], _ => le_proven z
+  | _ :: ks, h => eMeet_greatest (h (Or.inl rfl)) (meetAll_greatest ks (fun p => h (Or.inr p)))
+
+structure Row where
+  row ::
+  own  : Status      -- the §5 token of the row's own artefact
+  deps : List Nat    -- the rows it depends on, as indices into the rows after it
+
+abbrev Ledger := List Row
+
+def ownOf : Ledger → Nat → Status
+  | [], _ => proven
+  | r :: _, 0 => r.own
+  | _ :: L, i + 1 => ownOf L i
+
+/-- `Dep L i j`: row `i` depends directly on row `j`. -/
+def Dep : Ledger → Nat → Nat → Prop
+  | [], _, _ => False
+  | _ :: _, 0, 0 => False
+  | r :: _, 0, j + 1 => Mem j r.deps
+  | _ :: _, _ + 1, 0 => False
+  | _ :: L, i + 1, j + 1 => Dep L i j
+
+/-- `Reach L i j`: row `i` depends on row `j` through zero or more steps. -/
+inductive Reach (L : Ledger) : Nat → Nat → Prop where
+  | stay {i : Nat} : Reach L i i
+  | step {i k j : Nat} : Dep L i k → Reach L k j → Reach L i j
+
+/-- The derived status. -/
+def eff : Ledger → Nat → Status
+  | [], _ => proven
+  | r :: L, 0 => eMeet r.own (meetAll (mapList (eff L) r.deps))
+  | _ :: L, i + 1 => eff L i
+
+/-- E-2: never stronger than the row's own evidence. -/
+theorem eff_le_own : ∀ L i, Evidence.Le (eff L i) (ownOf L i)
+  | [], _ => Evidence.le_refl proven
+  | r :: L, 0 => eMeet_lowerl r.own (meetAll (mapList (eff L) r.deps))
+  | _ :: L, i + 1 => eff_le_own L i
+
+/-- E-2: nor than any row it depends on. -/
+theorem eff_le_dep : ∀ L i j, Dep L i j → Evidence.Le (eff L i) (eff L j)
+  | [], _, _, d => False.elim d
+  | _ :: _, 0, 0, d => False.elim d
+  | r :: L, 0, _ + 1, p =>
+      Evidence.le_trans (eMeet_lowerr r.own (meetAll (mapList (eff L) r.deps)))
+        (meetAll_lower r.deps p)
+  | _ :: _, _ + 1, 0, d => False.elim d
+  | _ :: L, i + 1, j + 1, d => eff_le_dep L i j d
+
+/-- E-2: a row is only as strong as the weakest step it depends on. -/
+theorem eff_le_reach (L : Ledger) {i j : Nat} (r : Reach L i j) :
+    Evidence.Le (eff L i) (ownOf L j) := by
+  induction r with
+  | stay => exact eff_le_own L _
+  | step d _ ih => exact Evidence.le_trans (eff_le_dep L _ _ d) ih
+
+/-- An assignment respects a ledger when no row is stronger than its own
+evidence or than a row it depends on. -/
+structure Respects (L : Ledger) (s : Nat → Status) : Prop where
+  below_own : ∀ i, Evidence.Le (s i) (ownOf L i)
+  below_dep : ∀ i j, Dep L i j → Evidence.Le (s i) (s j)
+
+/-- E-3 -/
+theorem eff_respects (L : Ledger) : Respects L (eff L) :=
+  ⟨eff_le_own L, eff_le_dep L⟩
+
+/-- Restricting an assignment of `r :: L` to `L` keeps it respectful. -/
+theorem restrict {r : Row} {L : Ledger} {s : Nat → Status} (ρ : Respects (r :: L) s) :
+    Respects L (fun i => s (i + 1)) :=
+  ⟨fun i => ρ.below_own (i + 1), fun i j d => ρ.below_dep (i + 1) (j + 1) d⟩
+
+/-- E-3: every assignment that respects the ledger is below `eff`. -/
+theorem eff_greatest : ∀ L s, Respects L s → ∀ i, Evidence.Le (s i) (eff L i)
+  | [], s, _, i => le_proven (s i)
+  | r :: L, s, ρ, 0 =>
+      eMeet_greatest (ρ.below_own 0)
+        (meetAll_greatest r.deps (fun {j} p =>
+          Evidence.le_trans (ρ.below_dep 0 (j + 1) p)
+            (eff_greatest L (fun k => s (k + 1)) (restrict ρ) j)))
+  | _ :: L, s, ρ, i + 1 => eff_greatest L (fun k => s (k + 1)) (restrict ρ) i
+
+/-! The worked ledger of `tests/unit/EvidenceTest.agda`, with its expected
+values. They pin the chain order, which the laws above cannot see. -/
+
+theorem sequence_keeps_the_weaker : Evidence.mul argued testedOnly = testedOnly := rfl
+theorem alternative_keeps_the_stronger : Evidence.add argued testedOnly = argued := rfl
+theorem provenWithPostulates_below_proven :
+    Evidence.mul proven provenWithPostulates = provenWithPostulates := rfl
+theorem open_annihilates : Evidence.mul proven openRow = openRow := rfl
+
+/-- Newest first; indices count back from each row. -/
+def exampleLedger : Ledger :=
+  [ Row.row proven [0, 1]      -- row 4: on row 3 and row 2
+  , Row.row testedOnly []      -- row 3
+  , Row.row proven [0, 1]      -- row 2: on row 1 and row 0
+  , Row.row argued []          -- row 1
+  , Row.row proven [] ]        -- row 0
+
+theorem row2_is_argued : eff exampleLedger 2 = argued := rfl
+theorem row4_is_tested_only : eff exampleLedger 0 = testedOnly := rfl
+theorem row0_keeps_its_evidence : eff exampleLedger 4 = proven := rfl
 /-! ## Diamond (C-4b)
 
 The diamond lattice M3: join for alternatives, meet for sequence, bottom
@@ -1063,3 +1384,26 @@ other answer. -/
 #print axioms RA.firstQuestion
 #print axioms RA.laterQuestions
 #print axioms RA.count_not_add
+#print axioms RA.Evidence
+#print axioms RA.Evidence_dioid
+#print axioms RA.Evidence_ordered
+#print axioms RA.Evidence_annihilating
+#print axioms RA.le_to_rank
+#print axioms RA.rank_to_le
+#print axioms RA.le_proven
+#print axioms RA.eMeet_lowerl
+#print axioms RA.eMeet_lowerr
+#print axioms RA.eMeet_greatest
+#print axioms RA.eff_le_own
+#print axioms RA.eff_le_dep
+#print axioms RA.eff_le_reach
+#print axioms RA.eff_respects
+#print axioms RA.restrict
+#print axioms RA.eff_greatest
+#print axioms RA.sequence_keeps_the_weaker
+#print axioms RA.alternative_keeps_the_stronger
+#print axioms RA.provenWithPostulates_below_proven
+#print axioms RA.open_annihilates
+#print axioms RA.row2_is_argued
+#print axioms RA.row4_is_tested_only
+#print axioms RA.row0_keeps_its_evidence

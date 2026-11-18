@@ -86,7 +86,8 @@ only from its first green run.
 ----
 src/ResourceAlgebra/Prelude.agda      ℕ lemmas (+, max, min, ≤), proved here
 src/ResourceAlgebra/Core.agda         the record and its layers
-src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions
+src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions, Evidence
+src/ResourceAlgebra/Ledger.agda       a proof-ledger row's status, derived from its dependencies
 src/ResourceAlgebra/Separation.agda   checked separation witnesses
 src/ResourceAlgebra/Morphism.agda     strict and lax morphisms, classifications
 tests/reject/*.agda                   expected rejections (must fail)
