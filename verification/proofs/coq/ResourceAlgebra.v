@@ -19,7 +19,8 @@
      irrelevance of `le`, which the standard library proves (`Peano_dec.le_unique`)
      rather than assumes. *)
 
-From Stdlib Require Import Arith Lia.
+From Stdlib Require Import Arith Lia ZArith.
+From Stdlib Require Eqdep_dec Bool.
 
 Set Implicit Arguments.
 
@@ -1492,6 +1493,316 @@ Proof.
     destruct a as [|[|n]|], b as [|m|], x as [|k|]; star_case h.
 Qed.
 
+(** * Signed drift (D-1 .. D-8)
+
+    The drift carrier is the integers with a bottom, [ninf], under max and
+    + (Agda: Drift.agda). Agda builds its own integers as differences of
+    naturals; here they are the standard library's [Z] and the arithmetic
+    is [lia]. The carrier, its operations and the bound are the same
+    definitions. The bound [drift ≤ peak] is a boolean here ([dleb]), so
+    its proofs are unique by [Eqdep_dec.UIP_dec] (a theorem); Agda's is a
+    relation defined by recursion, unique by recursion. *)
+
+Inductive Drift : Type := ninf : Drift | dfin : Z -> Drift.
+
+Definition dadd (a b : Drift) : Drift :=
+  match a, b with
+  | dfin x, dfin y => dfin (x + y)%Z
+  | _, _ => ninf
+  end.
+
+Definition dmax (a b : Drift) : Drift :=
+  match a, b with
+  | ninf, b => b
+  | a, ninf => a
+  | dfin x, dfin y => dfin (Z.max x y)
+  end.
+
+Definition dzero : Drift := dfin 0%Z.
+
+(** A natural as a drift, and the natural part of a drift (0 below zero). *)
+Definition pkd (n : nat) : Drift := dfin (Z.of_nat n).
+
+Definition dclamp (d : Drift) : nat :=
+  match d with
+  | ninf => 0
+  | dfin z => Z.to_nat z
+  end.
+
+Ltac dcases :=
+  repeat match goal with
+         | d : Drift |- _ => destruct d
+         end; simpl; try reflexivity; try (f_equal; lia).
+
+Lemma dmax_comm : forall a b, dmax a b = dmax b a.
+Proof. intros; dcases. Qed.
+
+Lemma dadd_comm : forall a b, dadd a b = dadd b a.
+Proof. intros; dcases. Qed.
+
+Lemma Drift_alt : IsAltMonoid dmax ninf.
+Proof. split; intros; dcases. Qed.
+
+Lemma Drift_seq : IsSeqMonoid dadd dzero.
+Proof. split; intros; dcases. Qed.
+
+(** D-1: the drift carrier is the max-plus dioid on ℤ. *)
+Definition Drift_RA : ResourceAlgebra :=
+  {| Grade := Drift; radd := dmax; rmul := dadd; rzero := ninf; rone := dzero;
+     ralt := Drift_alt; rseq := Drift_seq |}.
+
+Lemma Drift_dioid : IsDioid Drift_RA.
+Proof. split; simpl; intros; dcases. Qed.
+
+(** The bound of a signed grade. *)
+Definition dleb (d : Drift) (p : nat) : bool :=
+  match d with
+  | ninf => true
+  | dfin z => Z.leb z (Z.of_nat p)
+  end.
+
+Record SGrade : Type := shwm {
+  speak : nat;
+  sdrift : Drift;
+  sbounded : dleb sdrift speak = true
+}.
+
+Arguments shwm : clear implicits.
+
+Lemma shwm_eq : forall a b : SGrade, speak a = speak b -> sdrift a = sdrift b -> a = b.
+Proof.
+  intros [p n bd] [p' n' bd'] e1 e2; simpl in *; subst.
+  f_equal. apply Eqdep_dec.UIP_dec, Bool.bool_dec.
+Qed.
+
+(** Turn every bound into an inequality and every [Drift] into its cases,
+    then [lia]. *)
+Ltac sbounds :=
+  repeat match goal with
+         | a : SGrade |- _ => destruct a
+         end;
+  unfold pkd in *;
+  repeat match goal with
+         | d : Drift |- _ => destruct d
+         end;
+  simpl in *;
+  repeat match goal with
+         | h : Z.leb _ _ = true |- _ => apply Z.leb_le in h
+         end;
+  try apply Z.leb_le.
+
+Ltac fin_goals :=
+  unfold pkd in *; unfold_rmm; first [ reflexivity | lia | (f_equal; lia) ].
+
+Ltac shwms := sbounds; apply shwm_eq; simpl; fin_goals.
+
+Definition mulS (a b : SGrade) : SGrade.
+Proof.
+  refine (shwm (dclamp (dmax (pkd (speak a)) (dadd (sdrift a) (pkd (speak b)))))
+               (dadd (sdrift a) (sdrift b)) _).
+  sbounds; try reflexivity; lia.
+Defined.
+
+Definition addS (a b : SGrade) : SGrade.
+Proof.
+  refine (shwm (rmax (speak a) (speak b)) (dmax (sdrift a) (sdrift b)) _).
+  sbounds; rewrite ?rmax_eq; try reflexivity; try lia.
+Defined.
+
+Definition zeroS : SGrade := shwm 0 ninf eq_refl.
+Definition oneS : SGrade := shwm 0 dzero eq_refl.
+
+(** D-1 *)
+Lemma SHWM_alt : IsAltMonoid addS zeroS.
+Proof. split; intros; shwms. Qed.
+
+Lemma SHWM_seq : IsSeqMonoid mulS oneS.
+Proof. split; intros; shwms. Qed.
+
+Definition SHWM : ResourceAlgebra :=
+  {| Grade := SGrade; radd := addS; rmul := mulS; rzero := zeroS; rone := oneS;
+     ralt := SHWM_alt; rseq := SHWM_seq |}.
+
+Lemma SHWM_dioid : IsDioid SHWM.
+Proof. split; simpl; intros; shwms. Qed.
+
+Lemma SHWM_ordered : IsOrdered SHWM.
+Proof. exact (dioid_ordered SHWM_dioid). Qed.
+
+(** D-2: 𝟘 is not 𝟙; 𝟘 absorbs on the left; on the right it keeps the
+    peak, so SHWM is not annihilating. *)
+Lemma SHWM_zero_ne_one : rzero SHWM <> rone SHWM.
+Proof. intro h. pose proof (f_equal sdrift h) as e. discriminate e. Qed.
+
+Lemma SHWM_absorbl : forall a, mulS zeroS a = zeroS.
+Proof. intros; shwms. Qed.
+
+Lemma SHWM_seq_zero : forall a, mulS a zeroS = shwm (speak a) ninf eq_refl.
+Proof. intros; shwms. Qed.
+
+Lemma SHWM_not_annihilating : ~ IsAnnihilating SHWM.
+Proof.
+  intro z. pose proof (f_equal speak (annihilr z (shwm 1 dzero eq_refl))) as h.
+  simpl in h. discriminate h.
+Qed.
+
+(** D-4: in HWM a prefix keeps the peak; with consumption it can lower it. *)
+Lemma HWM_prefix_keeps_peak : forall a b, peak b <= peak (mulH a b).
+Proof. intros [p1 n1 b1] [p2 n2 b2]; simpl; rewrite rmax_eq; lia. Qed.
+
+Definition free_one : SGrade := shwm 0 (dfin (-1)%Z) eq_refl.
+Definition alloc_one : SGrade := shwm 1 (pkd 1) eq_refl.
+
+Lemma prefix_lowers_peak : ~ (forall a b, speak b <= speak (mulS a b)).
+Proof. intro f. pose proof (f free_one alloc_one) as h. simpl in h. lia. Qed.
+
+(** D-3: HWM inside SHWM, and back. *)
+Definition embed (a : HGrade) : SGrade.
+Proof.
+  refine (shwm (peak a) (pkd (drift a)) _).
+  destruct a; simpl; apply Z.leb_le; lia.
+Defined.
+
+Definition clampG (a : SGrade) : HGrade.
+Proof.
+  refine (hwm (speak a) (dclamp (dmax (pkd 0) (sdrift a))) _).
+  sbounds; lia.
+Defined.
+
+Lemma embed_mul : forall a b, embed (mulH a b) = mulS (embed a) (embed b).
+Proof. intros [p1 n1 b1] [p2 n2 b2]; apply shwm_eq; simpl; fin_goals. Qed.
+
+Lemma embed_add : forall a b, embed (addH a b) = addS (embed a) (embed b).
+Proof. intros [p1 n1 b1] [p2 n2 b2]; apply shwm_eq; simpl; fin_goals. Qed.
+
+Definition embed_lax : LaxHom HWM SHWM.
+Proof.
+  refine (@Build_LaxHom HWM SHWM embed _ embed_add _).
+  - apply shwm_eq; reflexivity.
+  - intros a b. simpl. rewrite embed_mul. apply le_refl.
+Defined.
+
+Lemma embed_injective : forall a b, embed a = embed b -> a = b.
+Proof.
+  intros [p n bd] [p' n' bd'] e. apply hwm_eq.
+  - exact (f_equal speak e).
+  - pose proof (f_equal sdrift e) as h. simpl in h. unfold pkd in h. injection h. simpl. lia.
+Qed.
+
+Lemma embed_zero : embed zeroH <> zeroS.
+Proof. intro h. pose proof (f_equal sdrift h) as e. discriminate e. Qed.
+
+Lemma no_strict_HWM_SHWM : Hom HWM SHWM -> False.
+Proof. apply no_strict_from_HWM. exact SHWM_zero_ne_one. Qed.
+
+Lemma clamp_embed : forall a, clampG (embed a) = a.
+Proof. intros [p n bd]; apply hwm_eq; simpl; fin_goals. Qed.
+
+Definition clamp_lax : LaxHom SHWM HWM.
+Proof.
+  refine (@Build_LaxHom SHWM HWM clampG _ _ _).
+  - apply hwm_eq; reflexivity.
+  - intros [p n bd] [p' n' bd']; apply hwm_eq; sbounds; fin_goals.
+  - intros [p n bd] [p' n' bd']; unfold Le; simpl; apply hwm_eq; sbounds; fin_goals.
+Defined.
+
+Lemma clamp_not_strict :
+  ~ (forall a b, clampG (mulS a b) = mulH (clampG a) (clampG b)).
+Proof.
+  intro f. pose proof (f_equal peak (f free_one alloc_one)) as h.
+  simpl in h. discriminate h.
+Qed.
+
+(** D-7: the peak is lax into MaxPlus, and agrees with HWM's on HWM. *)
+Definition speak_lax : LaxHom SHWM MaxPlus.
+Proof.
+  refine (@Build_LaxHom SHWM MaxPlus (fun g : SGrade => val (speak g)) _ _ _).
+  - reflexivity.
+  - intros [p n bd] [p' n' bd']; reflexivity.
+  - intros [p n bd] [p' n' bd']; unfold Le; simpl; sbounds; fin_goals.
+Defined.
+
+Lemma speak_embed : forall a, speak (embed a) = peak a.
+Proof. reflexivity. Qed.
+
+(** D-5: parallel = sum of peaks and sum of drifts. *)
+Definition parS (a b : SGrade) : SGrade.
+Proof.
+  refine (shwm (speak a + speak b) (dadd (sdrift a) (sdrift b)) _).
+  sbounds; try reflexivity; lia.
+Defined.
+
+Lemma SHWM_parallel : IsParallel SHWM parS.
+Proof. split; simpl; intros; shwms. Qed.
+
+Lemma SHWM_sync_below : SyncBelow SHWM parS.
+Proof. unfold SyncBelow, Le; simpl; intros; shwms. Qed.
+
+Lemma SHWM_not_sync_above : ~ SyncAbove SHWM parS.
+Proof.
+  intro f.
+  pose proof (f_equal speak (f (shwm 1 dzero eq_refl) oneS oneS (shwm 1 dzero eq_refl))) as h.
+  simpl in h. discriminate h.
+Qed.
+
+(** D-6: no star. *)
+Lemma SHWM_no_fixpoint : NoFixpoint SHWM (shwm 1 (pkd 1) eq_refl).
+Proof.
+  unfold NoFixpoint; intros s h. pose proof (f_equal speak h) as e.
+  destruct s as [p n bd].
+  change (rmax 0 (Z.to_nat (Z.max (Z.of_nat 1) (Z.of_nat 1 + Z.of_nat p))) = p) in e.
+  rewrite rmax_eq in e. lia.
+Qed.
+
+Lemma SHWM_no_star : forall star, ~ IsStar SHWM star.
+Proof. exact (@no_star SHWM (shwm 1 (pkd 1) eq_refl) SHWM_no_fixpoint). Qed.
+
+(** D-8: the bicyclic monoid. [bic (a, b)] is the grade of peak [a] and
+    drift [a − b]. *)
+Definition bmul (x y : nat * nat) : nat * nat :=
+  let (a, b) := x in let (c, d) := y in (a + (c - b), d + (b - c)).
+
+Definition bic (x : nat * nat) : SGrade.
+Proof.
+  refine (shwm (fst x) (dfin (Z.of_nat (fst x) - Z.of_nat (snd x))) _).
+  destruct x; simpl; apply Z.leb_le; lia.
+Defined.
+
+Lemma bic_one : bic (0, 0) = oneS.
+Proof. apply shwm_eq; reflexivity. Qed.
+
+Lemma bic_mul : forall x y, bic (bmul x y) = mulS (bic x) (bic y).
+Proof.
+  intros [a b] [c d]; apply shwm_eq; simpl; try (f_equal; lia); lia.
+Qed.
+
+Lemma bic_injective : forall x y, bic x = bic y -> x = y.
+Proof.
+  intros [a b] [c d] e.
+  pose proof (f_equal speak e) as e1. pose proof (f_equal sdrift e) as e2.
+  simpl in e1, e2. injection e2; intro. f_equal; lia.
+Qed.
+
+Definition Finite (g : SGrade) : Prop :=
+  match sdrift g with ninf => False | dfin _ => True end.
+
+Lemma bic_onto : forall g, Finite g -> exists x, bic x = g.
+Proof.
+  intros [p [|z] bd] h; simpl in h; [contradiction|].
+  simpl in bd. pose proof (proj1 (Z.leb_le _ _) bd) as q.
+  exists (p, Z.to_nat (Z.of_nat p - z)). apply shwm_eq; simpl; try reflexivity.
+  f_equal. lia.
+Qed.
+
+Lemma bic_HWM : forall a, bic (peak a, peak a - drift a) = embed a.
+Proof. intros [p n bd]; apply shwm_eq; simpl; fin_goals. Qed.
+
+Lemma HWM_bic : forall a b, b <= a -> exists h, embed h = bic (a, b).
+Proof.
+  intros a b q. exists (hwm a (a - b) (Nat.le_sub_l a b)).
+  apply shwm_eq; simpl; fin_goals.
+Qed.
+
 (** * Assumptions (PROOF-POLICY §8.4): each must print "Closed under the
     global context". *)
 Print Assumptions alt_unitr.
@@ -1600,3 +1911,34 @@ Print Assumptions MaxPlusTop_annihilating.
 Print Assumptions lift_hom.
 Print Assumptions lift_injective.
 Print Assumptions MaxPlusTop_star.
+Print Assumptions Drift_dioid.
+Print Assumptions SHWM.
+Print Assumptions SHWM_dioid.
+Print Assumptions SHWM_ordered.
+Print Assumptions SHWM_zero_ne_one.
+Print Assumptions SHWM_absorbl.
+Print Assumptions SHWM_seq_zero.
+Print Assumptions SHWM_not_annihilating.
+Print Assumptions HWM_prefix_keeps_peak.
+Print Assumptions prefix_lowers_peak.
+Print Assumptions embed_lax.
+Print Assumptions embed_mul.
+Print Assumptions embed_injective.
+Print Assumptions embed_zero.
+Print Assumptions no_strict_HWM_SHWM.
+Print Assumptions clamp_lax.
+Print Assumptions clamp_embed.
+Print Assumptions clamp_not_strict.
+Print Assumptions speak_lax.
+Print Assumptions speak_embed.
+Print Assumptions SHWM_parallel.
+Print Assumptions SHWM_sync_below.
+Print Assumptions SHWM_not_sync_above.
+Print Assumptions SHWM_no_fixpoint.
+Print Assumptions SHWM_no_star.
+Print Assumptions bic_one.
+Print Assumptions bic_mul.
+Print Assumptions bic_injective.
+Print Assumptions bic_onto.
+Print Assumptions bic_HWM.
+Print Assumptions HWM_bic.

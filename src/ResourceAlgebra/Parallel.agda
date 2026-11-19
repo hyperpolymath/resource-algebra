@@ -24,6 +24,8 @@
 --   HWM-parallel       ∥ = sum of peaks and of drifts (two threads may hold
 --                      their peaks together).  SyncBelow holds, SyncAbove
 --                      does not.
+--   SHWM-parallel      the same for signed drift (D-5): SyncBelow survives
+--                      consumption, SyncAbove still fails.
 module ResourceAlgebra.Parallel where
 
 open import ResourceAlgebra.Prelude
@@ -239,3 +241,84 @@ HWM-not-sync-above f =
   where
   two≢one : 2 ≢ 1
   two≢one ()
+
+----------------------------------------------------------------------
+-- D-5: signed-drift HWM, parallel = sum of peaks and sum of drifts
+--
+-- Each thread stays at or below its own peak, so two threads stay at or
+-- below the sum of their peaks, whatever their drifts.  P-4 carries over
+-- unchanged: SyncBelow holds and SyncAbove fails.
+module _ where
+  open import ResourceAlgebra.Drift
+  open import ResourceAlgebra.Instances.SignedHWM as SH
+    using (SHWM; shwm; shwm-≡; _⊗s_; _⊕s_; 𝟙s)
+  private
+    module D  = ResourceAlgebra Drift-RA
+    module DA = IsAltMonoid (ResourceAlgebra.alt Drift-RA)
+    module DS = IsSeqMonoid (ResourceAlgebra.seq Drift-RA)
+    module DD = IsDioid Drift-dioid
+    module DO = IsOrdered (IsDioid.ordered Drift-dioid)
+
+  infixl 7 _∥s_
+  _∥s_ : SH.Grade → SH.Grade → SH.Grade
+  shwm p₁ n₁ b₁ ∥s shwm p₂ n₂ b₂ =
+    shwm (p₁ + p₂) (n₁ +d n₂)
+         (≼→≤ᵈ (n₁ +d n₂) (p₁ + p₂)
+           (DO.⊗-mono {n₁} {pk p₁} {n₂} {pk p₂} (≤ᵈ→≼ n₁ p₁ b₁) (≤ᵈ→≼ n₂ p₂ b₂)))
+
+  SHWM-parallel : IsParallel SHWM _∥s_
+  SHWM-parallel = record
+    { assoc = assoc ; comm = comm ; unitˡ = unitˡ ; distribˡ = distribˡ }
+    where
+    assoc : ∀ a b c → (a ∥s b) ∥s c ≡ a ∥s (b ∥s c)
+    assoc (shwm p n _) (shwm p' n' _) (shwm p'' n'' _) =
+      shwm-≡ (+-assoc p p' p'') (DS.assoc n n' n'')
+
+    comm : ∀ a b → a ∥s b ≡ b ∥s a
+    comm (shwm p n _) (shwm p' n' _) = shwm-≡ (+-comm p p') (+d-comm n n')
+
+    unitˡ : ∀ a → 𝟙s ∥s a ≡ a
+    unitˡ (shwm p n _) = shwm-≡ refl (DS.unitˡ n)
+
+    distribˡ : ∀ a b c → a ∥s (b ⊕s c) ≡ (a ∥s b) ⊕s (a ∥s c)
+    distribˡ (shwm p n _) (shwm p₂ n₂ _) (shwm p₃ n₃ _) =
+      shwm-≡ (+-distribˡ-max p p₂ p₃) (DD.distribˡ n n₂ n₃)
+
+  private
+    +d-interchange : ∀ a b c d → (a +d b) +d (c +d d) ≡ (a +d c) +d (b +d d)
+    +d-interchange = ⊗-interchange Drift-RA Drift-dioid +d-comm
+
+    clamp-≤ : ∀ p y q → maxd (pk p) y ≼d pk q → clamp (maxd (pk p) y) ≤ q
+    clamp-≤ p y q h = pk-≼→≤ (subst (λ z → z ≼d pk q) (sym (pk-clamp p y)) h)
+
+  SHWM-sync-below : SyncBelow SHWM _∥s_
+  SHWM-sync-below (shwm pa na _) (shwm pb nb _) (shwm pc nc _) (shwm pd nd _) =
+    shwm-≡ (max-≤ peak≤) drift≼
+    where
+    Xac = maxd (pk pa) (na +d pk pc)
+    Xbd = maxd (pk pb) (nb +d pk pd)
+    peak≤ : clamp (maxd (pk (pa + pb)) ((na +d nb) +d pk (pc + pd)))
+          ≤ clamp Xac + clamp Xbd
+    peak≤ = clamp-≤ (pa + pb) ((na +d nb) +d pk (pc + pd)) (clamp Xac + clamp Xbd)
+      (subst (λ z → maxd (pk (pa + pb)) ((na +d nb) +d pk (pc + pd)) ≼d z)
+             (sym (cong₂ _+d_ (pk-clamp pa (na +d pk pc)) (pk-clamp pb (nb +d pk pd))))
+             (D.⊕-least {pk pa +d pk pb} {(na +d nb) +d (pk pc +d pk pd)} {Xac +d Xbd}
+               (DO.⊗-mono {pk pa} {Xac} {pk pb} {Xbd}
+                 (D.⊕-upperˡ (pk pa) (na +d pk pc)) (D.⊕-upperˡ (pk pb) (nb +d pk pd)))
+               (subst (λ z → z ≼d (Xac +d Xbd)) (sym (+d-interchange na nb (pk pc) (pk pd)))
+                 (DO.⊗-mono {na +d pk pc} {Xac} {nb +d pk pd} {Xbd}
+                   (D.⊕-upperʳ (pk pa) (na +d pk pc)) (D.⊕-upperʳ (pk pb) (nb +d pk pd))))))
+    drift≼ : maxd ((na +d nb) +d (nc +d nd)) ((na +d nc) +d (nb +d nd))
+           ≡ (na +d nc) +d (nb +d nd)
+    drift≼ = subst (λ z → maxd z ((na +d nc) +d (nb +d nd)) ≡ (na +d nc) +d (nb +d nd))
+                   (sym (+d-interchange na nb nc nd))
+                   (DA.idem ((na +d nc) +d (nb +d nd)))
+
+  -- SyncAbove fails with P-4's witness, read in SHWM.  The control is
+  -- tests/reject/SHWMSyncAbove.agda.
+  SHWM-not-sync-above : ¬ SyncAbove SHWM _∥s_
+  SHWM-not-sync-above f =
+    two≢one (cong SH.peak (f (shwm 1 0d tt) 𝟙s 𝟙s (shwm 1 0d tt)))
+    where
+    two≢one : 2 ≢ 1
+    two≢one ()

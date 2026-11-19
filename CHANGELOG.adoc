@@ -1,5 +1,31 @@
 == Changelog
 
+== 2026-11-19: Signed drift for HWM (D-1 to D-8); every receipt superseded (48 rows ungraded for now)
+
+* `src/ResourceAlgebra/Instances/SignedHWM.agda` adds `SHWM`: HWM with an
+  integer drift (or −∞), for terms that consume live state.
+  `Instances.HWM` is unchanged. `src/ResourceAlgebra/Drift.agda` adds its
+  drift carrier, the max-plus dioid on ℤ ∪ {−∞}, with its own integers.
+* What holds: SHWM is a dioid and ordered (D-1); 𝟘 absorbs on the left
+  (D-2); HWM embeds by a lax map that preserves ⊗, with a lax retraction
+  `clampG` (D-3); `SyncBelow` holds (D-5); `peak` is lax into MaxPlus
+  (D-7); on finite drift the sequence is the bicyclic monoid, and HWM is its
+  part with drift ≥ 0 (D-8).
+* What fails, each with a witness: 𝟘 ≢ 𝟙 and SHWM is not annihilating
+  (D-2); no strict map HWM → SHWM exists, and `clampG` is not strict (D-3);
+  a prefix can lower the peak (D-4); `SyncAbove` fails (D-5); no star (D-6).
+* Seven expected rejections are added (23 in all).
+* The Rocq and Lean legs re-prove the eight rows by hand. Checked before
+  the pull request, not as receipts: Agda 2.6.3, Lean 4.35.0 (147 of 147
+  printed theorems axiom-free) and Coq 8.18.0 on a copy (137 of 137 closed).
+* All three runs at `201e05b` are `superseded` in the ledger of
+  `scripts/proof-receipt.sh`, and limited to the rows they checked. The
+  receipt is regenerated with source commit `7ab9840`. All 48 theory rows
+  are ungraded until the first `proofs.yml` run on main that contains this
+  change is recorded.
+* Not built: the trough (option B, a proposal in `PROOF-STATUS.adoc`, Open),
+  and any change in occupancy-types (H-2 stays OPEN there).
+
 == 2026-11-19 — Proof receipt at 201e05b, the merge of #58; 39 rows are PWG-2ii
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed` now describes

@@ -16,6 +16,8 @@
 --   no-star         a grade a with no fixed point at all rules a star out.
 --                   MaxPlus (val 1) and HWM (hwm 1 1) have one: the costs
 --                   of 1, 2, 3, ... turns have no bound in the carrier.
+--                   SHWM (signed drift) has no star for the same reason
+--                   (D-6).
 --   MaxPlusTop      MaxPlus with a top (+∞) has a star: bot and val 0 loop
 --                   for nothing, every dearer body loops to top.  MaxPlus
 --                   embeds in it by a strict, injective morphism (lift-hom).
@@ -185,3 +187,19 @@ lift-injective (M.val a) (M.val b) e = cong M.val (T.val-injective e)
 lift-injective (M.val a) M.bot     ()
 lift-injective M.bot     (M.val b) ()
 lift-injective M.bot     M.bot     _ = refl
+
+----------------------------------------------------------------------
+-- D-6: signed-drift HWM has no star either
+--
+-- The body that allocates 1 and keeps it: each turn adds 1 to the peak
+-- above the entry level, whatever the drift of the rest.
+module _ where
+  open import ResourceAlgebra.Drift using (pk)
+  open import ResourceAlgebra.Instances.SignedHWM as SH using (SHWM; shwm)
+
+  SHWM-no-fixpoint : NoFixpoint SHWM (shwm 1 (pk 1) tt)
+  SHWM-no-fixpoint (shwm p n _) e =
+    suc≢ p (trans (cong suc (sym (+-identityʳ p))) (cong SH.peak e))
+
+  SHWM-no-star : (star : SH.Grade → SH.Grade) → ¬ IsStar SHWM star
+  SHWM-no-star = no-star SHWM (shwm 1 (pk 1) tt) SHWM-no-fixpoint

@@ -16,20 +16,32 @@ asserted. The values, weakest first, are `ungraded`, `3`, `2i`, `2ii` and
 
 == Census
 
-Out of 40 theory rows: PWG-1: 0 · PWG-2ii: 39 · PWG-2i: 0 · PWG-3: 0 ·
-ungraded: 1 (M-2). The grades hold at source commit
-`201e05bf3ab7acaa4a7a4a2d24f87c561d4e7f23` only, the merge of
-resource-algebra#58 and the commit the proof receipt describes
-(`verification/receipts/resource-algebra-proofs_praxis.deed`). The
+Out of 48 theory rows: PWG-1: 0 · PWG-2ii: 0 · PWG-2i: 0 · PWG-3: 0 ·
+ungraded: 48. No leg has a current receipt, so nothing is graded (§8.4).
+The proof receipt
+(`verification/receipts/resource-algebra-proofs_praxis.deed`) names source
+commit `7ab98404fc2f6540f239f8fbd09222b659ba8d4f`, the commit on main that
+the change below was made on. The
 standards reader (`deed_lint.js --proof-receipt-json`), as pinned by
-`scripts/proof-receipt.sh` (standards `f4e83044`), derives every grade there
+`scripts/proof-receipt.sh` (standards `f4e83044`), derives every grade
 from the legs and receipts, and refuses a recorded grade that differs (§8.4).
 
-All three legs have a current receipt from one `proofs.yml` run on main at
-that commit. It is the first run that contains rows P-1 to P-4 and K-1 to
-K-4 (parallel composition and the loop grade), and the first run on main of
-the Lean leg and the M-2 bridge under `lake`. The eight new rows have their
-first grade, and the 31 earlier rows are PWG-2ii again.
+Why no receipt is current. Rows D-1 to D-8 (signed drift, 2026-11-19)
+changed the inputs of all three legs: the Agda cone gained
+`Drift.agda` and `Instances/SignedHWM.agda` and three modules gained
+sections, and the Rocq and Lean files gained their legs. The three runs at
+`201e05b` (resource-algebra#58) no longer describe the tree, so they are
+`superseded`. The first `proofs.yml` run on main that contains this change
+is recorded next. The 39 rows that were PWG-2ii then get the grade that run
+supports, and the eight new rows get their first grade. The proofs of those
+39 rows did not change.
+
+The eight new rows were checked before the pull request in this way, which
+is not a receipt: Agda 2.6.3 (`scripts/check-agda.sh`, 23 expected
+rejections), Lean 4.35.0 from the pinned release archive
+(`scripts/check-lean-leg.sh`, 147 of 147 printed theorems axiom-free) and
+Coq 8.18.0 on a copy with `From Stdlib` read as `From Coq` (137 of 137
+printed theorems closed). The pinned Agda 2.6.4.3 and Rocq 9.3.0 run in CI.
 
 No row is PWG-1. Since standards#1625 (2026-11-17, owner ruling
 2026-11-16), PWG-1 needs every counted witness to name the image its checker
@@ -44,7 +56,7 @@ same evidence now gives PWG-2ii. The proofs did not change.
 
 M-2 stays ungraded whatever the receipts say. M-2 is `PROVEN` by a Lean bridge only. Its
 statement names a Lean-only object, so it has no Agda witness and cannot
-reach PWG-3 (§8.1). Every other row is graded by the current receipt. No row rests
+reach PWG-3 (§8.1). Every other row is graded by the receipts once one is current. No row rests
 on an axiom: the Agda leg is `--safe` with the trusted base below, the Rocq
 leg prints every theorem closed under the global context, and the Lean leg
 prints no axiom for any theorem.
@@ -58,7 +70,7 @@ dependent type theories (§8.3).
 -W error -i src`, and every module also
 declares `--exact-split --no-sized-types --no-guardedness` (the estate
 strict flag set, from main #21) over `src/ResourceAlgebra/All.agda`, the unit tests
-(`tests/unit/AllTests.agda`) and the sixteen expected rejections. A rejection
+(`tests/unit/AllTests.agda`) and the twenty-three expected rejections. A rejection
 must fail at its invalid declaration with the message its `-- EXPECT:` line
 names. A refusal with any other message fails the gate, and so does any
 warning, `UnsupportedIndexedMatch` included. Until 2026-11-16 the gate
@@ -95,7 +107,7 @@ receipts for the canonical profile. On 2026-11-09, `_≤_` and the
 constructor-injectivity lemmas were restated so that the core checks under
 `--cubical-compatible` with no `UnsupportedIndexedMatch` warning. The
 statements of the theorems below did not change.
-* *Expected rejections.* Sixteen claims must be refused, each with the
+* *Expected rejections.* Twenty-three claims must be refused, each with the
 message its `-- EXPECT:` line names. Those messages are:
 `min m n != max m n`, `p != zero`, `suc _ != zero`, `max m n != m + n`,
 `max p₁ (n₁ + p₂) != p₁ + p₂`, `3 != 5`, `inf != fin 3`, `… != bot`,
@@ -104,6 +116,10 @@ message its `-- EXPECT:` line names. Those messages are:
 `tested-only != argued`, `argued != proven` and `tested-only != proven`.
 The controls of P-3 and P-4 are refused with `2 != 1`, and the control of
 K-2 with `suc n != n`.
+The seven controls of D-1 to D-5 are refused with `Drift.−∞ !=`
+(SHWMZeroIsOne), `1 != 0` (SHWMAnnihilates), `0 != 1` (SHWMPrefixKeepsPeak
+and ClampIsStrict), `!= … Drift.−∞` (EmbedPreservesZero), `2 != 1`
+(SHWMSyncAbove) and `⊤ !=< ⊥` (SignedDriftExceedsPeak).
 These are controls for the PROVEN rows. They are not themselves theorems.
 
 == Recheck legs (every row)
@@ -113,8 +129,9 @@ E-3 are covered: their Rocq and Lean legs are re-proved by hand, in the same
 files and by the same routes as every other row, their statements are
 reconciled (see Statement correspondence), and the receipt below records a
 run of all three legs on a commit that contains them.
-P-1 to P-4 and K-1 to K-4 are re-proved in both legs in the same way, and
-the same receipt covers them.
+P-1 to P-4 and K-1 to K-4 are re-proved in both legs in the same way.
+D-1 to D-8 are re-proved in both legs in the same way. No receipt records a
+run of them yet (see Census).
 
 [cols="1,1,1,1,2",options="header"]
 |===
@@ -124,7 +141,8 @@ the same receipt covers them.
 | source
 | `PROVEN`
 | `AGDA-VERIFIED`
-| CI run `44435465068`, job `135263084676`
+| `superseded`: CI run `44435465068`, job `135263084676`. No current
+receipt yet
 
 | Rocq
 | `re-proved` (transport `unavailable`; see below)
@@ -132,14 +150,16 @@ the same receipt covers them.
 under the global context), and `rocqchk` rechecks the compiled file
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `44435465068`, job `135263084711`
+| `superseded`: CI run `44435465068`, job `135263084711`. No current
+receipt yet
 
 | Lean
 | `re-proved`, Lean core only, no Mathlib
 | `PROVEN`: no axiom (`#print axioms` reports none for every theorem)
 | `RECONCILED`: statements compared and residual differences recorded
 below
-| CI run `44435465068`, job `135263084426`
+| `superseded`: CI run `44435465068`, job `135263084426`. No current
+receipt yet
 |===
 
 === Receipts
@@ -152,6 +172,9 @@ and the coverage-exemption check. The machine-readable record is
 `verification/receipts/resource-algebra-proofs_praxis.deed` (§8.5.1).
 Each job's run summary holds its receipt: the checker and its asserted
 version, the invocation, the input digest, the result and the axioms.
+
+All three rows below are `superseded` by the change that added D-1 to D-8
+(see Census).
 
 [cols="1,2,3",options="header"]
 |===
@@ -353,6 +376,14 @@ equations as Lean's `or`/`and` and Rocq's `orb`/`andb`.
 | K-2 | `NoFixpoint`, `no-star`, `MaxPlus-no-fixpoint`, `MaxPlus-no-star`, `HWM-no-fixpoint`, `HWM-no-star` | `NoFixpoint`, `no_star`, `MaxPlus_no_fixpoint`, `MaxPlus_no_star`, `HWM_no_fixpoint`, `HWM_no_star` | the same names
 | K-3 | `MaxPlusTop`, `MaxPlusTop-dioid`, `MaxPlusTop-ordered`, `MaxPlusTop-annihilating`, `lift-hom`, `lift-injective` | `MaxPlusTop`, `MaxPlusTop_dioid`, `MaxPlusTop_ordered`, `MaxPlusTop_annihilating`, `liftHom`, `lift_injective` | `MaxPlusTop`, `MaxPlusTop_dioid`, `MaxPlusTop_ordered`, `MaxPlusTop_annihilating`, `lift_hom`, `lift_injective`
 | K-4 | `star-t`, `MaxPlusTop-star` | `starT`, `MaxPlusTop_star` | the same names
+| D-1 | `Drift-RA`, `Drift-dioid`, `SHWM`, `SHWM-dioid`, `SHWM-ordered` | `Drift_RA`, `Drift_dioid`, `SHWM`, `SHWM_dioid`, `SHWM_ordered` | `Drift_RA`, `Drift_dioid`, `SHWM`, `SHWM_dioid`, `SHWM_ordered`
+| D-2 | `SHWM-𝟘≢𝟙`, `SHWM-absorbˡ`, `SHWM-seq-𝟘`, `SHWM-not-annihilating` | `SHWM_zero_ne_one`, `SHWM_absorbl`, `SHWM_seq_zero`, `SHWM_not_annihilating` | the same names
+| D-3 | `embed-⊗`, `embed-⊕`, `embed-lax`, `embed-injective`, `embed-𝟘`, `no-strict-HWM→SHWM`, `clamp-embed`, `clamp-lax`, `clamp-not-strict` | `embed_mul`, `embed_add`, `embedLax`, `embed_injective`, `embed_zero`, `no_strict_HWM_SHWM`, `clamp_embed`, `clampLax`, `clamp_not_strict` | `embed_mul`, `embed_add`, `embed_lax`, `embed_injective`, `embed_zero`, `no_strict_HWM_SHWM`, `clamp_embed`, `clamp_lax`, `clamp_not_strict`
+| D-4 | `HWM-prefix-keeps-peak`, `prefix-lowers-peak` | `HWM_prefix_keeps_peak`, `prefix_lowers_peak` | the same names
+| D-5 | `_∥s_`, `SHWM-parallel`, `SHWM-sync-below`, `SHWM-not-sync-above` | `parS`, `SHWM_parallel`, `SHWM_sync_below`, `SHWM_not_sync_above` | the same names
+| D-6 | `SHWM-no-fixpoint`, `SHWM-no-star` | `SHWM_no_fixpoint`, `SHWM_no_star` | the same names
+| D-7 | `speak-lax`, `speak-embed` | `speakLax`, `speak_embed` | `speak_lax`, `speak_embed`
+| D-8 | `bic-𝟙`, `bic-·`, `bic-injective`, `bic-onto`, `bic-HWM`, `HWM-bic` | `bic_one`, `bic_mul`, `bic_injective`, `bic_onto`, `bic_HWM`, `HWM_bic` | the same names
 |===
 
 C-4b's carrier is `Grade` in Agda and `DGrade` in Lean and Rocq; the join
@@ -382,6 +413,25 @@ because ⊗ commutes. Rocq proves both laws by case analysis on the three
 grades. The statements are the same.
 * P-4: Agda and Lean give the peak bound of `HWM-sync-below` as an explicit
 chain of ℕ lemmas; Rocq closes it with `lia`.
+
+D-1 to D-8 have these residual differences:
+
+* The drift carrier is the integers with a bottom in all three provers, with
+the same operations (`maxd`/`dmax`, `_+d_`/`dadd`) and the same bound,
+defined by the same cases (Agda `_≤ᵈ_`, Lean `dle`; Rocq `dleb`, a boolean).
+Agda defines its own integers (`pos`, `negsuc`), because
+`Agda.Builtin.Int` imports `Agda.Builtin.String`, whose postulates the
+trusted-base gate refuses. Agda and Lean read an integer as a difference of
+naturals and prove every integer law by hand from that reading. Lean uses
+only the two constructors of its `Int`, not its library lemmas, which
+bring in `propext`. Rocq uses the standard library's `Z` and closes the
+arithmetic with `lia`.
+* The bound is a `Prop` in Lean and Agda and a boolean equation in Rocq, so
+Rocq's grades are equal by `Eqdep_dec.UIP_dec`, a theorem of the standard
+library. Every statement is about peaks and drifts, so this changes none.
+* The Bicyclic carrier is a record (`⟨ rise , fall ⟩`) in Agda and Lean and
+`nat * nat` in Rocq. Agda and Lean state `bic-onto` with a `Σ`/`∃` over
+finite-drift grades; Rocq with `exists`.
 
 E-1, E-2 and E-3 have these residual differences:
 
@@ -483,25 +533,25 @@ counted.
 | `ResourceAlgebra`: alternatives form an idempotent commutative monoid and
 sequencing a monoid.
 | `PROVEN` (the definition, plus the derived `unitʳ`)
-| 2ii
+| ungraded
 
 | C-2
 | The relation `≼` induced by ⊕ is a partial order. `𝟘` is least and `⊕` is
 its join.
 | `PROVEN` (`≼-refl`, `≼-trans`, `≼-antisym`, `𝟘-least`, `⊕-upperˡ/ʳ`;
 the least-upper-bound half is `⊕-least`, from main #21)
-| 2ii
+| ungraded
 
 | C-3
 | Every dioid is ordered: distributivity makes `⊗` monotone on both sides.
 | `PROVEN` (`IsDioid.ordered`)
-| 2ii
+| ungraded
 
 | C-4a
 | A dioid need not be annihilating. HWM is a dioid and is not annihilating.
 | `PROVEN` (`HWM-dioid`, `HWM-not-annihilating`); control
 `tests/reject/HWMAnnihilates.agda`
-| 2ii
+| ungraded
 
 | C-4b
 | An annihilating ordered algebra need not be a dioid. The diamond lattice
@@ -510,7 +560,7 @@ ordered and annihilating, and is not a dioid: a ⊗ (b ⊕ c) = a, while
 (a ⊗ b) ⊕ (a ⊗ c) = 𝟘.
 | `PROVEN` (`Diamond`, `Diamond-ordered`, `Diamond-annihilating`,
 `Diamond-not-dioid`); control `tests/reject/DiamondDistributes.agda`
-| 2ii
+| ungraded
 |===
 
 == Instances
@@ -523,13 +573,13 @@ ordered and annihilating, and is not a dioid: a ⊗ (b ⊕ c) = a, while
 | `Loss` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
 `IsAnnihilating`, with ⊕ = min, ⊗ = +, 𝟘 = inf and 𝟙 = fin 0.
 | `PROVEN` (Instances/Loss.agda)
-| 2ii
+| ungraded
 
 | M-1
 | `MaxPlus` is a `ResourceAlgebra`, `IsDioid`, `IsOrdered` and
 `IsAnnihilating`, with ⊕ = max, ⊗ = +, 𝟘 = bot and 𝟙 = val 0.
 | `PROVEN` (Instances/MaxPlus.agda)
-| 2ii
+| ungraded
 
 | M-2
 | `MaxPlus` agrees with tropical-types' `instance : CommSemiring Tropical`
@@ -548,13 +598,13 @@ names a Lean object.
 | `HWM` (peak, drift, with drift ≤ peak) is a `ResourceAlgebra`, `IsDioid`
 and `IsOrdered`, and 𝟘 ≡ 𝟙.
 | `PROVEN` (Instances/HWM.agda)
-| 2ii
+| ungraded
 
 | H-3
 | `HWM` has no annihilating zero.
 | `PROVEN` (`HWM-not-annihilating`); control
 `tests/reject/HWMAnnihilates.agda`
-| 2ii
+| ungraded
 
 | N-1
 | `MinMax` (the bottleneck algebra) is a `ResourceAlgebra`, `IsDioid`,
@@ -562,7 +612,7 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = min and ⊗ = max (`_⊔g_`, with `inf` absorbing), with 𝟘 = inf and
 𝟙 = fin 0.
 | `PROVEN` (Instances/MinMax.agda)
-| 2ii
+| ungraded
 
 | Q-1
 | `Questions n` (a "which" grade over `n` downstream questions) is a
@@ -571,19 +621,19 @@ and `IsOrdered`, and 𝟘 ≡ 𝟙.
 ⊕ = intersection and ⊗ = union, bit by bit, with 𝟘 = every question lost
 and 𝟙 = none lost.
 | `PROVEN` (Instances/Questions.agda)
-| 2ii
+| ungraded
 
 | Q-2
 | With two questions, `collapse` (loses question 1) and `shuffle` (loses
 question 0) each lose one question and are different grades: a count of
 lost questions cannot tell them apart.
 | `PROVEN` (`same-amount-different-loss`)
-| 2ii
+| ungraded
 
 | Q-3
 | In sequence, `collapse` then `shuffle` loses both questions.
 | `PROVEN` (`both-lost`)
-| 2ii
+| ungraded
 
 | Q-4
 | As alternatives, `collapse ⊕ shuffle` is 𝟙 (no question lost), while
@@ -591,7 +641,7 @@ neither branch is 𝟙. So ⊕ answers "is question i kept on some branch?"
 and not "does one branch keep every question?".
 | `PROVEN` (`no-branch-achieves-meet`, with Q-2); control
 `tests/reject/QuestionsMeetIsABranch.agda`
-| 2ii
+| ungraded
 
 | E-1
 | `Evidence` (how strongly a proof-ledger row is supported) is a
@@ -604,7 +654,7 @@ operations are ⊕ = the stronger (join) and ⊗ = the weaker (meet), with
 the meet of `≼` (`⊓e-lowerˡ`, `⊓e-lowerʳ`, `⊓e-greatest`).
 | `PROVEN` (Instances/Evidence.agda); control
 `tests/reject/EvidenceArguedBelowTested.agda`
-| 2ii
+| ungraded
 |===
 
 == Evidence ledger (Ledger.agda)
@@ -636,7 +686,7 @@ through dependencies.
 | `PROVEN` (`eff-≼-own`, `eff-≼-dep`, `eff-≼-reach`); controls
 `tests/reject/EvidenceProvenOverTested.agda`,
 `tests/reject/EvidenceArguedLinkIgnored.agda`
-| 2ii
+| ungraded
 
 | E-3
 | Maximality: `eff` respects the ledger, and every assignment of statuses
@@ -644,7 +694,7 @@ that respects it is below `eff` row by row. So `eff` is the strongest
 status the ledger supports, and a recorded status above it is an
 overstatement.
 | `PROVEN` (`eff-respects`, `eff-greatest`)
-| 2ii
+| ungraded
 |===
 
 The worked ledger in `tests/unit/EvidenceTest.agda` closes the loop on
@@ -666,26 +716,26 @@ it maps ⊗ to at most ⊗: that is what transporting a bound needs.
 | Both notions have identities and compose, and every strict morphism is
 lax.
 | `PROVEN` (`id-hom`, `_∘h_`, `id-lax`, `_∘l_`, `lax`)
-| 2ii
+| ungraded
 
 | F-2
 | `peak : HWM → MaxPlus` is lax: the peak of a sequence never exceeds the
 sum of the peaks.
 | `PROVEN` (`peak-lax`)
-| 2ii
+| ungraded
 
 | F-3
 | `peak` is not strict: it does not preserve ⊗, whatever it does to the
 units.
 | `PROVEN` (`peak-not-strict`); control `tests/reject/PeakIsStrict.agda`
-| 2ii
+| ungraded
 
 | F-4
 | No strict morphism leaves HWM for an algebra with 𝟘 ≢ 𝟙. In particular,
 none goes to MaxPlus or to Loss.
 | `PROVEN` (`no-strict-from-HWM`, `no-strict-HWM→MaxPlus`,
 `no-strict-HWM→Loss`)
-| 2ii
+| ungraded
 
 | F-5
 | Exactly two strict morphisms Loss → MaxPlus exist, `zero-test` and
@@ -695,7 +745,7 @@ morphism is one of them (`Loss→MaxPlus`). They are distinct
 (`maps-disagree-at-positive`), and every
 morphism collapses `fin 1` and `fin 2` (`Loss→MaxPlus-collapses`,
 `no-injective-Loss→MaxPlus`).
-| 2ii
+| ungraded
 
 | F-6
 | Exactly one strict morphism MaxPlus → Loss exists, `support′`.
@@ -703,13 +753,13 @@ resource-algebra#3 sketched this direction as "symmetric" to
 Loss → MaxPlus, but it is not: there is one map, not two. The issue's other
 claim, that every positive grade goes to a single point, holds.
 | `PROVEN` (`support′-hom`, `MaxPlus→Loss`)
-| 2ii
+| ungraded
 
 | F-7
 | The identity on the carrier is a lax morphism Loss → MinMax: a bottleneck
 never exceeds the sum.
 | `PROVEN` (`loss-bottleneck`)
-| 2ii
+| ungraded
 
 | F-8
 | Out of one question there is exactly one strict morphism into an algebra
@@ -717,20 +767,20 @@ never exceeds the sum.
 𝟘 ⊗ 𝟘 ≡ 𝟘, which every annihilating algebra has, and HWM too.
 | `PROVEN` (`one-question-hom`, `one-question-needs`,
 `one-question-unique`)
-| 2ii
+| ungraded
 
 | F-9
 | Taking the first question of `Questions (suc n)`, and dropping it, are
 strict morphisms. Composed, they read any single question alone.
 | `PROVEN` (`first-question`, `later-questions`)
-| 2ii
+| ungraded
 
 | F-10
 | The number of lost questions does not preserve ⊕: `collapse` and
 `shuffle` each count 1 and their ⊕ counts 0. So no map into Loss or MinMax
 that factors through the count is strict or lax.
 | `PROVEN` (`count-not-⊕`)
-| 2ii
+| ungraded
 |===
 
 == Separation (Separation.agda)
@@ -748,26 +798,26 @@ for checks over a bounded or sampled domain.
 | Sequencing peaks 2 and 3 gives 3 under HWM and 5 under MaxPlus: an
 occupancy bound is not a cost bound.
 | `PROVEN` (`occupancy-is-not-cost`)
-| 2ii
+| ungraded
 
 | S-2
 | On the same numbers, alternatives give `fin 2` under Loss and `val 3`
 under MaxPlus: echo's join is min, while tropical's is max.
 | `PROVEN` (`alternatives-differ`)
-| 2ii
+| ungraded
 
 | S-3
 | `val 1 ≼ val 2` in MaxPlus but `fin 2 ≼ fin 1` in Loss: the induced
 orders run in opposite directions.
 | `PROVEN` (`maxplus-order`, `loss-order-reversed`)
-| 2ii
+| ungraded
 
 | S-4
 | Sequencing 2 then 3 gives `fin 5` under Loss but `fin 3` under MinMax: a
 bottleneck bound is not a loss bound.
 | `PROVEN` (`bottleneck-is-not-sum`); `tests/reject/MinMaxIsLoss.agda`
 refuses the general identification
-| 2ii
+| ungraded
 |===
 
 == Parallel composition (Parallel.agda)
@@ -792,14 +842,14 @@ right and is monotone on both sides. A dioid with a commutative ⊗ is
 parallel with `_∥_` = ⊗, and then both exchange laws hold, as an equality.
 | `PROVEN` (`IsParallel` with `unitʳ`, `distribʳ`, `monoˡ`, `monoʳ`;
 `seq-parallel`, `seq-sync-below`, `seq-sync-above`)
-| 2ii
+| ungraded
 
 | P-2
 | Work. `Loss` and `MaxPlus` are parallel with `_∥_` = + (their ⊗), and
 have both exchange laws.
 | `PROVEN` (`Loss-parallel`, `Loss-sync-below`, `Loss-sync-above`,
 `MaxPlus-work`, `MaxPlus-work-sync-below`, `MaxPlus-work-sync-above`)
-| 2ii
+| ungraded
 
 | P-3
 | Span. `MaxPlus` is parallel with `_∥_` = max on finite costs (`bot`
@@ -808,7 +858,7 @@ absorbs). `SyncAbove` holds: max (a + c) (b + d) ≤ max a b + max c d.
 middle and 1 when they run free.
 | `PROVEN` (`MaxPlus-span`, `MaxPlus-span-sync-above`,
 `MaxPlus-span-not-sync-below`); control `tests/reject/SpanSyncBelow.agda`
-| 2ii
+| ungraded
 
 | P-4
 | Occupancy. `HWM` is parallel with `_∥_` = the sum of the peaks and the
@@ -817,7 +867,7 @@ peak 1, one before the meeting and one after it, hold 1 when they meet in
 the middle and are graded 2 when they run free.
 | `PROVEN` (`HWM-parallel`, `HWM-sync-below`, `HWM-not-sync-above`);
 control `tests/reject/HWMSyncAbove.agda`
-| 2ii
+| ungraded
 |===
 
 P-3 and P-4 together say that elapsed time and occupancy exchange in
@@ -839,7 +889,7 @@ greatest grade, `star a` = `𝟙` for every `a` is a star. `Loss` is such an
 algebra, so a loop grades as `fin 0`.
 | `PROVEN` (`IsStar` with `star-𝟙`, `star-step`; `unit-top-star`,
 `Loss-unit-top`, `Loss-star`)
-| 2ii
+| ungraded
 
 | K-2
 | A grade whose loop equation 𝟙 ⊕ (a ⊗ s) ≡ s has no solution rules a
@@ -849,7 +899,7 @@ carrier.
 | `PROVEN` (`no-star`, `MaxPlus-no-fixpoint`, `MaxPlus-no-star`,
 `HWM-no-fixpoint`, `HWM-no-star`); control
 `tests/reject/MaxPlusLoopBounded.agda`
-| 2ii
+| ungraded
 
 | K-3
 | `MaxPlusTop` (`Instances/MaxPlusTop.agda`: ℕ with −∞ and +∞, ⊕ = max,
@@ -858,14 +908,108 @@ carrier.
 embeds in it by a strict, injective morphism.
 | `PROVEN` (`MaxPlusTop`, `MaxPlusTop-dioid`, `MaxPlusTop-ordered`,
 `MaxPlusTop-annihilating`, `lift-hom`, `lift-injective`)
-| 2ii
+| ungraded
 
 | K-4
 | `MaxPlusTop` has a star: `bot` and `val 0` loop to `val 0`, and every
 dearer body, and `top`, loop to `top`.
 | `PROVEN` (`star-t`, `MaxPlusTop-star`)
-| 2ii
+| ungraded
 |===
+
+== Signed drift (Instances/SignedHWM.agda)
+
+`HWM` records a peak and a non-negative drift, so it grades only terms that
+never consume more than they allocate. `SHWM` lets the drift be any
+integer, or −∞: a term may free live state it did not allocate. The peak
+stays a natural, the live state above the entry level. Sequencing is HWM's
+formula read in the integers: the peak of a ; b is max (peak a) (drift a +
+peak b), and drifts add. `Instances.HWM` is unchanged. occupancy-types
+imports it (H-2), and HWM sits inside SHWM by the maps of D-3.
+
+The drift carrier is the max-plus dioid on ℤ ∪ {−∞} (`Drift.agda`). Its
+integers are Agda's own, read as differences of naturals; every integer law
+there is proved from that reading.
+
+[cols="1,4,2,1",options="header"]
+|===
+| ID | Claim | Agda (§5) | pwg
+
+| D-1
+| The drift carrier (ℤ ∪ {−∞}, max, +, −∞, 0) is a `ResourceAlgebra` and
+`IsDioid`. `SHWM` (peak in ℕ, drift in ℤ ∪ {−∞}, drift ≤ peak, ⊕ = max on
+both, ⊗ as above, 𝟘 = (0, −∞), 𝟙 = (0, 0)) is a `ResourceAlgebra`,
+`IsDioid` and `IsOrdered`.
+| `PROVEN` (`Drift-RA`, `Drift-dioid`, `SHWM`, `SHWM-dioid`,
+`SHWM-ordered`); control `tests/reject/SignedDriftExceedsPeak.agda` (a
+drift above the peak cannot be written)
+| ungraded
+
+| D-2
+| 𝟘 ≢ 𝟙: max on integer drift has no unit, so the unit of ⊕ needs drift
+−∞, which no run of ⊗'s unit has. 𝟘 absorbs on the left (𝟘 ⊗ a ≡ 𝟘). On the
+right it does not: a ⊗ 𝟘 keeps the peak of a, with drift −∞. So SHWM is not
+annihilating.
+| `PROVEN` (`SHWM-𝟘≢𝟙`, `SHWM-absorbˡ`, `SHWM-seq-𝟘`,
+`SHWM-not-annihilating`); controls `tests/reject/SHWMZeroIsOne.agda`,
+`tests/reject/SHWMAnnihilates.agda`
+| ungraded
+
+| D-3
+| HWM sits inside SHWM. `embed` (drift read as an integer) preserves 𝟙, ⊕
+and ⊗ exactly and is injective, so it is lax. It does not preserve 𝟘, and by
+F-4 no strict map HWM → SHWM exists. `clampG` (a drift below zero read as
+0) is lax, in the direction of F-2: the image of a sequence is below the
+sequence of the images. It is a retraction of `embed` (`clampG ∘ embed` is
+the identity), and it is not strict: free one cell, then allocate one, peaks
+at 0, and the clamped sequence peaks at 1.
+| `PROVEN` (`embed-⊗`, `embed-⊕`, `embed-lax`, `embed-injective`,
+`embed-𝟘`, `no-strict-HWM→SHWM`, `clamp-embed`, `clamp-lax`,
+`clamp-not-strict`); controls `tests/reject/EmbedPreservesZero.agda`,
+`tests/reject/ClampIsStrict.agda`
+| ungraded
+
+| D-4
+| In HWM a prefix never lowers the peak: peak b ≤ peak (a ⊗ b). With
+consumption it can: free one cell, then allocate one, peaks at 0, below the
+1 of the allocation alone. This is the change consumption makes.
+| `PROVEN` (`HWM-prefix-keeps-peak`, `prefix-lowers-peak`); control
+`tests/reject/SHWMPrefixKeepsPeak.agda`
+| ungraded
+
+| D-5
+| SHWM is parallel with `_∥_` = the sum of the peaks and the sum of the
+drifts. `SyncBelow` holds with signed drift: each thread stays at or below
+its own peak. `SyncAbove` does not, by P-4's witness.
+| `PROVEN` (`_∥s_`, `SHWM-parallel`, `SHWM-sync-below`,
+`SHWM-not-sync-above`); control `tests/reject/SHWMSyncAbove.agda`
+| ungraded
+
+| D-6
+| SHWM has no star: the body that allocates 1 and keeps it raises the peak
+by 1 each turn, whatever the drift of the rest.
+| `PROVEN` (`SHWM-no-fixpoint`, `SHWM-no-star`)
+| ungraded
+
+| D-7
+| `peak : SHWM → MaxPlus` is lax, as for HWM (F-2), and agrees with HWM's
+peak on `embed`.
+| `PROVEN` (`speak-lax`, `speak-embed`)
+| ungraded
+
+| D-8
+| On finite drift, SHWM's sequence is the bicyclic monoid. `bic` sends
+(a, b) to the grade of peak a and drift a − b. It sends (0, 0) to 𝟙 and
+the bicyclic product (a + (c ∸ b), d + (b ∸ c)) to ⊗, is injective, and
+reaches every grade with finite drift. HWM is the part where b ≤ a, that
+is drift ≥ 0: `embed` lands there, and every such pair comes from HWM.
+| `PROVEN` (`bic-𝟙`, `bic-·`, `bic-injective`, `bic-onto`, `bic-HWM`,
+`HWM-bic`)
+| ungraded
+|===
+
+What D-1 to D-8 do not cover is under Open: the trough (option B below),
+a loop grade, and adoption by occupancy-types.
 
 == Correspondences with other repositories (not graded)
 
@@ -884,7 +1028,7 @@ future import (echo → here, or here → echo) is `OPEN`.
 
 | H-2
 | `HWM` is occupancy-types' occupancy algebra.
-| PROVEN downstream: occupancy-types adopts `Instances.HWM` as its occupancy algebra (its O-1; `Reclaim.agda` and `Witness.agda` import it). Signed drift (consuming terms) is still not modelled: OPEN
+| PROVEN downstream: occupancy-types adopts `Instances.HWM` as its occupancy algebra (its O-1; `Reclaim.agda` and `Witness.agda` import it). Signed drift (consuming terms) is modelled here as a separate instance, `SHWM` (D-1 to D-8), with HWM inside it by `embed` and `clampG` (D-3). Whether occupancy-types adopts it is that repository's call: OPEN
 
 | N-2
 | `MinMax` is the bottleneck sequence that typed-wasm's `Tropical.tropMax`
@@ -919,6 +1063,22 @@ Questions, Evidence and Diamond are not instantiated. `unit-top-star` and
 commutes; that is not checked.
 * A loop grade for occupancy. HWM has no star (K-2) and no HWM with a top is
 defined. It belongs with occupancy-types' own algebra (H-2).
+* The trough of a signed run (option B). A term that consumes needs live
+state on entry. SHWM bounds the peak above the entry level and does not
+record how far below it a run goes, so it cannot say that a run never takes
+the live state below zero. The proposal is a third component: the trough
+t ≤ 0, the lowest level relative to entry, with t ≤ drift ≤ peak, ⊕ =
+(max, min, max) and the trough of a ; b = min (trough a) (drift a + trough
+b). The trough is the peak of the mirrored run, so the triple is the
+prefix-extrema algebra of a walk, and SHWM is its projection that forgets
+the trough: nothing in D-1 to D-8 would be lost. The entry requirement −t
+is a typing precondition, which belongs to occupancy-types (IS-NOT), so it
+is written up here and not built. Whether to build it is an owner call.
+* Signed drift in occupancy-types. That repository imports `Instances.HWM`
+(H-2). Using `SHWM` there, or the trough, would be its own change, made
+there.
+* A loop grade for signed drift. SHWM has no star (D-6), and no SHWM with a
+top is defined.
 * No law here relates `star` to `_∥_`, and no morphism is shown to preserve
 either. `peak-lax` is not checked against `_∥h_` and `tPar`.
 * Which exchange law (P-1) a cut needs is a question for K-CUT-LOSS in
