@@ -1786,22 +1786,22 @@ Qed.
 Definition Finite (g : SGrade) : Prop :=
   match sdrift g with ninf => False | dfin _ => True end.
 
-Lemma bic_onto : forall g, Finite g -> exists x, bic x = g.
+Definition bic_onto : forall g, Finite g -> { x : nat * nat | bic x = g }.
 Proof.
   intros [p [|z] bd] h; simpl in h; [contradiction|].
   simpl in bd. pose proof (proj1 (Z.leb_le _ _) bd) as q.
   exists (p, Z.to_nat (Z.of_nat p - z)). apply shwm_eq; simpl; try reflexivity.
   f_equal. lia.
-Qed.
+Defined.
 
 Lemma bic_HWM : forall a, bic (peak a, peak a - drift a) = embed a.
 Proof. intros [p n bd]; apply shwm_eq; simpl; fin_goals. Qed.
 
-Lemma HWM_bic : forall a b, b <= a -> exists h, embed h = bic (a, b).
+Definition HWM_bic : forall a b, b <= a -> { h : HGrade | embed h = bic (a, b) }.
 Proof.
   intros a b q. exists (hwm a (a - b) (Nat.le_sub_l a b)).
   apply shwm_eq; simpl; fin_goals.
-Qed.
+Defined.
 
 (** * Assumptions (PROOF-POLICY §8.4): each must print "Closed under the
     global context". *)

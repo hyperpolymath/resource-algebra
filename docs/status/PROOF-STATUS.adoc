@@ -430,8 +430,12 @@ arithmetic with `lia`.
 Rocq's grades are equal by `Eqdep_dec.UIP_dec`, a theorem of the standard
 library. Every statement is about peaks and drifts, so this changes none.
 * The Bicyclic carrier is a record (`⟨ rise , fall ⟩`) in Agda and Lean and
-`nat * nat` in Rocq. Agda and Lean state `bic-onto` with a `Σ`/`∃` over
-finite-drift grades; Rocq with `exists`.
+`nat * nat` in Rocq. D-8's `bic-onto` and `HWM-bic` return data-bearing
+witnesses: Agda's `Σ` in `Set`, Lean subtypes in `Type`, and Rocq's `sig`
+in `Set`. Their equality fields live in the universes described above.
+`bic-onto` retains the finite-drift premise; `HWM-bic` retains `b ≤ a`.
+Lean uses definitions and Rocq closes them with `Defined`, so callers can
+project and reduce the witnesses without a choice axiom.
 
 E-1, E-2 and E-3 have these residual differences:
 
@@ -1067,13 +1071,20 @@ defined. It belongs with occupancy-types' own algebra (H-2).
 state on entry. SHWM bounds the peak above the entry level and does not
 record how far below it a run goes, so it cannot say that a run never takes
 the live state below zero. The proposal is a third component: the trough
-t ≤ 0, the lowest level relative to entry, with t ≤ drift ≤ peak, ⊕ =
-(max, min, max) and the trough of a ; b = min (trough a) (drift a + trough
-b). The trough is the peak of the mirrored run, so the triple is the
-prefix-extrema algebra of a walk, and SHWM is its projection that forgets
-the trough: nothing in D-1 to D-8 would be lost. The entry requirement −t
-is a typing precondition, which belongs to occupancy-types (IS-NOT), so it
-is written up here and not built. Whether to build it is an owner call.
+t ≤ 0, the lowest level relative to entry, with t ≤ drift ≤ peak and the
+trough of a ; b = min (trough a) (drift a + trough b). For a deterministic
+walk, −t is the peak of the mirrored run and the triple records its prefix
+extrema. The proposed alternative operation ⊕ = (max, min, max), in
+(peak, trough, drift) order, forgets the smaller branch drift. It cannot
+give a sound entry requirement after a suffix: choosing drift −1 or +1,
+then taking a suffix with trough −2, can reach −3, while that summary
+reports −1. Alternatives are therefore excluded from the entry-safety
+claim; supporting them requires retaining a lower bound on branch drift
+and using it in the sequence trough bound. Forgetting the trough recovers
+the SHWM summary, but does not establish entry safety. For deterministic
+sequences, the entry requirement −t is a typing precondition, which
+belongs to occupancy-types (IS-NOT), so it is written up here and not
+built. Whether to build it is an owner call.
 * Signed drift in occupancy-types. That repository imports `Instances.HWM`
 (H-2). Using `SHWM` there, or the trough, would be its own change, made
 there.

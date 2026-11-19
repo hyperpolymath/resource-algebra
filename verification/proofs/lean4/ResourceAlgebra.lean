@@ -2298,7 +2298,7 @@ def Finite (g : SGrade) : Prop :=
   | ninf => False
   | dfin _ => True
 
-theorem bic_onto : ∀ g : SGrade, Finite g → ∃ x, bic x = g
+def bic_onto : ∀ g : SGrade, Finite g → { x : Bicyclic // bic x = g }
   | ⟨_, ninf, _⟩, h => absurd h id
   | ⟨p, dfin (Int.ofNat n), b⟩, _ => ⟨⟨p, p - n⟩, SGrade.ext' rfl (congrArg dfin
       (isub_eq _ _ _ _ ((Nat.add_zero p).trans
@@ -2311,7 +2311,7 @@ theorem bic_HWM (a : HGrade) : bic ⟨a.peak, a.peak - a.drift⟩ = embed a :=
     (isub_eq _ _ _ _ ((Nat.add_zero a.peak).trans
       ((sub_add_cancel' a.bounded).symm.trans (Nat.add_comm (a.peak - a.drift) a.drift)))))
 
-theorem HWM_bic (a b : Nat) (q : b ≤ a) : ∃ h : HGrade, embed h = bic ⟨a, b⟩ :=
+def HWM_bic (a b : Nat) (q : b ≤ a) : { h : HGrade // embed h = bic ⟨a, b⟩ } :=
   ⟨⟨a, a - b, sub_le' a b⟩, SGrade.ext' rfl (congrArg dfin (isub_pos a b q).symm)⟩
 
 end RA
