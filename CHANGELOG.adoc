@@ -1,5 +1,21 @@
 == Changelog
 
+== 2026-11-19 — Proof receipt at 201e05b, the merge of #58; 39 rows are PWG-2ii
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `201e05b` (the merge of #58), from `proofs.yml` run
+  `44435465068` on main: Agda job `135263084676`, Rocq `135263084711`, Lean
+  `135263084426`. The `Proofs verdict` job and the coverage-exemption job
+  passed in the same run. Each ledger row was printed by
+  `scripts/proof-receipt.sh --run-row`.
+* Census: of 40 theory rows, 39 are PWG-2ii and 1 (M-2) is ungraded. P-1 to
+  P-4 and K-1 to K-4 have their first grade. No row is PWG-1: only the Rocq
+  job runs in an image that ships its checker (PN-7).
+* This is the first receipt of the Lean leg and the M-2 bridge under `lake`.
+* The three runs at `15fa113` leave the ledger and are listed under "Earlier
+  receipts" in `PROOF-STATUS.adoc`. The `receipt_run_scope` hook that
+  limited them to the rows they checked is removed with them.
+
 == 2026-11-19 — Parallel composition and the loop grade (P-1 to P-4, K-1 to K-4); every receipt superseded (40 rows ungraded for now)
 
 * `src/ResourceAlgebra/Parallel.agda` adds the `IsParallel` layer: a
