@@ -118,6 +118,20 @@ lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c92
 ROWS
 }
 
+# The three runs at 15fa113 predate rows P-1 to P-4 and K-1 to K-4, so they
+# did not check them.  Each is listed under the rows it did check only: a
+# row's lineage never names a run that did not check it.  M-2 has a Lean
+# leg only.  Remove a row here when its run is replaced by a current one.
+receipt_run_scope() {
+  local u=https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job
+  local old='C-1 C-2 C-3 C-4a C-4b L-1 M-1 H-1 H-3 N-1 Q-1 Q-2 Q-3 Q-4 E-1 E-2 E-3 F-1 F-2 F-3 F-4 F-5 F-6 F-7 F-8 F-9 F-10 S-1 S-2 S-3 S-4'
+  cat <<ROWS
+agda|$u/134484857967|$old
+rocq|$u/134484858135|$old
+lean|$u/134484858201|$old M-2
+ROWS
+}
+
 receipt_echoes() { :; }
 receipt_header() {
   cat <<'EOF'
