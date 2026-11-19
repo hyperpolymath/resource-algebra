@@ -1,5 +1,29 @@
 == Changelog
 
+== 2026-11-19 — Parallel composition and the loop grade (P-1 to P-4, K-1 to K-4); every receipt superseded (40 rows ungraded for now)
+
+* `src/ResourceAlgebra/Parallel.agda` adds the `IsParallel` layer: a
+  commutative monoid on `𝟙` that distributes over ⊕. Two exchange laws,
+  `SyncBelow` and `SyncAbove`, relate it to ⊗ and are stated apart. Work
+  (`_∥_` = ⊗ in a dioid with a commutative ⊗; Loss and MaxPlus) has both.
+  MaxPlus span (`tPar`, max) has `SyncAbove` only. HWM (`_∥h_`, the sum) has
+  `SyncBelow` only.
+* `src/ResourceAlgebra/Star.agda` adds the `IsStar` layer (Kozen's axioms).
+  An algebra whose `𝟙` is greatest has the star `star a` = `𝟙` (Loss).
+  MaxPlus and HWM have no star. `Instances/MaxPlusTop.agda` adds a top to
+  MaxPlus; it is an annihilating dioid with a star, and MaxPlus embeds in it
+  by a strict, injective morphism.
+* Three expected rejections are added (16 in all): `SpanSyncBelow`,
+  `HWMSyncAbove` and `MaxPlusLoopBounded`.
+* The Rocq and Lean legs re-prove the eight rows by hand. Checked before
+  the pull request, not as receipts: Agda 2.6.3, Lean 4.35.0 (116 of 116
+  printed theorems axiom-free) and Coq 8.18.0 on a copy (106 of 106 closed).
+* The Agda and Rocq inputs changed, so their runs at `15fa113` are
+  `superseded` in the ledger of `scripts/proof-receipt.sh`; the Lean run
+  already was. The receipt is regenerated with source commit `c31bf1a`. Of
+  40 theory rows, all 40 are ungraded until the first `proofs.yml` run on
+  main that contains this change is recorded.
+
 == 2026-11-18 — Lean leg and M-2 bridge under lake; the Lean receipt is superseded (31 rows PWG-2i for now)
 
 * The Lean leg builds as a Lake package (`verification/proofs/lean4/lakefile.toml`,

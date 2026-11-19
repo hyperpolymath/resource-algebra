@@ -1317,6 +1317,376 @@ theorem ordered_annihilating_not_dioid :
     IsOrdered Diamond ∧ IsAnnihilating Diamond ∧ ¬ IsDioid Diamond :=
   ⟨Diamond_ordered, Diamond_annihilating, Diamond_not_dioid⟩
 
+/-! ## Parallel composition (P-1 .. P-4)
+
+A second, commutative product on the same unit, distributing over
+alternatives. Which way it exchanges with sequence depends on the resource,
+so the two exchange laws are stated apart. -/
+
+structure IsParallel (R : ResourceAlgebra) (par : R.Grade → R.Grade → R.Grade) : Prop where
+  assoc    : ∀ a b c, par (par a b) c = par a (par b c)
+  comm     : ∀ a b, par a b = par b a
+  unitl    : ∀ a, par R.one a = a
+  distribl : ∀ a b c, par a (R.add b c) = R.add (par a b) (par a c)
+
+/-- P-1: the derived right unit, right distributivity and monotonicity. -/
+theorem IsParallel.unitr {R : ResourceAlgebra} {par : R.Grade → R.Grade → R.Grade}
+    (p : IsParallel R par) (a : R.Grade) : par a R.one = a :=
+  (p.comm a R.one).trans (p.unitl a)
+
+theorem IsParallel.distribr {R : ResourceAlgebra} {par : R.Grade → R.Grade → R.Grade}
+    (p : IsParallel R par) (a b c : R.Grade) :
+    par (R.add a b) c = R.add (par a c) (par b c) := by
+  rw [p.comm (R.add a b) c, p.distribl c a b, p.comm c a, p.comm c b]
+
+theorem IsParallel.mono_l {R : ResourceAlgebra} {par : R.Grade → R.Grade → R.Grade}
+    (p : IsParallel R par) (c : R.Grade) {a b : R.Grade} (h : R.Le a b) :
+    R.Le (par c a) (par c b) := by
+  unfold ResourceAlgebra.Le at *
+  rw [← p.distribl, h]
+
+theorem IsParallel.mono_r {R : ResourceAlgebra} {par : R.Grade → R.Grade → R.Grade}
+    (p : IsParallel R par) (c : R.Grade) {a b : R.Grade} (h : R.Le a b) :
+    R.Le (par a c) (par b c) := by
+  unfold ResourceAlgebra.Le at *
+  rw [← p.distribr, h]
+
+/-- Threads that meet in the middle are graded at most as threads that run
+free. -/
+def SyncBelow (R : ResourceAlgebra) (par : R.Grade → R.Grade → R.Grade) : Prop :=
+  ∀ a b c d, R.Le (R.mul (par a b) (par c d)) (par (R.mul a c) (R.mul b d))
+
+/-- Threads that meet in the middle are graded at least as threads that run
+free. -/
+def SyncAbove (R : ResourceAlgebra) (par : R.Grade → R.Grade → R.Grade) : Prop :=
+  ∀ a b c d, R.Le (par (R.mul a c) (R.mul b d)) (R.mul (par a b) (par c d))
+
+/-- P-1: a dioid with a commutative sequence is parallel with ∥ = ⊗. -/
+theorem seq_parallel {R : ResourceAlgebra} (d : IsDioid R)
+    (mc : ∀ a b, R.mul a b = R.mul b a) : IsParallel R R.mul where
+  assoc := R.seq.assoc
+  comm := mc
+  unitl := R.seq.unitl
+  distribl := d.distribl
+
+theorem mul_interchange {R : ResourceAlgebra} (mc : ∀ a b, R.mul a b = R.mul b a)
+    (a b c d : R.Grade) :
+    R.mul (R.mul a b) (R.mul c d) = R.mul (R.mul a c) (R.mul b d) := by
+  rw [R.seq.assoc a b (R.mul c d), ← R.seq.assoc b c d, mc b c,
+      R.seq.assoc c b d, ← R.seq.assoc a c (R.mul b d)]
+
+/-- P-1: and it has both exchange laws. -/
+theorem seq_sync_below {R : ResourceAlgebra} (mc : ∀ a b, R.mul a b = R.mul b a) :
+    SyncBelow R R.mul := fun a b c d => by
+  rw [mul_interchange mc a b c d]
+  exact R.le_refl _
+
+theorem seq_sync_above {R : ResourceAlgebra} (mc : ∀ a b, R.mul a b = R.mul b a) :
+    SyncAbove R R.mul := fun a b c d => by
+  rw [mul_interchange mc a b c d]
+  exact R.le_refl _
+
+/-! P-2: work. Loss and MaxPlus, parallel = sequence. -/
+theorem lplus_comm (a b : LGrade) : lplus a b = lplus b a := by
+  cases a <;> cases b <;> first | rfl | exact congrArg fin (Nat.add_comm _ _)
+
+theorem Loss_parallel : IsParallel Loss lplus := seq_parallel Loss_dioid lplus_comm
+
+theorem Loss_sync_below : SyncBelow Loss lplus := seq_sync_below (R := Loss) lplus_comm
+
+theorem Loss_sync_above : SyncAbove Loss lplus := seq_sync_above (R := Loss) lplus_comm
+
+theorem tMul_comm (a b : Tropical) : tMul a b = tMul b a := by
+  cases a <;> cases b <;> first | rfl | exact congrArg val (Nat.add_comm _ _)
+
+theorem MaxPlus_work : IsParallel MaxPlus tMul := seq_parallel MaxPlus_dioid tMul_comm
+
+theorem MaxPlus_work_sync_below : SyncBelow MaxPlus tMul :=
+  seq_sync_below (R := MaxPlus) tMul_comm
+
+theorem MaxPlus_work_sync_above : SyncAbove MaxPlus tMul :=
+  seq_sync_above (R := MaxPlus) tMul_comm
+
+/-! P-3: span. MaxPlus, parallel = max on finite costs. -/
+def tPar : Tropical → Tropical → Tropical
+  | bot, _ => bot
+  | val _, bot => bot
+  | val m, val n => val (rmax m n)
+
+theorem MaxPlus_span : IsParallel MaxPlus tPar where
+  assoc := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;>
+      first | rfl | exact congrArg val (rmax_assoc _ _ _)
+  comm := by
+    intro a b
+    cases a <;> cases b <;> first | rfl | exact congrArg val (rmax_comm _ _)
+  unitl := by intro a; cases a <;> rfl
+  distribl := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;>
+      first | rfl | exact congrArg val (rmax_dup _ _ _).symm
+
+theorem MaxPlus_span_sync_above : SyncAbove MaxPlus tPar := by
+  intro a b c d
+  unfold ResourceAlgebra.Le
+  cases a <;> cases b <;> cases c <;> cases d <;>
+    first
+    | rfl
+    | exact congrArg val (rmax_of_le (rmax_lub
+        (Nat.add_le_add (le_rmax_left _ _) (le_rmax_left _ _))
+        (Nat.add_le_add (le_rmax_right _ _) (le_rmax_right _ _))))
+
+theorem MaxPlus_span_not_sync_below : ¬ SyncBelow MaxPlus tPar := fun f =>
+  absurd (val_injective (f (val 1) (val 0) (val 0) (val 1)) : (2 : Nat) = 1) (by decide)
+
+/-! P-4: occupancy. HWM, parallel = sum of peaks and sum of drifts. -/
+def parH (a b : HGrade) : HGrade :=
+  ⟨a.peak + b.peak, a.drift + b.drift, Nat.add_le_add a.bounded b.bounded⟩
+
+theorem add_interchange (a b c d : Nat) : (a + b) + (c + d) = (a + c) + (b + d) := by
+  rw [Nat.add_assoc a b (c + d), ← Nat.add_assoc b c d, Nat.add_comm b c,
+      Nat.add_assoc c b d, ← Nat.add_assoc a c (b + d)]
+
+theorem HWM_parallel : IsParallel HWM parH where
+  assoc := fun _ _ _ => HGrade.ext' (Nat.add_assoc _ _ _) (Nat.add_assoc _ _ _)
+  comm := fun _ _ => HGrade.ext' (Nat.add_comm _ _) (Nat.add_comm _ _)
+  unitl := fun _ => HGrade.ext' (Nat.zero_add _) (Nat.zero_add _)
+  distribl := fun _ _ _ => HGrade.ext' (add_rmax_l _ _ _) (add_rmax_l _ _ _)
+
+theorem HWM_sync_below : SyncBelow HWM parH := fun a b c d => HGrade.ext'
+  (show rmax (rmax (a.peak + b.peak) ((a.drift + b.drift) + (c.peak + d.peak)))
+          (rmax a.peak (a.drift + c.peak) + rmax b.peak (b.drift + d.peak))
+        = rmax a.peak (a.drift + c.peak) + rmax b.peak (b.drift + d.peak) from
+    rmax_of_le (rmax_lub
+      (Nat.add_le_add (le_rmax_left _ _) (le_rmax_left _ _))
+      (Nat.le_trans (Nat.le_of_eq (add_interchange a.drift b.drift c.peak d.peak))
+        (Nat.add_le_add (le_rmax_right _ _) (le_rmax_right _ _)))))
+  (show rmax ((a.drift + b.drift) + (c.drift + d.drift))
+          ((a.drift + c.drift) + (b.drift + d.drift))
+        = (a.drift + c.drift) + (b.drift + d.drift) from
+    rmax_of_le (Nat.le_of_eq (add_interchange _ _ _ _)))
+
+theorem HWM_not_sync_above : ¬ SyncAbove HWM parH := fun f =>
+  absurd (congrArg HGrade.peak
+      (f ⟨1, 0, Nat.zero_le 1⟩ zeroH zeroH ⟨1, 0, Nat.zero_le 1⟩) : (2 : Nat) = 1)
+    (by decide)
+
+/-! ## The loop grade (K-1 .. K-4)
+
+`star a` is the grade of "a, any number of times": a fixed point of
+x ↦ 𝟙 ⊕ (a ⊗ x), and the least one on both sides (Kozen's axioms). -/
+
+structure IsStar (R : ResourceAlgebra) (star : R.Grade → R.Grade) : Prop where
+  unfold_eq : ∀ a, R.add R.one (R.mul a (star a)) = star a
+  leastl : ∀ a b x, R.Le (R.add b (R.mul a x)) x → R.Le (R.mul (star a) b) x
+  leastr : ∀ a b x, R.Le (R.add b (R.mul x a)) x → R.Le (R.mul b (star a)) x
+
+/-- K-1: the loop grade bounds no turn and one more turn. -/
+theorem IsStar.one_le {R : ResourceAlgebra} {star : R.Grade → R.Grade}
+    (s : IsStar R star) (a : R.Grade) : R.Le R.one (star a) := by
+  have h := R.add_upperl R.one (R.mul a (star a))
+  rw [s.unfold_eq a] at h
+  exact h
+
+theorem IsStar.step {R : ResourceAlgebra} {star : R.Grade → R.Grade}
+    (s : IsStar R star) (a : R.Grade) : R.Le (R.mul a (star a)) (star a) := by
+  have h := R.add_upperr R.one (R.mul a (star a))
+  rw [s.unfold_eq a] at h
+  exact h
+
+/-- K-1: if 𝟙 is the greatest grade, every loop grades as 𝟙. -/
+theorem unit_top_star {R : ResourceAlgebra} (greatest : ∀ a, R.Le a R.one) :
+    IsStar R (fun _ => R.one) where
+  unfold_eq a := (R.alt.comm R.one (R.mul a R.one)).trans (greatest (R.mul a R.one))
+  leastl a b x h := by
+    show R.Le (R.mul R.one b) x
+    rw [R.seq.unitl]
+    exact R.le_trans (R.add_upperl b (R.mul a x)) h
+  leastr a b x h := by
+    show R.Le (R.mul b R.one) x
+    rw [R.seq.unitr]
+    exact R.le_trans (R.add_upperl b (R.mul x a)) h
+
+theorem Loss_unit_top (a : LGrade) : Loss.Le a Loss.one := by
+  unfold ResourceAlgebra.Le
+  cases a <;> first | rfl | exact congrArg fin (rmin_zero_r _)
+
+theorem Loss_star : IsStar Loss (fun _ => fin 0) := unit_top_star Loss_unit_top
+
+/-- K-2: a grade whose loop equation has no solution rules a star out. -/
+def NoFixpoint (R : ResourceAlgebra) (a : R.Grade) : Prop :=
+  ∀ s, R.add R.one (R.mul a s) ≠ s
+
+theorem no_star {R : ResourceAlgebra} (a : R.Grade) (nf : NoFixpoint R a)
+    (star : R.Grade → R.Grade) : ¬ IsStar R star :=
+  fun st => nf (star a) (st.unfold_eq a)
+
+theorem MaxPlus_no_fixpoint : NoFixpoint MaxPlus (val 1) := fun s h => by
+  cases s with
+  | val n =>
+      have e : 1 + n = n := val_injective h
+      exact Nat.succ_ne_self n ((Nat.add_comm n 1).trans e)
+  | bot =>
+      have h' : val 0 = bot := h
+      cases h'
+
+theorem MaxPlus_no_star (star : Tropical → Tropical) : ¬ IsStar MaxPlus star :=
+  no_star (R := MaxPlus) (val 1) MaxPlus_no_fixpoint star
+
+theorem HWM_no_fixpoint : NoFixpoint HWM ⟨1, 1, Nat.le_refl 1⟩ := fun s h =>
+  have e : 1 + s.drift = s.drift := congrArg HGrade.drift h
+  Nat.succ_ne_self s.drift ((Nat.add_comm s.drift 1).trans e)
+
+theorem HWM_no_star (star : HGrade → HGrade) : ¬ IsStar HWM star :=
+  no_star (R := HWM) ⟨1, 1, Nat.le_refl 1⟩ HWM_no_fixpoint star
+
+/-! K-3: MaxPlus with a top, (ℕ ∪ {−∞, +∞}, max, +). -/
+inductive TGrade where
+  | bot : TGrade
+  | val : Nat → TGrade
+  | top : TGrade
+  deriving DecidableEq
+
+def taddT : TGrade → TGrade → TGrade
+  | .bot, y => y
+  | .val m, .bot => .val m
+  | .val m, .val n => .val (rmax m n)
+  | .val _, .top => .top
+  | .top, _ => .top
+
+def tmulT : TGrade → TGrade → TGrade
+  | .bot, _ => .bot
+  | .val _, .bot => .bot
+  | .val m, .val n => .val (m + n)
+  | .val _, .top => .top
+  | .top, .bot => .bot
+  | .top, .val _ => .top
+  | .top, .top => .top
+
+abbrev MaxPlusTop : ResourceAlgebra where
+  Grade := TGrade
+  add := taddT
+  mul := tmulT
+  zero := .bot
+  one := .val 0
+  alt := {
+    assoc := by
+      intro a b c
+      cases a <;> cases b <;> cases c <;>
+        first | rfl | exact congrArg TGrade.val (rmax_assoc _ _ _)
+    comm := by
+      intro a b
+      cases a <;> cases b <;> first | rfl | exact congrArg TGrade.val (rmax_comm _ _)
+    idem := by intro a; cases a <;> first | rfl | exact congrArg TGrade.val (rmax_idem _)
+    unitl := by intro a; rfl }
+  seq := {
+    assoc := by
+      intro a b c
+      cases a <;> cases b <;> cases c <;>
+        first | rfl | exact congrArg TGrade.val (Nat.add_assoc _ _ _)
+    unitl := by
+      intro a; cases a <;> first | rfl | exact congrArg TGrade.val (Nat.zero_add _)
+    unitr := by intro a; cases a <;> rfl }
+
+theorem tmulT_comm (a b : TGrade) : tmulT a b = tmulT b a := by
+  cases a <;> cases b <;> first | rfl | exact congrArg TGrade.val (Nat.add_comm _ _)
+
+theorem MaxPlusTop_dioid : IsDioid MaxPlusTop where
+  distribl := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;>
+      first | rfl | exact congrArg TGrade.val (add_rmax_l _ _ _)
+  distribr := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;>
+      first | rfl | exact congrArg TGrade.val (add_rmax_r _ _ _)
+
+theorem MaxPlusTop_ordered : IsOrdered MaxPlusTop := MaxPlusTop_dioid.ordered
+
+theorem MaxPlusTop_annihilating : IsAnnihilating MaxPlusTop where
+  annihill := by intro a; rfl
+  annihilr := by intro a; cases a <;> rfl
+
+/-- K-3: MaxPlus embeds in it by a strict, injective morphism. -/
+def liftT : Tropical → TGrade
+  | val n => .val n
+  | bot => .bot
+
+def liftHom : Hom MaxPlus MaxPlusTop where
+  map := liftT
+  map_zero := rfl
+  map_one := rfl
+  map_add := by intro a b; cases a <;> cases b <;> rfl
+  map_mul := by intro a b; cases a <;> cases b <;> rfl
+
+theorem lift_injective : ∀ a b : Tropical, liftT a = liftT b → a = b
+  | val _, val _, h => congrArg val (TGrade.val.inj h)
+  | val _, bot, h => by cases h
+  | bot, val _, h => by cases h
+  | bot, bot, _ => rfl
+
+/-! K-4: its star. bot and val 0 loop for nothing; a dearer body loops to
+top. -/
+def starT : TGrade → TGrade
+  | .bot => .val 0
+  | .val 0 => .val 0
+  | .val (_ + 1) => .top
+  | .top => .top
+
+/-- `max (suc n + k) k` is never `k` (Agda: `max-suc-+`). -/
+theorem rmax_succ_add_ne (n k : Nat) : rmax (n + 1 + k) k ≠ k := fun e =>
+  have h2 : n + 1 + k ≤ k := Nat.le_trans (le_rmax_left _ _) (Nat.le_of_eq e)
+  have h3 : k + 1 ≤ n + 1 + k := by
+    rw [Nat.add_assoc, Nat.add_comm 1 k]
+    exact Nat.le_add_left (k + 1) n
+  Nat.not_succ_le_self k (Nat.le_trans h3 h2)
+
+/-- From `b ≼ x` and `a ⊗ x ≼ x`. A body that costs something, sequenced
+before a possible `x`, forces `x` to be top. -/
+theorem starT_go : ∀ a b x : TGrade,
+    taddT b x = x → taddT (tmulT a x) x = x → taddT (tmulT (starT a) b) x = x
+  | .bot, b, x, hb, _ => by
+      rw [show tmulT (starT .bot) b = b from MaxPlusTop.seq.unitl b]; exact hb
+  | .val 0, b, x, hb, _ => by
+      rw [show tmulT (starT (.val 0)) b = b from MaxPlusTop.seq.unitl b]; exact hb
+  | .val (_ + 1), .bot, x, _, _ => by cases x <;> rfl
+  | .val (_ + 1), .val _, .bot, hb, _ => by cases hb
+  | .val (n + 1), .val _, .val k, _, ha =>
+      absurd (TGrade.val.inj ha) (rmax_succ_add_ne n k)
+  | .val (_ + 1), .val _, .top, _, _ => rfl
+  | .val (_ + 1), .top, .bot, hb, _ => by cases hb
+  | .val (_ + 1), .top, .val _, hb, _ => by cases hb
+  | .val (_ + 1), .top, .top, _, _ => rfl
+  | .top, .bot, x, _, _ => by cases x <;> rfl
+  | .top, .val _, .bot, hb, _ => by cases hb
+  | .top, .val _, .val _, _, ha => by cases ha
+  | .top, .val _, .top, _, _ => rfl
+  | .top, .top, .bot, hb, _ => by cases hb
+  | .top, .top, .val _, hb, _ => by cases hb
+  | .top, .top, .top, _, _ => rfl
+
+theorem MaxPlusTop_star : IsStar MaxPlusTop starT where
+  unfold_eq := by
+    intro a
+    cases a with
+    | bot => rfl
+    | top => rfl
+    | val n => cases n <;> rfl
+  leastl a b x h :=
+    starT_go a b x
+      (MaxPlusTop.le_trans (MaxPlusTop.add_upperl b (tmulT a x)) h)
+      (MaxPlusTop.le_trans (MaxPlusTop.add_upperr b (tmulT a x)) h)
+  leastr a b x h := by
+    have h' : MaxPlusTop.Le (taddT b (tmulT a x)) x := by
+      rw [tmulT_comm a x]; exact h
+    have g := starT_go a b x
+      (MaxPlusTop.le_trans (MaxPlusTop.add_upperl b (tmulT a x)) h')
+      (MaxPlusTop.le_trans (MaxPlusTop.add_upperr b (tmulT a x)) h')
+    show taddT (tmulT b (starT a)) x = x
+    rw [tmulT_comm b (starT a)]
+    exact g
+
 end RA
 
 /-! ## Axioms (PROOF-POLICY §8.4)
@@ -1407,3 +1777,35 @@ other answer. -/
 #print axioms RA.row2_is_argued
 #print axioms RA.row4_is_tested_only
 #print axioms RA.row0_keeps_its_evidence
+#print axioms RA.IsParallel.unitr
+#print axioms RA.IsParallel.distribr
+#print axioms RA.IsParallel.mono_l
+#print axioms RA.IsParallel.mono_r
+#print axioms RA.seq_parallel
+#print axioms RA.seq_sync_below
+#print axioms RA.seq_sync_above
+#print axioms RA.Loss_parallel
+#print axioms RA.Loss_sync_below
+#print axioms RA.Loss_sync_above
+#print axioms RA.MaxPlus_work
+#print axioms RA.MaxPlus_work_sync_below
+#print axioms RA.MaxPlus_work_sync_above
+#print axioms RA.MaxPlus_span
+#print axioms RA.MaxPlus_span_sync_above
+#print axioms RA.MaxPlus_span_not_sync_below
+#print axioms RA.HWM_parallel
+#print axioms RA.HWM_sync_below
+#print axioms RA.HWM_not_sync_above
+#print axioms RA.IsStar.one_le
+#print axioms RA.IsStar.step
+#print axioms RA.unit_top_star
+#print axioms RA.Loss_star
+#print axioms RA.no_star
+#print axioms RA.MaxPlus_no_star
+#print axioms RA.HWM_no_star
+#print axioms RA.MaxPlusTop
+#print axioms RA.MaxPlusTop_dioid
+#print axioms RA.MaxPlusTop_annihilating
+#print axioms RA.liftHom
+#print axioms RA.lift_injective
+#print axioms RA.MaxPlusTop_star
