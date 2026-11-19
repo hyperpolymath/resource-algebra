@@ -86,10 +86,12 @@ only from its first green run.
 ----
 src/ResourceAlgebra/Prelude.agda      ℕ lemmas (+, max, min, ≤), proved here
 src/ResourceAlgebra/Core.agda         the record and its layers
-src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions, Evidence
+src/ResourceAlgebra/Instances/*.agda  Loss, MaxPlus, HWM, MinMax, Questions, Evidence, Diamond, MaxPlusTop
 src/ResourceAlgebra/Ledger.agda       a proof-ledger row's status, derived from its dependencies
 src/ResourceAlgebra/Separation.agda   checked separation witnesses
 src/ResourceAlgebra/Morphism.agda     strict and lax morphisms, classifications
+src/ResourceAlgebra/Parallel.agda     parallel composition and its two exchange laws
+src/ResourceAlgebra/Star.agda         the loop grade (Kleene star), and where it exists
 tests/reject/*.agda                   expected rejections (must fail)
 docs/pre-registration.adoc            intent, provenance ledger, obligations
 docs/status/PROOF-STATUS.adoc         every claim with its status and artefact

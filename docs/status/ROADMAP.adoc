@@ -28,7 +28,7 @@ Initial development phase.
 * [ ] Pin the digests in `.github/workflows/proofs.yml`, print each image
   digest in the job summaries, and record a new receipt from a run on the
   merge commit.
-* Until then the 28 rows stay PWG-2ii. Detail and rejected alternatives:
+* Until then the 39 graded rows stay PWG-2ii. Detail and rejected alternatives:
   `docs/status/PROOF-NEEDS.adoc`, PN-7.
 
 == Future Directions
