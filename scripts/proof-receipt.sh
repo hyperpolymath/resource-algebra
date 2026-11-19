@@ -86,7 +86,7 @@ receipt_claims() {
     printf '%s|proven|theorem|re-proved|RECONCILED|re-proved|RECONCILED||\n' "$id"
   done
   printf '%s\n' "M-2|open|theorem|unavailable||re-proved|LEAN-CHECKED|the statement names tropical-types' Lean instance, which Rocq cannot import|"
-  for id in H-1 H-3 N-1 Q-1 Q-2 Q-3 Q-4 E-1 E-2 E-3 F-1 F-2 F-3 F-4 F-5 F-6 F-7 F-8 F-9 F-10 S-1 S-2 S-3 S-4; do
+  for id in H-1 H-3 N-1 Q-1 Q-2 Q-3 Q-4 E-1 E-2 E-3 F-1 F-2 F-3 F-4 F-5 F-6 F-7 F-8 F-9 F-10 S-1 S-2 S-3 S-4 P-1 P-2 P-3 P-4 K-1 K-2 K-3 K-4; do
     printf '%s|proven|theorem|re-proved|RECONCILED|re-proved|RECONCILED||\n' "$id"
   done
 }
@@ -112,9 +112,23 @@ receipt_runs() {
   # The Lean invocation of that run, before the legs moved under lake.
   local lean_direct='lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)'
   cat <<ROWS
-agda|$u/134484857967|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|current||||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
-rocq|$u/134484858135|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|current|||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
+agda|$u/134484857967|$c|Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)|$(receipt_invocation agda)|6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d|PASS: core proofs, unit tests and all 13 expected rejections|superseded|its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them|||0c1f64c3c7f0a26cbc92595168858485a9883f6196d287497dcc805faf5c58eb
+rocq|$u/134484858135|$c|Rocq 9.3.0, then rocqchk|$(receipt_invocation rocq)|b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7|RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file|superseded|its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them||||rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93
 lean|$u/134484858201|$c|Lean 4.35.0 (release archive, sha256 7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d, on the hosted runner, no image)|$lean_direct|015e62121942646e938318c4015212bb32434493c238e3cef7168858c68d9cb6|RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom|superseded|its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake||hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e=c176b35aaec8d21b891671ed0e0619e68f1413ace21a8078825069a3d3095e01
+ROWS
+}
+
+# The three runs at 15fa113 predate rows P-1 to P-4 and K-1 to K-4, so they
+# did not check them.  Each is listed under the rows it did check only: a
+# row's lineage never names a run that did not check it.  M-2 has a Lean
+# leg only.  Remove a row here when its run is replaced by a current one.
+receipt_run_scope() {
+  local u=https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job
+  local old='C-1 C-2 C-3 C-4a C-4b L-1 M-1 H-1 H-3 N-1 Q-1 Q-2 Q-3 Q-4 E-1 E-2 E-3 F-1 F-2 F-3 F-4 F-5 F-6 F-7 F-8 F-9 F-10 S-1 S-2 S-3 S-4'
+  cat <<ROWS
+agda|$u/134484857967|$old
+rocq|$u/134484858135|$old
+lean|$u/134484858201|$old M-2
 ROWS
 }
 

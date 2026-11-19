@@ -19,48 +19,29 @@
   :beholding-chora #u8"chora:estate/github.com/hyperpolymath"
   :profile proof-receipt
   :repository "hyperpolymath/resource-algebra"
-  :source-commit "15fa113c7427e2de009eade9148295d08c046b33"
+  :source-commit "c31bf1a9ae9d186674c7ed79c6c9b018a1d59c2b"
   (trusted-base
     (primitive :prover agda :module "Agda.Primitive" :name "Level" :binding "BUILTIN LEVEL")
     (primitive :prover agda :module "Agda.Primitive" :name "lzero" :binding "BUILTIN LEVELZERO")
     (primitive :prover agda :module "Agda.Primitive" :name "lsuc" :binding "BUILTIN LEVELSUC")
     (primitive :prover agda :module "Agda.Primitive" :name "_⊔_" :binding "BUILTIN LEVELMAX"))
-  (claim :id "C-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "C-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -69,42 +50,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "C-2" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "C-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -113,42 +75,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "C-3" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "C-3" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -157,42 +100,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "C-4a" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "C-4a" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -201,42 +125,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "C-4b" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "C-4b" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -245,42 +150,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "L-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "L-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -289,42 +175,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "M-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "M-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -344,42 +211,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "H-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "H-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -388,42 +236,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "H-3" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "H-3" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -432,42 +261,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "N-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "N-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -476,42 +286,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "Q-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "Q-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -520,42 +311,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "Q-2" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "Q-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -564,42 +336,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "Q-3" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "Q-3" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -608,42 +361,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "Q-4" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "Q-4" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -652,42 +386,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "E-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "E-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -696,42 +411,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "E-2" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "E-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -740,42 +436,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "E-3" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "E-3" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -784,42 +461,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -828,42 +486,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-2" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -872,42 +511,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-3" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-3" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -916,42 +536,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-4" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-4" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -960,42 +561,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-5" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-5" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1004,42 +586,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-6" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-6" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1048,42 +611,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-7" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-7" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1092,42 +636,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-8" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-8" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1136,42 +661,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-9" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-9" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1180,42 +686,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "F-10" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "F-10" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1224,42 +711,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "S-1" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "S-1" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1268,42 +736,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "S-2" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "S-2" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1312,42 +761,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "S-3" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "S-3" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1356,42 +786,23 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
-  (claim :id "S-4" :pwg PWG-2i :foundation-diverse #f
+  (claim :id "S-4" :pwg ungraded :foundation-diverse #f
     (leg :prover agda :route source :token proven :state AGDA-VERIFIED
       ; the run reported: PASS: core proofs, unit tests and all 13 expected rejections
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484857967"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Agda version 2.6.4.3 (Debian trixie agda-bin=2.6.4.3-1+b2, container debian:trixie-slim, not pinned by digest)"
                :invocation "agda --safe --without-K --cubical-compatible --no-libraries --ignore-interfaces --double-check -W error -i src src/ResourceAlgebra/All.agda"
-               :inputs-sha256 "6d3250447bd3271db46ebac1e48005a6988baf87b6b923ecd3914fbe1b74ae9d"
-               :state current
-               (inputs-manifest
-                 (file :path "src/ResourceAlgebra/All.agda" :sha256 "be7242276a1d594c6665633cab6747b176c265bfcb1f7cb752e001fa9c1c3d33")
-                 (file :path "src/ResourceAlgebra/Core.agda" :sha256 "9b975043e9b597e1b807c857cd43ae73e96c58182c4de83e97b5d2e4c6ef2fde")
-                 (file :path "src/ResourceAlgebra/Instances/Diamond.agda" :sha256 "0eebbbe722e453d8c1ced415925060560fc9513d34a5e934bafc00e23287e4ec")
-                 (file :path "src/ResourceAlgebra/Instances/Evidence.agda" :sha256 "b69e3e050c636772977dc9244ae30dcc63d8f27ed61391a01553b3c851048ad5")
-                 (file :path "src/ResourceAlgebra/Instances/HWM.agda" :sha256 "4806ba1adb9426e122c196aae99f3266236e9d0e5286c837072c810fbd48b7a2")
-                 (file :path "src/ResourceAlgebra/Instances/Loss.agda" :sha256 "ef525820249861b529a155e6fcf34b4149638a14f332c46201794e4ad50a2ffc")
-                 (file :path "src/ResourceAlgebra/Instances/MaxPlus.agda" :sha256 "557d1147095d4e57671e9c8d9fad3e1b3be9e9630304fd15837cc15f8742e399")
-                 (file :path "src/ResourceAlgebra/Instances/MinMax.agda" :sha256 "a31eead6379daf18fee3481af6ba45c26bc553c54e4b26caccb9551f4593defe")
-                 (file :path "src/ResourceAlgebra/Instances/Questions.agda" :sha256 "aaf1f6d1a1d5f58cc3916ef31df286be0d64c1a0ea59e989d28508ea518b846a")
-                 (file :path "src/ResourceAlgebra/Ledger.agda" :sha256 "31b53104b420c37f3e9639d249bdce13920d440313536fcabc02f9ae8e4c46f3")
-                 (file :path "src/ResourceAlgebra/Morphism.agda" :sha256 "56f53e414c481c0357de6e10cc3dfe3b288c4c37d1212a127f6fa7523677b4fa")
-                 (file :path "src/ResourceAlgebra/Prelude.agda" :sha256 "ab911c0e1563b8594e10755ce81a57ed1963aaa1253940d14e93b17999bde720")
-                 (file :path "src/ResourceAlgebra/Separation.agda" :sha256 "4404893286f1ef61bfa07ab3f7d4682f049a19a90597a2ddab9f96ff258a40d0"))
-               (axioms)))
+               :state superseded
+               :reason "its inputs changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): the cone gained src/ResourceAlgebra/Parallel.agda, Star.agda and Instances/MaxPlusTop.agda, and three expected rejections were added. To be replaced by the first run on main that contains them"))
     (leg :prover rocq :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Assumptions step then passed, which fails unless all 75 printed theorems are closed under the global context and rocqchk accepts the compiled file
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858135"
                :commit "15fa113c7427e2de009eade9148295d08c046b33"
                :checker "Rocq 9.3.0, then rocqchk"
                :invocation "rocq compile ResourceAlgebra.v in verification/proofs/coq, then rocqchk"
-               :image "rocq/rocq-prover:9.3.0@sha256:97a68f230e785726c3bab4ba17e1d416fdd630de4af4548eb49b08712f29af93"
-               :inputs-sha256 "b52b1348c6cace05db2ac026d1137a1a3027b14ec84e9fb599259c3693c8b1b7"
-               :state current
-               (inputs-manifest
-                 (file :path "verification/proofs/coq/ResourceAlgebra.v" :sha256 "4989d461674d9f3d36e65ded96613b5df45a6c851b0ec63f40cf05ffd760582e"))
-               (axioms)))
+               :state superseded
+               :reason "its input changed when parallel composition and the loop grade were added (rows P-1 to P-4 and K-1 to K-4): verification/proofs/coq/ResourceAlgebra.v gained their Rocq leg. To be replaced by the first run on main that contains them"))
     (leg :prover lean :route re-proved :token proven :state RECONCILED
       ; the run reported: RESULT: PASS -- gated modules compile; the Axioms step then passed, which fails unless all 84 printed theorems depend on no axiom; PASS: M-2 bridge to hyperpolymath/tropical-types@f2e465c966d14d4986dfc492875cc54653d9751e; 6 of 6 printed theorems depend on no axiom
       (receipt :run "https://github.com/hyperpolymath/resource-algebra/actions/runs/44209774341/job/134484858201"
@@ -1400,4 +811,36 @@
                :invocation "lean ResourceAlgebra.lean in verification/proofs/lean4, core only; then bash scripts/check-lean-bridge.sh (lean -o on TropicalSessionTypes.lean and ResourceAlgebra.lean, then lean TropicalBridge.lean with LEAN_PATH)"
                :state superseded
                :reason "its inputs changed in hyperpolymath/resource-algebra#53: the leg and the M-2 bridge now build under lake, so the input set gained scripts/check-lean-leg.sh, two lakefiles and two Lake manifests, and scripts/check-lean-bridge.sh changed. To be replaced by the first run on main of the legs under lake")))
+  (claim :id "P-1" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "P-2" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "P-3" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "P-4" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "K-1" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "K-2" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "K-3" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
+  (claim :id "K-4" :pwg ungraded :foundation-diverse #f
+    (leg :prover agda :route source :token proven :state AGDA-VERIFIED)
+    (leg :prover rocq :route re-proved :token proven :state RECONCILED)
+    (leg :prover lean :route re-proved :token proven :state RECONCILED))
 )
