@@ -193,7 +193,7 @@
     (methodology :instructions-clause "bot-directives" :default-mode hybrid))
   (manifest
     :version "0.1.0"
-    :last-updated "2026-10-14"
+    :last-updated "2026-11-16"
     :project "resource-algebra"
     :purpose "Parametric resource algebra in Agda, with checked instances, separation witnesses and strict/lax morphism classifications."
     (agent :name CLAUDE :role "proofs, compilers, repo-local implementation, CI/CD, formal verification, Rust/Idris2/Zig")
@@ -309,16 +309,7 @@
       (directory :id "source-unit-contracts" :ply 2 :path "src/contracts" :description "Contracts unit for high-rigor source code.")
       (directory :id "source-unit-core" :ply 2 :path "src/core" :description "Primary application logic and core domain models.")
       (directory :id "source-unit-definitions" :ply 2 :path "src/definitions" :description "Definitions unit for high-rigor source code.")
-      (directory :id "source-unit-errors" :ply 2 :path "src/errors" :description "Errors unit for high-rigor source code.")
-      (directory :id "interface-seams-unit" :ply 2 :path "src/interface" :description "Consolidated \"Verified Interface Seams\" unit. This directory unifies the\nformal specification (ABI), the bridge implementation (FFI), and the\nresulting artifacts (Generated)."
-        (canonical-locations :abi "abi/" :ffi "ffi/" :generated "generated/")
-        :invariants ("ABI MUST be Idris2 (.idr)" "FFI MUST be Zig (.zig)" "Generated artifacts MUST be C-compatible" "The 'Truth' lives in abi/; the 'Implementation' lives in ffi/")
-        (directory :id "abi-logic" :ply 3 :path "src/interface/Abi" :description "Specialised Level 3 logic for abi.")
-        (directory :id "ffi-logic" :ply 3 :path "src/interface/ffi" :description "Specialised Level 3 logic for ffi."
-          (directory :id "src-unit" :ply 4 :path "src/interface/ffi/src" :description "Src logic at level 4.")
-          (directory :id "test-unit" :ply 4 :path "src/interface/ffi/test" :description "Test logic at level 4."))
-        (directory :id "generated-logic" :ply 3 :path "src/interface/generated" :description "Specialised Level 3 logic for generated."
-          (directory :id "abi-unit" :ply 4 :path "src/interface/generated/abi" :description "Abi logic at level 4."))))
+      (directory :id "source-unit-errors" :ply 2 :path "src/errors" :description "Errors unit for high-rigor source code."))
     (directory :id "verification-pillar" :ply 1 :path "verification" :description "Primary verification pillar. Contains evidence for correctness,\nperformance, formal proofs, randomized testing, and aerospace-grade\nhigh-assurance metrics (MC/DC coverage, traceability, safety cases)."
       (canonical-locations :benchmarks "benchmarks/" :coverage "coverage/" :fuzzing "fuzzing/" :proofs "proofs/" :safety_case "safety_case/" :simulations "simulations/" :tests "tests/" :traceability "traceability/")
       :invariants ("Evidence MUST be reproducible and documented" "High-assurance deployments MUST satisfy traceability and safety_case requirements")
@@ -1073,7 +1064,9 @@
     ; Files a minted repo owns from birth are (paths :diverged …).
     (paths
       :added ()
-      :removed ()
+      ; 2026-11-16, owner decision: this repository is pure Agda theory and ships no
+      ; ABI or FFI, so the template's Idris2 ABI / Zig FFI scaffold is removed.
+      :removed ("src/interface/" "tests/ffi_strings_test.sh" "docs/developer/ABI-FFI-README.adoc")
       :diverged ("resource-algebra_chora.deed" "docs/status/ROADMAP.adoc")))
   ; provenance — what this repo was minted FROM. Written once, at mint,
   ; by build/just/repo-init.just. Tools that want "what is this repo" read

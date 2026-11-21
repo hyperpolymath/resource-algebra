@@ -55,17 +55,6 @@ jobs:
           echo "${NICKEL_SHA256}  $RUNNER_TEMP/nickel-bin/nickel" | sha256sum --check --strict
           chmod +x "$RUNNER_TEMP/nickel-bin/nickel"
           echo "$RUNNER_TEMP/nickel-bin" >> "$GITHUB_PATH"
-      - name: Install verified Zig 0.16.0 (matching mise.lock)
-        run: |
-          set -euo pipefail
-          curl --proto '=https' --proto-redir '=https' --fail --silent --show-error --location \
-            https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz \
-            --output "$RUNNER_TEMP/zig.tar.xz"
-          echo "70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00  $RUNNER_TEMP/zig.tar.xz" | sha256sum --check --strict
-          mkdir -p "$RUNNER_TEMP/zig"
-          tar -xJf "$RUNNER_TEMP/zig.tar.xz" -C "$RUNNER_TEMP/zig" --strip-components=1
-          echo "$RUNNER_TEMP/zig" >> "$GITHUB_PATH"
-
       - name: Install verified Just 1.56.0 (matching mise.lock)
         run: |
           set -euo pipefail

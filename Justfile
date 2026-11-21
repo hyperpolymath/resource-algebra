@@ -88,9 +88,10 @@ import? "build/just/assess.just"
 # BUILD & COMPILE
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Build the project with every detected language's toolchain (here: pack/idris2 for
-# the ABI, then `zig build` in src/interface/ffi). Replace the delegation with a
-# body of your own when the project needs a different build.
+# Build the project with every detected language's toolchain. None is detected here
+# (pure Agda theory, no FFI), so this prints that it is N/A and builds nothing; the
+# Agda proofs are checked by `just test` (scripts/check-agda.sh). Replace the
+# delegation with a body of your own when the project needs a different build.
 build: provision::build
 
 # Build in release mode with optimizations
@@ -99,7 +100,6 @@ build-release *args:
     # Examples:
     #   cargo build --release {{args}}
     #   MIX_ENV=prod mix compile {{args}}
-    #   zig build -Doptimize=ReleaseFast {{args}}
     @echo "FAIL: 'just build-release' is not wired yet — nothing was built. Edit the 'build-release' recipe." >&2; exit 1
 
 # Build and watch for changes (requires entr or similar)
@@ -130,10 +130,10 @@ clean-all: clean
 # TEST & QUALITY
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Run every detected language's tests: `zig build test` covers src/interface/ffi
-# (unit tests in src/main.zig, test/integration_test.zig). It compiles only after
-# `just repo-init` has filled the template tokens, so an un-initialised template
-# fails here loudly instead of reporting a pass over nothing.
+# Run the tests. This repository is pure Agda theory with no FFI, so the praxis deed
+# (.machine_readable/descriptiles/provisioning_praxis.deed, :test) points this at
+# scripts/check-agda.sh: the canonical Agda invocation over src/, the unit tests and
+# the expected rejections. A missing Agda fails loudly; nothing is skipped.
 test: provision::test
 
 # Run tests with verbose output
@@ -212,8 +212,8 @@ fmt: provision::fmt
 # Check formatting without changes
 fmt-check: provision::fmt-check
 
-# Run linter (`zig fmt --check` on src/interface/ffi; like `test`, it parses the
-# FFI sources only after `just repo-init` has filled the template tokens)
+# Run linter. No linter exists for the languages here (no language is detected), so
+# this prints that it is N/A; `-W error` in `just test` is the Agda lint.
 lint: provision::lint
 
 # ═══════════════════════════════════════════════════════════════════════════════

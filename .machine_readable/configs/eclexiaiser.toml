@@ -4,17 +4,9 @@
 [project]
 name = "resource-algebra"
 
-[[functions]]
-name = "build"
-source = "src/interface/ffi/build.zig"
-energy-budget-mj = 15.0
-carbon-budget-mg = 3.0
-
-[[functions]]
-name = "setError"
-source = "src/interface/ffi/src/main.zig"
-energy-budget-mj = 5.0
-carbon-budget-mg = 1.0
+# No [[functions]] entries: the two template entries budgeted functions of the
+# removed Zig FFI (src/interface/ffi, removed 2026-11-16). This repository has no
+# executable code to budget; add an entry only when it has a source file to name.
 
 [carbon]
 provider = "static"

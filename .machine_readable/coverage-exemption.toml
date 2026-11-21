@@ -8,6 +8,3 @@
 measurable-runtime-code = false
 product-roots = ["src"]
 runtime-extensions = ["rs", "zig", "idr", "js", "ts", "py", "go", "c", "h", "cpp", "ex", "res"]
-# Shrink-only. The Idris2/Zig ABI/FFI scaffold is still on main and is removed by
-# hyperpolymath/resource-algebra#40; delete this entry when that merges.
-pending-removal = ["src/interface"]

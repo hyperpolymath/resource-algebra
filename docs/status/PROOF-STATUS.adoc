@@ -1099,6 +1099,28 @@ exists (`scripts/proof-receipt.sh --check` in the `receipt` job of
 `proofs.yml`). Recording a new run is still manual: `--run-row`, then
 `--write` (see Receipts).
 
+== Rust verifiers (not run)
+
+PROOF-POLICY §1.2 names *Creusot* with *Pearlite* contracts, and *Verus*,
+as the default Rust verifiers; Pearlite is Creusot's specification language,
+not a third verifier. Neither has been run in this repository, and no row
+above rests on Rust.
+
+* *Scope.* The repository's only first-party Rust is template tooling in
+`scripts/` (`merge-actions-lock.rs`, `prune-dependabot-ecosystems.rs`,
+`strip-instruction-blocks.rs`), run through `scripts/rust-tool.sh` and
+exercised by `tests/workflows/mint_cleanup_test.sh`. It implements no
+theorem in `PROOF-NEEDS.adoc` and carries no Creusot or Verus contracts.
+* *Creusot / Pearlite:* not run. No proof obligation is recorded for the
+tooling; this is a gap, not a pass.
+* *Verus:* not run, for the same reason.
+* *Kani and Aeneas:* not applicable. There is no `unsafe` or FFI seam (the
+ABI/FFI scaffold was removed on 2026-11-16, see `PROOF-NEEDS.adoc`), and no
+Rust implements an Agda-proved theorem.
+
+If Rust that implements a theorem here is ever added, both verifiers must be
+scoped for it, and this section updated with what ran.
+
 == Discipline
 
 Prose, citation and artefact must agree before any status moves. A status

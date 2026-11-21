@@ -26,7 +26,10 @@ The repository ships no executable code, ABI, FFI, wire format or protocol.
 | No exported functions, memory layout or foreign interface exist to state
 them about. The template's mandatory ABI rows (ABI-1..5) and its typing
 rows (TP-1, TP-2) named template example files, not this repository's code;
-they were removed with those files on 2026-11-09.
+they were removed with those files on 2026-11-09. The ABI group applies to a
+repository that ships an ABI or FFI, whatever implements it, not only to an
+Idris2 one; this repository ships neither, so it carries no ABI/FFI proof
+obligations (see "Removed scaffold" below).
 
 | Rust (Creusot, Pearlite, Verus) and Ada (SPARK)
 | No

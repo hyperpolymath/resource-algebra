@@ -201,6 +201,19 @@ jobs:
           fi
       - name: Converted container configs keep their data (template only)
         run: bash tests/workflows/container_kyaml_test.sh
+      - name: Install verified Just 1.56.0 (matching mise.lock)
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --proto-redir '=https' --fail --silent --show-error --location \
+            https://github.com/casey/just/releases/download/1.56.0/just-1.56.0-x86_64-unknown-linux-musl.tar.gz \
+            --output "$RUNNER_TEMP/just.tar.gz"
+          echo "fa2a8ec1015d9df5330941ade12437488fc40d33f9c9f8cd4eb70a26de11b639  $RUNNER_TEMP/just.tar.gz" | sha256sum --check --strict
+          mkdir -p "$RUNNER_TEMP/just-bin"
+          tar -xzf "$RUNNER_TEMP/just.tar.gz" -C "$RUNNER_TEMP/just-bin" just
+          chmod +x "$RUNNER_TEMP/just-bin/just"
+          echo "$RUNNER_TEMP/just-bin" >> "$GITHUB_PATH"
+      - name: Container engine guard (only podman, nerdctl or docker; refuses the rest)
+        run: bash tests/workflows/container_engine_test.sh
       - name: KYAML ratchet self-test (installs verify, gate propagates, narrowing)
         run: bash tests/workflows/kyaml_ratchet_test.sh
       - name: I-JSON (RFC 7493) + JCS (RFC 8785) canonical gate & self-test
@@ -213,3 +226,7 @@ jobs:
           set -euo pipefail
           bash tests/workflows/squabble_gate_test.sh
           bash scripts/check-required-contexts.sh .
+      - name: Proof gate self-test, agda branch (stub prover; a warning pragma is refused)
+        run: bash tests/workflows/check_proofs_agda_test.sh
+      - name: Agda gate self-test (an OPTIONS pragma that sets a warning flag is refused)
+        run: bash tests/workflows/check_agda_pragma_test.sh
