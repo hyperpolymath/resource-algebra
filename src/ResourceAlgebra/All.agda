@@ -16,3 +16,8 @@ import ResourceAlgebra.Ledger
 import ResourceAlgebra.Instances.Diamond
 import ResourceAlgebra.Separation
 import ResourceAlgebra.Morphism
+import ResourceAlgebra.Instances.MaxPlusTop
+import ResourceAlgebra.Parallel
+import ResourceAlgebra.Star
+import ResourceAlgebra.Drift
+import ResourceAlgebra.Instances.SignedHWM
