@@ -1,5 +1,97 @@
 == Changelog
 
+== 2026-11-19: Signed drift for HWM (D-1 to D-8); every receipt superseded (48 rows ungraded for now)
+
+* `src/ResourceAlgebra/Instances/SignedHWM.agda` adds `SHWM`: HWM with an
+  integer drift (or −∞), for terms that consume live state.
+  `Instances.HWM` is unchanged. `src/ResourceAlgebra/Drift.agda` adds its
+  drift carrier, the max-plus dioid on ℤ ∪ {−∞}, with its own integers.
+* What holds: SHWM is a dioid and ordered (D-1); 𝟘 absorbs on the left
+  (D-2); HWM embeds by a lax map that preserves ⊗, with a lax retraction
+  `clampG` (D-3); `SyncBelow` holds (D-5); `peak` is lax into MaxPlus
+  (D-7); on finite drift the sequence is the bicyclic monoid, and HWM is its
+  part with drift ≥ 0 (D-8).
+* What fails, each with a witness: 𝟘 ≢ 𝟙 and SHWM is not annihilating
+  (D-2); no strict map HWM → SHWM exists, and `clampG` is not strict (D-3);
+  a prefix can lower the peak (D-4); `SyncAbove` fails (D-5); no star (D-6).
+* Seven expected rejections are added (23 in all).
+* The Rocq and Lean legs re-prove the eight rows by hand. Checked before
+  the pull request, not as receipts: Agda 2.6.3, Lean 4.35.0 (147 of 147
+  printed theorems axiom-free) and Coq 8.18.0 on a copy (137 of 137 closed).
+* All three runs at `201e05b` are `superseded` in the ledger of
+  `scripts/proof-receipt.sh`, and limited to the rows they checked. The
+  receipt is regenerated with source commit `7ab9840`. All 48 theory rows
+  are ungraded until the first `proofs.yml` run on main that contains this
+  change is recorded.
+* Not built: the trough (option B, a proposal in `PROOF-STATUS.adoc`, Open),
+  and any change in occupancy-types (H-2 stays OPEN there).
+
+== 2026-11-19 — Proof receipt at 201e05b, the merge of #58; 39 rows are PWG-2ii
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `201e05b` (the merge of #58), from `proofs.yml` run
+  `44435465068` on main: Agda job `135263084676`, Rocq `135263084711`, Lean
+  `135263084426`. The `Proofs verdict` job and the coverage-exemption job
+  passed in the same run. Each ledger row was printed by
+  `scripts/proof-receipt.sh --run-row`.
+* Census: of 40 theory rows, 39 are PWG-2ii and 1 (M-2) is ungraded. P-1 to
+  P-4 and K-1 to K-4 have their first grade. No row is PWG-1: only the Rocq
+  job runs in an image that ships its checker (PN-7).
+* This is the first receipt of the Lean leg and the M-2 bridge under `lake`.
+* The three runs at `15fa113` leave the ledger and are listed under "Earlier
+  receipts" in `PROOF-STATUS.adoc`. The `receipt_run_scope` hook that
+  limited them to the rows they checked is removed with them.
+
+== 2026-11-19 — Parallel composition and the loop grade (P-1 to P-4, K-1 to K-4); every receipt superseded (40 rows ungraded for now)
+
+* `src/ResourceAlgebra/Parallel.agda` adds the `IsParallel` layer: a
+  commutative monoid on `𝟙` that distributes over ⊕. Two exchange laws,
+  `SyncBelow` and `SyncAbove`, relate it to ⊗ and are stated apart. Work
+  (`_∥_` = ⊗ in a dioid with a commutative ⊗; Loss and MaxPlus) has both.
+  MaxPlus span (`tPar`, max) has `SyncAbove` only. HWM (`_∥h_`, the sum) has
+  `SyncBelow` only.
+* `src/ResourceAlgebra/Star.agda` adds the `IsStar` layer (Kozen's axioms).
+  An algebra whose `𝟙` is greatest has the star `star a` = `𝟙` (Loss).
+  MaxPlus and HWM have no star. `Instances/MaxPlusTop.agda` adds a top to
+  MaxPlus; it is an annihilating dioid with a star, and MaxPlus embeds in it
+  by a strict, injective morphism.
+* Three expected rejections are added (16 in all): `SpanSyncBelow`,
+  `HWMSyncAbove` and `MaxPlusLoopBounded`.
+* The Rocq and Lean legs re-prove the eight rows by hand. Checked before
+  the pull request, not as receipts: Agda 2.6.3, Lean 4.35.0 (116 of 116
+  printed theorems axiom-free) and Coq 8.18.0 on a copy (106 of 106 closed).
+* The Agda and Rocq inputs changed, so their runs at `15fa113` are
+  `superseded` in the ledger of `scripts/proof-receipt.sh`; the Lean run
+  already was. The receipt is regenerated with source commit `c31bf1a`. Of
+  40 theory rows, all 40 are ungraded until the first `proofs.yml` run on
+  main that contains this change is recorded.
+
+== 2026-11-18 — Lean leg and M-2 bridge under lake; the Lean receipt is superseded (31 rows PWG-2i for now)
+
+* The Lean leg builds as a Lake package (`verification/proofs/lean4/lakefile.toml`,
+  no dependencies; `lake-manifest.json` committed as a pinned input) through
+  the new `scripts/check-lean-leg.sh`. PROOF-POLICY §8.2 names `lean` under
+  `lake` as the qualifying run (owner ruling 2026-11-17).
+* The M-2 bridge builds under `lake` too
+  (`verification/bridges/tropical-types/lakefile.toml`). The tropical-types
+  pin and its fetch stay in `scripts/check-lean-bridge.sh`.
+* Both checks count the `#print axioms` lines of the copy `lake` built,
+  compare the manifest with what `lake` was given, and print the difference
+  when it was rewritten. The bridge check also hashes the bridge file it
+  built; the leg's input hashes are taken by `proofs.yml` from the checkout.
+  Both builds run with Lake's artifact cache off, because a cache hit prints
+  no axiom report and the count would fail. `tests/check_lean_leg_test.sh` (new) and
+  `tests/check_lean_bridge_test.sh` plant 11 failures between them and each checks the cache is off.
+* The Agda and Lean jobs run in base images pinned by digest. They still
+  install the checker at run time, which the owner ruled on 2026-11-18 is
+  not isolation: their receipts name no image and PN-7 stays open.
+* The Lean leg's inputs changed, so the Lean run at `15fa113`
+  is `superseded` in the ledger of `scripts/proof-receipt.sh` and the
+  receipt is regenerated. Of 32 theory rows, 31 are PWG-2i (Agda and Rocq
+  receipts stand) and 1 (M-2) is ungraded, until the first `proofs.yml` run
+  on main under `lake` is recorded. The Lean input set now lists both
+  lakefiles, both manifests and `scripts/check-lean-leg.sh`.
+
 == 2026-11-18 — Proof receipt at 15fa113, from the shared generator; 31 rows are PWG-2ii
 
 * `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
