@@ -513,6 +513,12 @@ https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
 ==== Fixed
 
+* **A `CI/gate` publisher may not filter `workflow_run` by branch.**
+  GitHub applies `branches` and `branches-ignore` to the triggering run's
+  branch, so a filtered publisher never posts the status on a PR head and the
+  PR waits for ever. `check-required-contexts.sh` now refuses any such filter
+  except `branches: ["**"]`; negative fixtures cover both keys. Ported from
+  rsr-template-repo#481.
 * Julia mints start with Lock Sync green. The julia-library overlay
   shipped its own `actions.lock`, which replaced the spine's at mint, so
   every spine workflow lost its records. The records now ship beside the
