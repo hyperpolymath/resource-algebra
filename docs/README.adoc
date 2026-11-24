@@ -23,7 +23,7 @@ and CI fails if it goes stale, so prefer it over any hand-written listing.
 | `architecture/`  | Topology, threat model, and the generated repository map.
 | `attribution/`   | CODEOWNERS rationale and credit.
 | `decisions/`     | ADRs. `0000-template.adoc` is the template; number upwards from there.
-| `developer/`     | Developer-facing deep dives (ABI/FFI, tooling integrations).
+| `developer/`     | Developer-facing deep dives (tooling integrations).
 | `governance/`    | Governance model, maintenance checklist, development approach, audits, planning.
 | `legal/`         | Licence exhibits.
 | `onboarding/`    | Quickstarts and the LLM warm-up documents.

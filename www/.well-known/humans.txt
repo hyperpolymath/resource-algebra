@@ -10,5 +10,5 @@ From: United Kingdom
 Last update: 2026-10-14
 Standards: RSR (Rhodium Standard Repository)
 License: MPL-2.0 (code) / CC-BY-SA-4.0 (docs)
-Components: Idris2 ABI, Zig FFI
+Components: Agda proofs, Rocq and Lean rechecks
 Tools: just, Podman, Guix

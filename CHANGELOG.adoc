@@ -207,6 +207,53 @@
 * `tests/workflows/ci_gate_test.sh`: positive control, four negative cases,
   `needs:` drift and a planted-runtime-code case.
 
+== 2026-11-16 — Port of the template's open PR #421 (f846da9) and proof wording
+
+* `CLAUDE.md`: the Rust row of the Proofs table names Creusot with Pearlite
+  contracts, and Verus, and a paragraph says to name all three in Rust
+  verification plans. The block is hand-authored below the generated
+  `ARRIVAL-PACK` region, so it is edited in place; `generate.sh` and
+  `verify.sh` agree with the file.
+* `build/just/container.just` and `build/container/stapeln/ct-build.sh`
+  refuse a container engine other than podman, nerdctl or docker (exit 2).
+  `tests/workflows/container_engine_test.sh` covers it and runs in
+  `estate-rules.yml`.
+* `scripts/check-agda.sh` refuses, before Agda runs, an `OPTIONS` pragma that
+  sets a warning flag in any module the gate checks (`src/`, `tests/unit`,
+  `tests/reject`): `-W`, `--warning`, and every abbreviation of `--warning`
+  that Agda accepts (`--warn`, `--wa`, ...), read across a pragma split over
+  lines. `scripts/check-proofs.sh` does the same for its agda branch and
+  passes `-W error`. With #37 the gate suppresses no warning, so nothing on
+  the command line or in a pragma can weaken `-W error`. Tests:
+  `tests/workflows/check_agda_pragma_test.sh` and
+  `tests/workflows/check_proofs_agda_test.sh`, both in `estate-rules.yml`.
+* Unmerged upstream: the changes follow
+  `hyperpolymath/rsr-template-repo#421` as it stood at `f846da9`, and may need
+  to be revisited if that pull request changes.
+
+== 2026-11-16 — ABI/FFI scaffold removed (pure-theory Agda repository)
+
+* Owner decision: this repository ships no ABI or FFI, so the template's
+  Idris2 ABI / Zig FFI scaffold is removed: `src/interface/` (`Abi/`,
+  `abi.ipkg`, `ffi/`, `generated/`), `tests/ffi_strings_test.sh` and
+  `docs/developer/ABI-FFI-README.adoc`. The paths are recorded in the repo
+  deed as `(variant (paths :removed))`, as the template's own prune does.
+* `docs/status/PROOF-NEEDS.adoc` records that no ABI/FFI exists, so there are
+  no ABI/FFI proof obligations.
+* `just test` now runs `scripts/check-agda.sh` (the praxis deed's `:test`)
+  instead of `idris2 --typecheck` and `zig build test`. `just build`, `lint`,
+  `fmt` and `fmt-check` report that no language is detected and ran nothing;
+  they are not a pass. `just quality` therefore gates on the Agda check alone.
+* The template's guards for a pruned seam are ported: `validate.just` and
+  `scripts/validate-template.sh` accept a tree with no `src/interface/`
+  (a tree that has one must still carry all of it), and
+  `scripts/run-proven-suite.sh` reports the Zig lane as NOT APPLICABLE,
+  counted apart from passes. `--require-zig` still fails closed if an
+  `src/interface/ffi` returns without a compiler.
+* Zig is dropped from `mise.toml`, `mise.lock`, `build/manifest.scm`,
+  `build/guix.scm` and the `proven-tests.yml` job, and the Idris-Inside and
+  Zig badges and the ABI/FFI bullet are dropped from `README.adoc`.
+
 == 2026-11-16 — The Agda gate suppresses no warning
 
 * `scripts/check-agda.sh` drops `-W noUnsupportedIndexedMatch`. Since

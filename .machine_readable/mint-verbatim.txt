@@ -32,5 +32,4 @@ tests/workflows/self_name_pass_test.sh     # template-name fixtures
 tests/workflows/template_conformance_test.sh  # template-slug fixtures
 tests/workflows/julia_library_test.sh      # PACKAGE_UUID brace-token fixture
 tests/workflows/resolve_template_pin_test.sh  # template-slug fixtures
-tests/ffi_strings_test.sh                  # FFI token fixture, filled in a scratch copy
 tests/workflows/container_kyaml_test.sh    # container token fixtures (template only)

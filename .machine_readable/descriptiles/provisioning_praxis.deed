@@ -13,10 +13,10 @@
   :canonical-name "resource-algebra-provisioning"
   :repo         "hyperpolymath/resource-algebra"
   :archetype    "library"            ; app | library | tool | theory | docs
-  :languages    "idris2 zig"           ; detected; informational
+  :languages    "docs"                 ; detected; informational (no build language: the Agda proofs are checked by :test)
   ;; Contract-verb overrides ("" = per-language default, which `just langs` shows)
   :build        ""
-  :test         ""
+  :test         "bash scripts/check-agda.sh"
   :bench        ""
   :lint         ""
   :fmt          ""

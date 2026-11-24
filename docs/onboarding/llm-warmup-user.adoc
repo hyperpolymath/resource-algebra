@@ -8,12 +8,12 @@ running, and where to look when something goes wrong.
 
 == What it is
 
-resource-algebra (https://github.com/hyperpolymath/resource-algebra) is a library written in idris2, zig.
+resource-algebra (https://github.com/hyperpolymath/resource-algebra) is a library of Agda proofs, with Rocq and Lean rechecks.
 
 It is not a project in its own right: it is the template every new hyperpolymath
 repository is created from. It ships CI/CD, machine-readable metadata
 (`.machine_readable/descriptiles/`), an AI gatekeeper deed
-(`resource-algebra_chora.deed`), a typed ABI/FFI seam (Idris2 over Zig), Guix and
+(`resource-algebra_chora.deed`), Guix and
 mise toolchains, and governance files, all passing the RSR validators before you
 add a line of your own.
 

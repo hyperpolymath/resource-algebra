@@ -6,15 +6,11 @@ Paste this into an AI assistant before changing code in resource-algebra.
 
 == Orientation
 
-resource-algebra (https://github.com/hyperpolymath/resource-algebra): a library in idris2, zig.
+resource-algebra (https://github.com/hyperpolymath/resource-algebra): a library of Agda proofs, with Rocq and Lean rechecks.
 
-The template's own code is the ABI/FFI seam that every minted repo inherits:
-
-* `src/interface/Abi/` + `src/interface/abi.ipkg`: Idris2 types and layout proofs
-  (the ABI owns the contract).
-* `src/interface/ffi/`: the Zig implementation (`build.zig`, `src/main.zig`,
-  `test/integration_test.zig`), exporting C symbols named `<project>_*`.
-* `src/interface/generated/`: C headers generated from the ABI.
+It ships no ABI or FFI: the template's Idris2 ABI / Zig FFI scaffold was removed on
+2026-11-16 (owner decision; see `docs/status/PROOF-NEEDS.adoc`). The code is the Agda
+source in `src/ResourceAlgebra/`.
 
 Everything else is scaffolding: `.machine_readable/` (descriptiles, contractiles,
 policies), `build/just/*.just` (the task phases the root `Justfile` imports), and
@@ -53,9 +49,9 @@ just test-all     # test, e2e, aspect, bench, readiness
 just repo-map     # regenerate docs/architecture/REPOSITORY-MAP.adoc (CI checks it)
 ----
 
-The golden path is `just test && just quality`. In the template itself `test` and
-`lint` fail on the placeholder tokens in `src/interface/ffi/src/main.zig`; that is
-deliberate. Test a change to the FFI in a scratch copy after `repo-init`.
+The golden path is `just test && just quality`. Here `just test` runs
+`scripts/check-agda.sh` (the praxis deed's `:test`); `build`, `lint`, `fmt` and
+`fmt-check` report that no language is detected and run nothing.
 
 == Where things are
 

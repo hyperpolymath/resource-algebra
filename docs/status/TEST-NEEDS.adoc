@@ -4,6 +4,11 @@
 
 == CRG Grade: C — ACHIEVED 2026-04-04
 
+NOTE: On 2026-11-16 the template ABI/FFI scaffold this record describes
+(`src/interface/`, the Idris2 ABI and Zig FFI rows, `tests/ffi_strings_test.sh`) was
+removed from this repository (see `docs/status/PROOF-NEEDS.adoc`). The rows that name
+them are the 2026-04-04 template record, not claims about the current tree.
+
 == Current State (Updated 2026-04-04)
 
 [cols="2,1,4", options="header"]
