@@ -6,9 +6,9 @@ workflows:
     '.github/workflows/build-notification.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/ci-gate-tamper-guard-caller.yml':
-        - 'hyperpolymath/proven-cicd-and-workflows@4e9e680b0dfd842a457cf23271f9e005a88f766c'
+        - 'hyperpolymath/proven-cicd-and-workflows@a0760cea695a815a96b3944f3d03ee015da856d0'
     '.github/workflows/ci-gate.yml':
-        - 'hyperpolymath/proven-cicd-and-workflows@4e9e680b0dfd842a457cf23271f9e005a88f766c'
+        - 'hyperpolymath/proven-cicd-and-workflows@a0760cea695a815a96b3944f3d03ee015da856d0'
     '.github/workflows/codeql.yml':
         - 'actions/checkout@v7.0.1'
         - 'github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370'
@@ -93,7 +93,7 @@ workflows:
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
     '.github/workflows/sonarqube.yml':
         - 'actions/checkout@v7.0.1'
-        - 'sonarsource/sonarqube-scan-action@v8.4.1'
+        - 'sonarsource/sonarqube-scan-action@v8.5.0'
     '.github/workflows/squabble.yml': []
     '.github/workflows/static-analysis-gate.yml':
         - 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9'
@@ -198,9 +198,9 @@ dependencies:
         commit: 'sha1-0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d'
         owner_id: 75048950
         repo_id: 623796603
-    'hyperpolymath/proven-cicd-and-workflows@4e9e680b0dfd842a457cf23271f9e005a88f766c':
+    'hyperpolymath/proven-cicd-and-workflows@a0760cea695a815a96b3944f3d03ee015da856d0':
         ref: 'main'
-        commit: 'sha1-4e9e680b0dfd842a457cf23271f9e005a88f766c'
+        commit: 'sha1-a0760cea695a815a96b3944f3d03ee015da856d0'
         owner_id: 6759885
         repo_id: 1326697643
     'hyperpolymath/smtp-notify-action@v0.5.1':
@@ -223,8 +223,8 @@ dependencies:
         commit: 'sha1-8a0cd651e5b2365bd640854a3fa5dfc70e4875f3'
         owner_id: 2242
         repo_id: 204253808
-    'sonarsource/sonarqube-scan-action@v8.4.1':
-        ref: 'v8.4.1'
-        commit: 'sha1-e805d875275f728fac1885b413934be6d7c63f65'
+    'sonarsource/sonarqube-scan-action@v8.5.0':
+        ref: 'v8.5.0'
+        commit: 'sha1-59202af334b4ba7b5db01b701b8e79f8b3bef0f4'
         owner_id: 545988
         repo_id: 366408409

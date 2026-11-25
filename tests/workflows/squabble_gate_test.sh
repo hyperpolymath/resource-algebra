@@ -311,7 +311,7 @@ assert_rc 2 'missing workflow directory is setup failure' bash "$REPO_ROOT/scrip
 echo "=== 5b. Typed status mapping: a workflow_run commit-status publisher ==="
 # `CI/gate => status:<file>` is certified as a publisher, never as a job name.
 SUITE_REUSABLE='hyperpolymath/proven-cicd-and-workflows/.github/workflows/ci-gate.yml'
-SUITE_PIN='4e9e680b0dfd842a457cf23271f9e005a88f766c'
+SUITE_PIN='a0760cea695a815a96b3944f3d03ee015da856d0'
 status_tree="$WORK/status-publisher"
 fresh_status() { # fresh_status [uses] [context] [on-block]
   local uses="${1:-$SUITE_REUSABLE@$SUITE_PIN}" ctx="${2:-CI/gate}"
@@ -343,12 +343,27 @@ fresh_local() { # fresh_local <uses> <target on-block, or - for no target file>
   fi
 }
 LOCAL_TARGET='./.github/workflows/ci-gate.yml'
+GOOD_CALL=$'on:\n  workflow_call:\n    inputs:\n      context: {type: string}'
+fresh_local "$LOCAL_TARGET" "$GOOD_CALL"
+assert_rc 0 'status mapping: a separate caller whose local target declares workflow_call with a string context input passes' check_status
+fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:\n    inputs:\n      context: {type: string, required: true}\n  workflow_dispatch:'
+assert_rc 0 'status mapping: a required string context input beside another trigger passes' check_status
+# The caller passes with.context; GitHub refuses an input the called workflow does not declare.
 fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:'
-assert_rc 0 'status mapping: a separate caller whose local target declares workflow_call passes' check_status
-fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:\n    inputs:\n      context: {type: string}'
-assert_rc 0 'status mapping: a local target with workflow_call inputs passes' check_status
+assert_rc 1 'status mapping: a local target whose workflow_call declares no inputs fails' check_status
+fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:'
+check_status >"$WORK/status-msg" 2>&1 || true
+assert_rc 0 'status mapping message: names the missing context input' grep -qF 'inputs.context with type: string' "$WORK/status-msg"
 fresh_local "$LOCAL_TARGET" 'on: [workflow_call]'
-assert_rc 0 'status mapping: a local target with a workflow_call list passes' check_status
+assert_rc 1 'status mapping: a workflow_call list (which cannot declare inputs) fails' check_status
+fresh_local "$LOCAL_TARGET" 'on: workflow_call'
+assert_rc 1 'status mapping: a bare workflow_call string (which cannot declare inputs) fails' check_status
+fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:\n    inputs:\n      other: {type: string}'
+assert_rc 1 'status mapping: inputs without context fails' check_status
+fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:\n    inputs:\n      context: {type: number}'
+assert_rc 1 'status mapping: a non-string context input fails' check_status
+fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:\n    inputs:\n      context:'
+assert_rc 1 'status mapping: a context input with no type fails' check_status
 fresh_local "$LOCAL_TARGET" $'on:\n  push:'
 assert_rc 1 'status mapping: a local target without workflow_call fails' check_status
 fresh_local "$LOCAL_TARGET" $'on:\n  push:'
@@ -359,14 +374,14 @@ assert_rc 1 'status mapping: a missing local target file fails' check_status
 fresh_local "$LOCAL_TARGET" -
 check_status >"$WORK/status-msg" 2>&1 || true
 assert_rc 0 'status mapping message: names the missing target file' grep -qF 'names a file that does not exist' "$WORK/status-msg"
-fresh_local './.github/workflows/../workflows/ci-gate.yml' $'on:\n  workflow_call:'
+fresh_local './.github/workflows/../workflows/ci-gate.yml' "$GOOD_CALL"
 assert_rc 1 'status mapping: a local target path with .. fails even though the file exists' check_status
-fresh_local './.github/workflows/../workflows/ci-gate.yml' $'on:\n  workflow_call:'
+fresh_local './.github/workflows/../workflows/ci-gate.yml' "$GOOD_CALL"
 check_status >"$WORK/status-msg" 2>&1 || true
 assert_rc 0 'status mapping message: names the path traversal' grep -qF "contains '..' path traversal" "$WORK/status-msg"
-fresh_local '/etc/ci-gate.yml' $'on:\n  workflow_call:'
+fresh_local '/etc/ci-gate.yml' "$GOOD_CALL"
 assert_rc 1 'status mapping: an absolute local target fails' check_status
-fresh_local "$LOCAL_TARGET" $'on:\n  workflow_call:'
+fresh_local "$LOCAL_TARGET" "$GOOD_CALL"
 sed -i 's|^    uses: .*|    uses: ./.github/workflows/ci-gate.yml|' "$status_tree/.github/workflows/gate-caller.yml"
 printf '  other:\n    uses: ./../outside/ci-gate.yml\n    with: {context: "CI/gate"}\n' >> "$status_tree/.github/workflows/gate-caller.yml"
 assert_rc 1 'status mapping: a second, bad local job fails beside a valid local job' check_status
@@ -377,6 +392,13 @@ fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  pull_request:'
 assert_rc 1 'status mapping: no workflow_run trigger fails' check_status
 fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**"]\n    types: [in_progress]'
 assert_rc 1 'status mapping: workflow_run without the completed type fails' check_status
+# A workflow_run branch filter applies to the triggering run's branch: it strands PR heads.
+fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**", "!CI gate"]\n    types: [completed]\n    branches: [main]'
+assert_rc 1 'status mapping: a completed-only publisher filtered to main fails' check_status
+fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**", "!CI gate"]\n    types: [completed]\n    branches-ignore: ["dependabot/**"]'
+assert_rc 1 'status mapping: a publisher with workflow_run branches-ignore fails' check_status
+fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**", "!CI gate"]\n    types: [completed]\n    branches: ["**"]'
+assert_rc 0 'status mapping: an all-branches workflow_run filter passes' check_status
 fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/other'
 assert_rc 1 'status mapping: a wrong with.context fails' check_status
 fresh_status "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate '
@@ -405,6 +427,8 @@ status_says 'wrong context' 'wrong with.context' "$SUITE_REUSABLE@$SUITE_PIN" 'C
 status_says 'foreign reusable' 'has no job whose uses:' "hyperpolymath/other-repo/.github/workflows/ci-gate.yml@$SUITE_PIN"
 status_says 'no workflow_run' 'does not trigger on workflow_run' "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  pull_request:'
 status_says 'no completed type' "do not include 'completed'" "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**"]\n    types: [in_progress]'
+status_says 'branch filter' 'filters workflow_run by branches' "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**"]\n    types: [completed]\n    branches: [main]'
+status_says 'branches-ignore filter' 'filters workflow_run by branches-ignore' "$SUITE_REUSABLE@$SUITE_PIN" 'CI/gate' $'on:\n  workflow_run:\n    workflows: ["**"]\n    types: [completed]\n    branches-ignore: [main]'
 fresh_status
 rm "$status_tree/.github/workflows/ci-gate.yml"
 check_status >"$WORK/status-msg" 2>&1 || true

@@ -30,6 +30,10 @@
 --                     each question can be read alone (first-question,
 --                     later-questions); the number of lost questions is
 --                     not a morphism (count-not-⊕).
+--   embed, clampG     HWM → SHWM (signed drift) is lax and preserves ⊗; it
+--                     misses 𝟘, so by F-4 nothing strict does better.
+--                     clampG : SHWM → HWM is a lax retraction of it, not
+--                     strict (D-3).  speak-lax: SHWM → MaxPlus (D-7).
 module ResourceAlgebra.Morphism where
 
 open import ResourceAlgebra.Prelude
@@ -400,3 +404,129 @@ count-not-⊕ : ¬ (∀ a b → fin (count 2 (ResourceAlgebra._⊕_ (Questions 2
                         ≡ fin (count 2 a) ⊓g fin (count 2 b))
 count-not-⊕ f with f collapse shuffle
 ... | ()
+
+----------------------------------------------------------------------
+-- D-3, D-7: HWM inside signed-drift HWM, and back
+--
+-- embed reads a drift as an integer.  It preserves 𝟙, ⊕ and ⊗ exactly
+-- and misses only 𝟘 (HWM's 𝟘 is its 𝟙, SHWM's is not), so it is lax and,
+-- by F-4, no strict map HWM → SHWM exists at all.  clampG reads a negative
+-- drift as 0.  It is lax in the same direction as peak-lax (the image of a
+-- sequence is below the sequence of the images), it is a retraction of
+-- embed, and it is not strict.
+module _ where
+  open import ResourceAlgebra.Drift
+  open import ResourceAlgebra.Instances.SignedHWM as SH
+    using (SHWM; shwm; shwm-≡; _⊗s_; _⊕s_; 𝟘s; 𝟙s; SHWM-𝟘≢𝟙; embed; clampG; free-one; alloc-one)
+  private
+    module D  = ResourceAlgebra Drift-RA
+    module DA = IsAltMonoid (ResourceAlgebra.alt Drift-RA)
+    module DS = IsSeqMonoid (ResourceAlgebra.seq Drift-RA)
+    module DO = IsOrdered (IsDioid.ordered Drift-dioid)
+
+    hwm-≼ : ∀ {p n p' n'} {b : n ≤ p} {b' : n' ≤ p'}
+          → p ≤ p' → n ≤ n' → (hwm p n b ⊕h hwm p' n' b') ≡ hwm p' n' b'
+    hwm-≼ q r = H.hwm-≡ (max-≤ q) (max-≤ r)
+
+    clamp-≤ : ∀ p y q → maxd (pk p) y ≼d pk q → clamp (maxd (pk p) y) ≤ q
+    clamp-≤ p y q h = pk-≼→≤ (subst (λ z → z ≼d pk q) (sym (pk-clamp p y)) h)
+
+  embed-⊗ : ∀ a b → embed (a ⊗h b) ≡ embed a ⊗s embed b
+  embed-⊗ (hwm p₁ n₁ _) (hwm p₂ n₂ _) =
+    shwm-≡ (cong clamp (pk-max p₁ (n₁ + p₂))) refl
+
+  embed-⊕ : ∀ a b → embed (a ⊕h b) ≡ embed a ⊕s embed b
+  embed-⊕ (hwm p₁ n₁ _) (hwm p₂ n₂ _) = shwm-≡ refl (pk-max n₁ n₂)
+
+  embed-lax : LaxHom HWM SHWM
+  embed-lax = record
+    { map   = embed
+    ; map-𝟙 = shwm-≡ refl refl
+    ; map-⊕ = embed-⊕
+    ; map-⊗ = λ a b →
+        subst (λ x → ResourceAlgebra._≼_ SHWM x (embed a ⊗s embed b))
+              (sym (embed-⊗ a b))
+              (ResourceAlgebra.≼-refl SHWM (embed a ⊗s embed b))
+    }
+
+  embed-injective : ∀ {a b} → embed a ≡ embed b → a ≡ b
+  embed-injective {hwm p n _} {hwm p' n' _} e =
+    H.hwm-≡ (cong SH.peak e) (pk-injective (cong SH.drift e))
+
+  -- embed misses 𝟘 …
+  embed-𝟘 : embed H.𝟘h ≢ 𝟘s
+  embed-𝟘 e = SHWM-𝟘≢𝟙 (sym e)
+
+  -- … and no strict map can do better.
+  no-strict-HWM→SHWM : Hom HWM SHWM → ⊥
+  no-strict-HWM→SHWM = no-strict-from-HWM SHWM SHWM-𝟘≢𝟙
+
+  clamp-embed : ∀ a → clampG (embed a) ≡ a
+  clamp-embed (hwm p n _) = H.hwm-≡ refl (+-identityʳ n)
+
+  clamp-lax : LaxHom SHWM HWM
+  clamp-lax = record
+    { map   = clampG
+    ; map-𝟙 = H.hwm-≡ refl refl
+    ; map-⊕ = ⊕-case
+    ; map-⊗ = ⊗-case
+    }
+    where
+    Z = pk 0
+    ⊕-case : ∀ a b → clampG (a ⊕s b) ≡ clampG a ⊕h clampG b
+    ⊕-case (shwm p₁ n₁ _) (shwm p₂ n₂ _) =
+      H.hwm-≡ refl (pk-injective
+        (trans (pk-clamp 0 (maxd n₁ n₂))
+        (trans (sym (trans (D.⊕-interchange Z n₁ Z n₂)
+                           (cong (λ z → maxd z (maxd n₁ n₂)) (DA.idem Z))))
+        (trans (sym (cong₂ maxd (pk-clamp 0 n₁) (pk-clamp 0 n₂)))
+               (sym (pk-max (clamp (maxd Z n₁)) (clamp (maxd Z n₂))))))))
+
+    -- Peak: a negative drift before b lowers b's contribution, and the
+    -- clamped drift does not.  Drift: max 0 (n₁ + n₂) ≤ max 0 n₁ + max 0 n₂.
+    ⊗-case : ∀ a b → (clampG (a ⊗s b) ⊕h (clampG a ⊗h clampG b)) ≡ clampG a ⊗h clampG b
+    ⊗-case (shwm p₁ n₁ _) (shwm p₂ n₂ _) = hwm-≼ peak≤ drift≤
+      where
+      c₁ = clamp (maxd Z n₁)
+      c₂ = clamp (maxd Z n₂)
+      peak≤ : clamp (maxd (pk p₁) (n₁ +d pk p₂)) ≤ max p₁ (c₁ + p₂)
+      peak≤ = clamp-≤ p₁ (n₁ +d pk p₂) (max p₁ (c₁ + p₂))
+        (subst (λ z → maxd (pk p₁) (n₁ +d pk p₂) ≼d z)
+               (sym (trans (pk-max p₁ (c₁ + p₂))
+                           (cong (λ z → maxd (pk p₁) (z +d pk p₂)) (pk-clamp 0 n₁))))
+               (D.⊕-mono {pk p₁} {pk p₁} {n₁ +d pk p₂} {maxd Z n₁ +d pk p₂} (D.≼-refl (pk p₁))
+                         (DO.⊗-monoʳ (pk p₂) {n₁} {maxd Z n₁} (D.⊕-upperʳ Z n₁))))
+      drift≤ : clamp (maxd Z (n₁ +d n₂)) ≤ c₁ + c₂
+      drift≤ = clamp-≤ 0 (n₁ +d n₂) (c₁ + c₂)
+        (subst (λ z → maxd Z (n₁ +d n₂) ≼d z)
+               (sym (cong₂ _+d_ (pk-clamp 0 n₁) (pk-clamp 0 n₂)))
+               (D.⊕-least {Z} {n₁ +d n₂} {maxd Z n₁ +d maxd Z n₂}
+                 (subst (λ z → z ≼d (maxd Z n₁ +d maxd Z n₂)) (DS.unitˡ Z)
+                        (DO.⊗-mono {Z} {maxd Z n₁} {Z} {maxd Z n₂} (D.⊕-upperˡ Z n₁) (D.⊕-upperˡ Z n₂)))
+                 (DO.⊗-mono {n₁} {maxd Z n₁} {n₂} {maxd Z n₂} (D.⊕-upperʳ Z n₁) (D.⊕-upperʳ Z n₂))))
+
+  -- Free one cell, then allocate one: the sequence peaks at 0, the clamped
+  -- sequence at 1.  The control is tests/reject/ClampIsStrict.agda.
+  clamp-not-strict : ¬ (∀ a b → clampG (a ⊗s b) ≡ clampG a ⊗h clampG b)
+  clamp-not-strict f with cong peak (f free-one alloc-one)
+  ... | ()
+
+  -- The peak of a signed grade is lax into MaxPlus, as for HWM (F-2), and
+  -- agrees with it on HWM.
+  speak-lax : LaxHom SHWM MaxPlus
+  speak-lax = record
+    { map   = λ g → val (SH.peak g)
+    ; map-𝟙 = refl
+    ; map-⊕ = λ { (shwm p n _) (shwm p' n' _) → refl }
+    ; map-⊗ = ⊗-case
+    }
+    where
+    ⊗-case : ∀ a b → tAdd (val (SH.peak (a ⊗s b))) (tMul (val (SH.peak a)) (val (SH.peak b)))
+                   ≡ tMul (val (SH.peak a)) (val (SH.peak b))
+    ⊗-case (shwm p₁ n₁ b₁) (shwm p₂ n₂ _) =
+      cong val (max-≤ (clamp-≤ p₁ (n₁ +d pk p₂) (p₁ + p₂)
+        (D.⊕-least (pk-mono (≤-+ʳ p₁ p₂))
+                   (DO.⊗-monoʳ (pk p₂) (≤ᵈ→≼ n₁ p₁ b₁)))))
+
+  speak-embed : ∀ a → SH.peak (embed a) ≡ peak a
+  speak-embed (hwm p n _) = refl

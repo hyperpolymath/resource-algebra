@@ -157,6 +157,12 @@ function localTargetError(uses, fullWf) {
     : onBlock && typeof onBlock === "object" ? "workflow_call" in onBlock
     : false;
   if (!callable) return `'${uses}' does not declare on.workflow_call, so GitHub cannot run it as a reusable workflow`;
+  // The caller passes with.context, and GitHub refuses an input the called workflow does not
+  // declare, so the target must declare on.workflow_call.inputs.context as a string input.
+  const call = onBlock && typeof onBlock === "object" && !Array.isArray(onBlock) ? onBlock.workflow_call : undefined;
+  const ctxInput = call && typeof call === "object" ? call.inputs?.context : undefined;
+  if (!ctxInput || typeof ctxInput !== "object" || ctxInput.type !== "string")
+    return `'${uses}' does not declare on.workflow_call.inputs.context with type: string, so GitHub refuses the caller's with.context`;
   return null;
 }
 
@@ -182,6 +188,18 @@ function verifyStatusPublisher(ctx, relWf, fullWf) {
     const types = wr && typeof wr === "object" ? wr.types : undefined;
     if (!Array.isArray(types) || !types.includes("completed")) {
       fail(`status context '${ctx}' publisher '${relWf}' workflow_run types do not include 'completed' (types: ${JSON.stringify(types ?? null)})`);
+    }
+    // GitHub applies workflow_run branch filters to the TRIGGERING run's branch, so a filter
+    // keeps the publisher from running for PR-branch workflows and strands the PR head
+    // without the status (#219 defect class). Only an all-branches filter is harmless.
+    if (wr && typeof wr === "object" && Object.hasOwn(wr, "branches")) {
+      const b = wr.branches;
+      if (!(Array.isArray(b) && b.length === 1 && b[0] === "**")) {
+        fail(`status context '${ctx}' publisher '${relWf}' filters workflow_run by branches (${JSON.stringify(b ?? null)}) — strands PR heads whose workflows run on other branches`);
+      }
+    }
+    if (wr && typeof wr === "object" && Object.hasOwn(wr, "branches-ignore")) {
+      fail(`status context '${ctx}' publisher '${relWf}' filters workflow_run by branches-ignore (${JSON.stringify(wr["branches-ignore"] ?? null)}) — strands PR heads on the ignored branches`);
     }
   }
   const jobs = doc?.jobs && typeof doc.jobs === "object" ? doc.jobs : {};

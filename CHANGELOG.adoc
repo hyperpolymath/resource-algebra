@@ -1,5 +1,71 @@
 == Changelog
 
+== 2026-11-19: Signed drift for HWM (D-1 to D-8); every receipt superseded (48 rows ungraded for now)
+
+* `src/ResourceAlgebra/Instances/SignedHWM.agda` adds `SHWM`: HWM with an
+  integer drift (or −∞), for terms that consume live state.
+  `Instances.HWM` is unchanged. `src/ResourceAlgebra/Drift.agda` adds its
+  drift carrier, the max-plus dioid on ℤ ∪ {−∞}, with its own integers.
+* What holds: SHWM is a dioid and ordered (D-1); 𝟘 absorbs on the left
+  (D-2); HWM embeds by a lax map that preserves ⊗, with a lax retraction
+  `clampG` (D-3); `SyncBelow` holds (D-5); `peak` is lax into MaxPlus
+  (D-7); on finite drift the sequence is the bicyclic monoid, and HWM is its
+  part with drift ≥ 0 (D-8).
+* What fails, each with a witness: 𝟘 ≢ 𝟙 and SHWM is not annihilating
+  (D-2); no strict map HWM → SHWM exists, and `clampG` is not strict (D-3);
+  a prefix can lower the peak (D-4); `SyncAbove` fails (D-5); no star (D-6).
+* Seven expected rejections are added (23 in all).
+* The Rocq and Lean legs re-prove the eight rows by hand. Checked before
+  the pull request, not as receipts: Agda 2.6.3, Lean 4.35.0 (147 of 147
+  printed theorems axiom-free) and Coq 8.18.0 on a copy (137 of 137 closed).
+* All three runs at `201e05b` are `superseded` in the ledger of
+  `scripts/proof-receipt.sh`, and limited to the rows they checked. The
+  receipt is regenerated with source commit `7ab9840`. All 48 theory rows
+  are ungraded until the first `proofs.yml` run on main that contains this
+  change is recorded.
+* Not built: the trough (option B, a proposal in `PROOF-STATUS.adoc`, Open),
+  and any change in occupancy-types (H-2 stays OPEN there).
+
+== 2026-11-19 — Proof receipt at 201e05b, the merge of #58; 39 rows are PWG-2ii
+
+* `verification/receipts/resource-algebra-proofs_praxis.deed` now describes
+  source commit `201e05b` (the merge of #58), from `proofs.yml` run
+  `44435465068` on main: Agda job `135263084676`, Rocq `135263084711`, Lean
+  `135263084426`. The `Proofs verdict` job and the coverage-exemption job
+  passed in the same run. Each ledger row was printed by
+  `scripts/proof-receipt.sh --run-row`.
+* Census: of 40 theory rows, 39 are PWG-2ii and 1 (M-2) is ungraded. P-1 to
+  P-4 and K-1 to K-4 have their first grade. No row is PWG-1: only the Rocq
+  job runs in an image that ships its checker (PN-7).
+* This is the first receipt of the Lean leg and the M-2 bridge under `lake`.
+* The three runs at `15fa113` leave the ledger and are listed under "Earlier
+  receipts" in `PROOF-STATUS.adoc`. The `receipt_run_scope` hook that
+  limited them to the rows they checked is removed with them.
+
+== 2026-11-19 — Parallel composition and the loop grade (P-1 to P-4, K-1 to K-4); every receipt superseded (40 rows ungraded for now)
+
+* `src/ResourceAlgebra/Parallel.agda` adds the `IsParallel` layer: a
+  commutative monoid on `𝟙` that distributes over ⊕. Two exchange laws,
+  `SyncBelow` and `SyncAbove`, relate it to ⊗ and are stated apart. Work
+  (`_∥_` = ⊗ in a dioid with a commutative ⊗; Loss and MaxPlus) has both.
+  MaxPlus span (`tPar`, max) has `SyncAbove` only. HWM (`_∥h_`, the sum) has
+  `SyncBelow` only.
+* `src/ResourceAlgebra/Star.agda` adds the `IsStar` layer (Kozen's axioms).
+  An algebra whose `𝟙` is greatest has the star `star a` = `𝟙` (Loss).
+  MaxPlus and HWM have no star. `Instances/MaxPlusTop.agda` adds a top to
+  MaxPlus; it is an annihilating dioid with a star, and MaxPlus embeds in it
+  by a strict, injective morphism.
+* Three expected rejections are added (16 in all): `SpanSyncBelow`,
+  `HWMSyncAbove` and `MaxPlusLoopBounded`.
+* The Rocq and Lean legs re-prove the eight rows by hand. Checked before
+  the pull request, not as receipts: Agda 2.6.3, Lean 4.35.0 (116 of 116
+  printed theorems axiom-free) and Coq 8.18.0 on a copy (106 of 106 closed).
+* The Agda and Rocq inputs changed, so their runs at `15fa113` are
+  `superseded` in the ledger of `scripts/proof-receipt.sh`; the Lean run
+  already was. The receipt is regenerated with source commit `c31bf1a`. Of
+  40 theory rows, all 40 are ungraded until the first `proofs.yml` run on
+  main that contains this change is recorded.
+
 == 2026-11-18 — Lean leg and M-2 bridge under lake; the Lean receipt is superseded (31 rows PWG-2i for now)
 
 * The Lean leg builds as a Lake package (`verification/proofs/lean4/lakefile.toml`,
@@ -83,8 +149,8 @@
   `pull_request_target`: a pull request that touches a gate file fails
   `guard / check` until the owner applies the label `gate-change-approved`. The
   guard is not a required context yet. Both callers pin
-  hyperpolymath/proven-cicd-and-workflows at `4e9e680b0dfd842a457cf23271f9e005a88f766c`,
-  the squash commit of hyperpolymath/proven-cicd-and-workflows#139 on its `main`;
+  hyperpolymath/proven-cicd-and-workflows at `a0760cea695a815a96b3944f3d03ee015da856d0`,
+  a commit on the suite's `main` (hyperpolymath/proven-cicd-and-workflows#164: emoji-safe status descriptions, retry with back-off on API rate limits, a per-commit concurrency group, a sweep that stops when limited);
   `actions.lock` is edited by hand to match (`gh actions-lock` v0.2.0 cannot lock
   cross-repository reusable workflows) and `scripts/check-lock-sync.sh` is the
   authority. `tests/workflows/squabble_gate_test.sh` section 5b asserts the new
@@ -447,6 +513,12 @@ https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
 ==== Fixed
 
+* **A `CI/gate` publisher may not filter `workflow_run` by branch.**
+  GitHub applies `branches` and `branches-ignore` to the triggering run's
+  branch, so a filtered publisher never posts the status on a PR head and the
+  PR waits for ever. `check-required-contexts.sh` now refuses any such filter
+  except `branches: ["**"]`; negative fixtures cover both keys. Ported from
+  rsr-template-repo#481.
 * Julia mints start with Lock Sync green. The julia-library overlay
   shipped its own `actions.lock`, which replaced the spine's at mint, so
   every spine workflow lost its records. The records now ship beside the
